@@ -1,0 +1,73 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.2-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+}
+
+group = 'com.robotzero'
+version = '0.0.1-SNAPSHOT'
+//sourceCompatibility = '16'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(16)
+  }
+}
+
+allprojects {
+
+	tasks.withType(JavaCompile) {
+//        	options.compilerArgs.addAll(['--add-exports', 'java.base/java.lang.reflect=ALL-UNNAMED'])
+//	        options.compilerArgs.addAll(['--add-exports', 'jdk.unsupported/sun.misc=ALL-UNNAMED'])
+	        options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'] )
+	        options.encoding = 'UTF-8'
+	        options.deprecation = true
+    }
+}
+
+compileJava {
+  options.warnings = true
+  options.deprecation = true
+  options.debug = true
+  options.compilerArgs += ["--add-modules=jdk.incubator.foreign"]
+  options.incremental = false
+}
+
+configurations {
+	compile.exclude module: 'spring-boot-starter-tomcat'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.springframework.boot:spring-boot-starter-jersey'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-reactor-netty'
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'io.r2dbc:r2dbc-h2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+      useJUnitPlatform()
+      jvmArgs '--add-modules=jdk.incubator.foreign'
+}
