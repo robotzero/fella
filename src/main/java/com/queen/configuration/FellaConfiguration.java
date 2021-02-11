@@ -1,4 +1,4 @@
-package com.queen.infrastructure;
+package com.queen.configuration;
 
 import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebFluxSecurity
-@EnableR2dbcRepositories(basePackages = "com.queen.infrastructure")
+@EnableR2dbcRepositories(basePackages = "com.queen.infrastructure.persistence")
 public class FellaConfiguration {
   @Bean
   public SecurityWebFilterChain securityWebFilterChain(
