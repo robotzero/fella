@@ -4,10 +4,8 @@ import com.queen.adapters.persistance.MonitorTypeMapper;
 import com.queen.application.ports.in.AllMonitorTypesQuery;
 import com.queen.application.ports.out.LoadAllMonitorTypes;
 import com.queen.domain.monitortype.MonitorType;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
-@Component
 public class MonitorTypeService implements AllMonitorTypesQuery {
 	private final LoadAllMonitorTypes loadAllMonitorTypes;
 	private final MonitorTypeMapper monitorTypeMapper;

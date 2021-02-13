@@ -8,8 +8,21 @@ import org.springframework.data.relational.core.mapping.Table;
 public class MonitorType {
 	@Id
 	@Column("id")
-	public int id;
+	private final int id;
 
 	@Column("name")
-	public String name;
+	private final String name;
+
+	public MonitorType(final int id, final String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
 }

@@ -1,11 +1,19 @@
 package com.queen.adapters.web;
 
-public class MonitorTypeDTO {
-	public final int id;
-	public final String name;
+import com.fasterxml.jackson.annotation.JsonGetter;
 
-	public MonitorTypeDTO(int id, String name) {
-		this.id = id;
-		this.name = name;
+import javax.validation.constraints.NotNull;
+
+public record MonitorTypeDTO(@NotNull int id, @NotNull String name) {
+	@JsonGetter("id")
+	@Override
+	public int id() {
+		return id;
+	}
+
+	@JsonGetter("name")
+	@Override
+	public String name() {
+		return name;
 	}
 }
