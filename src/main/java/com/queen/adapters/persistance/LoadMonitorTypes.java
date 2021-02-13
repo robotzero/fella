@@ -8,12 +8,12 @@ import reactor.core.publisher.Flux;
 public class LoadMonitorTypes implements LoadAllMonitorTypes {
 	private final MonitorTypeRepository monitorTypeRepository;
 
-	public LoadMonitorTypes(MonitorTypeRepository monitorTypeRepository) {
+	public LoadMonitorTypes(final MonitorTypeRepository monitorTypeRepository) {
 		this.monitorTypeRepository = monitorTypeRepository;
 	}
 
 	@Override
-	public Flux<MonitorType> loadMonitorTypes() {
+	public Flux<MonitorType> loadAllMonitorTypes() {
 		return this.monitorTypeRepository.findAll();
 	}
 }

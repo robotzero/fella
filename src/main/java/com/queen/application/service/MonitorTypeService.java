@@ -10,14 +10,14 @@ public class MonitorTypeService implements AllMonitorTypesQuery {
 	private final LoadAllMonitorTypes loadAllMonitorTypes;
 	private final MonitorTypeMapper monitorTypeMapper;
 
-	public MonitorTypeService(LoadAllMonitorTypes loadAllMonitorTypes, MonitorTypeMapper monitorTypeMapper) {
+	public MonitorTypeService(final LoadAllMonitorTypes loadAllMonitorTypes, final MonitorTypeMapper monitorTypeMapper) {
 		this.loadAllMonitorTypes = loadAllMonitorTypes;
-		this.monitorTypeMapper = monitorTypeMapper;
+		this.monitorTypeMapper   = monitorTypeMapper;
 	}
 
 	@Override
 	public Flux<MonitorType> load() {
-		final var allMonitorTypes = this.loadAllMonitorTypes.loadMonitorTypes();
+		final var allMonitorTypes = this.loadAllMonitorTypes.loadAllMonitorTypes();
 		return allMonitorTypes.map(monitorType -> {
 			return monitorTypeMapper.mapToDomain(monitorType);
 		});

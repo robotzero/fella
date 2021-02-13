@@ -13,9 +13,13 @@ public class MonitorType {
 	@Column("name")
 	private final String name;
 
-	public MonitorType(final int id, final String name) {
+	@Column("userId")
+	private final int userId;
+
+	public MonitorType(final int id, final String name, final int userId) {
 		this.id = id;
 		this.name = name;
+		this.userId = userId;
 	}
 
 	public int getId() {
@@ -24,5 +28,9 @@ public class MonitorType {
 
 	public String getName() {
 		return name;
+	}
+
+	public int getUserId() {
+		return userId;
 	}
 }
