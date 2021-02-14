@@ -4,14 +4,18 @@ import com.queen.adapters.persistance.LoadMonitorTypes;
 import com.queen.adapters.persistance.LoadMonitors;
 import com.queen.adapters.persistance.MonitorMapper;
 import com.queen.adapters.persistance.MonitorTypeMapper;
+import com.queen.adapters.persistance.UserMapper;
 import com.queen.adapters.web.MonitorToDTO;
 import com.queen.adapters.web.MonitorTypeToDTO;
 import com.queen.application.ports.out.LoadAllMonitorTypes;
 import com.queen.application.ports.out.LoadAllMonitors;
+import com.queen.application.ports.out.LoadUser;
 import com.queen.application.service.MonitorService;
 import com.queen.application.service.MonitorTypeService;
+import com.queen.application.service.UserService;
 import com.queen.infrastructure.persitence.MonitorRepository;
 import com.queen.infrastructure.persitence.MonitorTypeRepository;
+import com.queen.infrastructure.persitence.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -57,5 +61,22 @@ public class FellaConfiguration {
 	@Bean
 	MonitorToDTO monitorToDTO() {
 		return new MonitorToDTO();
+	}
+
+	// User
+
+	@Bean
+	UserService userService(final UserMapper userMapper, final LoadUser loadUser) {
+		return new UserService(loadUser, userMapper);
+	}
+
+	@Bean
+	UserMapper userMapper() {
+		return new UserMapper();
+	}
+
+	@Bean
+	LoadUser loadUser(final UserRepository userRepository) {
+		return new com.queen.adapters.persistance.LoadUser(userRepository);
 	}
 }

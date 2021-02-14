@@ -14,6 +14,7 @@ public class TestController {
   @ResponseStatus(HttpStatus.OK)
   public Mono<String[]> test(Authentication authentication) {
 	  JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authentication;
+		System.out.println(jwtAuthentication.getCredentials());
 	  return Mono.fromSupplier(() -> new String[] {"Message 1", "Message 2", "Message 4", jwtAuthentication.getToken().getTokenValue() });
   }
 }
