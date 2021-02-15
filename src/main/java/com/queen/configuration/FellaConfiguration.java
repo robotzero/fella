@@ -7,9 +7,11 @@ import com.queen.adapters.persistance.MonitorTypeMapper;
 import com.queen.adapters.persistance.UserMapper;
 import com.queen.adapters.web.MonitorToDTO;
 import com.queen.adapters.web.MonitorTypeToDTO;
+import com.queen.application.ports.out.CreateUser;
 import com.queen.application.ports.out.LoadAllMonitorTypes;
 import com.queen.application.ports.out.LoadAllMonitors;
 import com.queen.application.ports.out.LoadUser;
+import com.queen.application.service.AttachNewUserService;
 import com.queen.application.service.MonitorService;
 import com.queen.application.service.MonitorTypeService;
 import com.queen.application.service.UserService;
@@ -64,7 +66,6 @@ public class FellaConfiguration {
 	}
 
 	// User
-
 	@Bean
 	UserService userService(final UserMapper userMapper, final LoadUser loadUser) {
 		return new UserService(loadUser, userMapper);
@@ -78,5 +79,15 @@ public class FellaConfiguration {
 	@Bean
 	LoadUser loadUser(final UserRepository userRepository) {
 		return new com.queen.adapters.persistance.LoadUser(userRepository);
+	}
+
+	@Bean
+	CreateUser createUser(final UserRepository userRepository) {
+		return new com.queen.adapters.persistance.CreateUser(userRepository);
+	}
+
+	@Bean
+	AttachNewUserService attachNewUserService(final LoadUser loadUser, final CreateUser createUser, final UserMapper userMapper) {
+		return new AttachNewUserService(loadUser, createUser, userMapper);
 	}
 }

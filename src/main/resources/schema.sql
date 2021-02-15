@@ -23,4 +23,4 @@ CREATE TABLE `users` (
 
 INSERT INTO `monitor_type` (id, userId, name) VALUES (1, 1, 'period');
 INSERT INTO `monitor` (id, userId, name) VALUES (1, 1, 'period');
-
+INSERT INTO `users` (id, username) VALUES ('blah', 'blah');

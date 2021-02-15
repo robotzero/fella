@@ -1,6 +1,6 @@
 package com.queen.configuration;
 
-import com.queen.application.service.UserService;
+import com.queen.application.service.AttachNewUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -25,7 +25,7 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
-	public CustomWebFilter CustomWebFilter(final UserService userService) {
-		return new CustomWebFilter(userService);
+	public CustomWebFilter CustomWebFilter(final AttachNewUserService attachNewUserService) {
+		return new CustomWebFilter(attachNewUserService);
 	}
 }

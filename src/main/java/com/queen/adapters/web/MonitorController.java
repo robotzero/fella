@@ -2,6 +2,8 @@ package com.queen.adapters.web;
 
 import com.queen.application.service.MonitorService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
@@ -17,7 +19,7 @@ public class MonitorController {
 	}
 
 	@GetMapping("/monitors")
-	public Flux<MonitorDTO> getAllMonitors(Authentication authentication) {
+	public Flux<MonitorDTO> getAllMonitors(Authentication authentication, JwtAuthenticationToken jwtAuthenticationToken) {
 		return monitorService.loadAllMonitors().map(monitor -> {
 			return monitorToDTO.toDTO(monitor);
 		});
