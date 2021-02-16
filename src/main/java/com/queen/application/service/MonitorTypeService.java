@@ -2,15 +2,15 @@ package com.queen.application.service;
 
 import com.queen.adapters.persistance.MonitorTypeMapper;
 import com.queen.application.ports.in.AllMonitorTypesQuery;
-import com.queen.application.ports.out.LoadAllMonitorTypes;
+import com.queen.application.ports.out.LoadAllMonitorTypesPort;
 import com.queen.domain.monitortype.MonitorType;
 import reactor.core.publisher.Flux;
 
 public class MonitorTypeService implements AllMonitorTypesQuery {
-	private final LoadAllMonitorTypes loadAllMonitorTypes;
+	private final LoadAllMonitorTypesPort loadAllMonitorTypes;
 	private final MonitorTypeMapper monitorTypeMapper;
 
-	public MonitorTypeService(final LoadAllMonitorTypes loadAllMonitorTypes, final MonitorTypeMapper monitorTypeMapper) {
+	public MonitorTypeService(final LoadAllMonitorTypesPort loadAllMonitorTypes, final MonitorTypeMapper monitorTypeMapper) {
 		this.loadAllMonitorTypes = loadAllMonitorTypes;
 		this.monitorTypeMapper   = monitorTypeMapper;
 	}

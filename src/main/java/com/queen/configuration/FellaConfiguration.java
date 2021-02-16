@@ -1,20 +1,20 @@
 package com.queen.configuration;
 
-import com.queen.adapters.persistance.LoadMonitorTypes;
-import com.queen.adapters.persistance.LoadMonitors;
+import com.queen.adapters.persistance.MonitorTypePersistenceAdapter;
+import com.queen.adapters.persistance.MonitorPersistenceAdapter;
 import com.queen.adapters.persistance.MonitorMapper;
 import com.queen.adapters.persistance.MonitorTypeMapper;
 import com.queen.adapters.persistance.UserMapper;
+import com.queen.adapters.persistance.UserPersistenceAdapter;
 import com.queen.adapters.web.MonitorToDTO;
 import com.queen.adapters.web.MonitorTypeToDTO;
-import com.queen.application.ports.out.CreateUser;
-import com.queen.application.ports.out.LoadAllMonitorTypes;
-import com.queen.application.ports.out.LoadAllMonitors;
-import com.queen.application.ports.out.LoadUser;
+import com.queen.application.ports.out.CreateUserPort;
+import com.queen.application.ports.out.LoadAllMonitorTypesPort;
+import com.queen.application.ports.out.LoadAllMonitorsPort;
+import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.AttachNewUserService;
 import com.queen.application.service.MonitorService;
 import com.queen.application.service.MonitorTypeService;
-import com.queen.application.service.UserService;
 import com.queen.infrastructure.persitence.MonitorRepository;
 import com.queen.infrastructure.persitence.MonitorTypeRepository;
 import com.queen.infrastructure.persitence.UserRepository;
@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
 public class FellaConfiguration {
 	// Monitor Types
 	@Bean
-	MonitorTypeService monitorTypeService(final MonitorTypeMapper monitorTypeMapper, final LoadAllMonitorTypes loadAllMonitorTypes) {
+	MonitorTypeService monitorTypeService(final MonitorTypeMapper monitorTypeMapper, final LoadAllMonitorTypesPort loadAllMonitorTypes) {
 		return new MonitorTypeService(loadAllMonitorTypes, monitorTypeMapper);
 	}
 
@@ -35,8 +35,8 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	LoadAllMonitorTypes loadAllMonitorTypes(final MonitorTypeRepository monitorTypeRepository) {
-		return new LoadMonitorTypes(monitorTypeRepository);
+	LoadAllMonitorTypesPort loadAllMonitorTypes(final MonitorTypeRepository monitorTypeRepository) {
+		return new MonitorTypePersistenceAdapter(monitorTypeRepository);
 	}
 
 	@Bean
@@ -46,7 +46,7 @@ public class FellaConfiguration {
 
 	// Monitors
 	@Bean
-	MonitorService monitorService(final MonitorMapper monitorMapper, final LoadAllMonitors loadAllMonitors) {
+	MonitorService monitorService(final MonitorMapper monitorMapper, final LoadAllMonitorsPort loadAllMonitors) {
 		return new MonitorService(loadAllMonitors, monitorMapper);
 	}
 
@@ -56,19 +56,13 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	LoadAllMonitors loadAllMonitors(final MonitorRepository monitorRepository) {
-		return new LoadMonitors(monitorRepository);
+	LoadAllMonitorsPort loadAllMonitors(final MonitorRepository monitorRepository) {
+		return new MonitorPersistenceAdapter(monitorRepository);
 	}
 
 	@Bean
 	MonitorToDTO monitorToDTO() {
 		return new MonitorToDTO();
-	}
-
-	// User
-	@Bean
-	UserService userService(final UserMapper userMapper, final LoadUser loadUser) {
-		return new UserService(loadUser, userMapper);
 	}
 
 	@Bean
@@ -77,17 +71,17 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	LoadUser loadUser(final UserRepository userRepository) {
-		return new com.queen.adapters.persistance.LoadUser(userRepository);
+	LoadUserPort loadUser(final UserRepository userRepository) {
+		return new UserPersistenceAdapter(userRepository);
 	}
 
 	@Bean
-	CreateUser createUser(final UserRepository userRepository) {
-		return new com.queen.adapters.persistance.CreateUser(userRepository);
+	CreateUserPort createUser(final UserRepository userRepository) {
+		return new UserPersistenceAdapter(userRepository);
 	}
 
 	@Bean
-	AttachNewUserService attachNewUserService(final LoadUser loadUser, final CreateUser createUser, final UserMapper userMapper) {
+	AttachNewUserService attachNewUserService(final LoadUserPort loadUser, final CreateUserPort createUser, final UserMapper userMapper) {
 		return new AttachNewUserService(loadUser, createUser, userMapper);
 	}
 }

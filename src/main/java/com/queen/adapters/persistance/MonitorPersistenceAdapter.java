@@ -1,14 +1,14 @@
 package com.queen.adapters.persistance;
 
-import com.queen.application.ports.out.LoadAllMonitors;
+import com.queen.application.ports.out.LoadAllMonitorsPort;
 import com.queen.infrastructure.persitence.Monitor;
 import com.queen.infrastructure.persitence.MonitorRepository;
 import reactor.core.publisher.Flux;
 
-public class LoadMonitors implements LoadAllMonitors {
+public class MonitorPersistenceAdapter implements LoadAllMonitorsPort {
 	private final MonitorRepository monitorRepository;
 
-	public LoadMonitors(MonitorRepository monitorRepository) {
+	public MonitorPersistenceAdapter(MonitorRepository monitorRepository) {
 		this.monitorRepository = monitorRepository;
 	}
 
