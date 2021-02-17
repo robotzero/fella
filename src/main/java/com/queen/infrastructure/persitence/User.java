@@ -23,14 +23,14 @@ public class User implements Persistable<String> {
 		this.userName = userName;
 	}
 
-	public String getId() {
-		return id;
-	}
-
 	@Override
 	@Transient
 	public boolean isNew() {
 		return this.newUser || id == null || id.isEmpty();
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setAsNew() {

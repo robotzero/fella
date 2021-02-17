@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 
 import javax.validation.constraints.NotNull;
 
-public record MonitorTypeDTO(@NotNull int id, @NotNull String name) {
+public record MonitorTypeDTO(@NotNull String id, @NotNull String name) {
 	@JsonGetter("id")
 	@Override
-	public int id() {
+	public String id() {
 		return id;
 	}
 

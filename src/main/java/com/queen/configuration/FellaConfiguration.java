@@ -8,6 +8,7 @@ import com.queen.adapters.persistance.UserMapper;
 import com.queen.adapters.persistance.UserPersistenceAdapter;
 import com.queen.adapters.web.MonitorToDTO;
 import com.queen.adapters.web.MonitorTypeToDTO;
+import com.queen.application.ports.out.CreateMonitorTypePort;
 import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadAllMonitorTypesPort;
 import com.queen.application.ports.out.LoadAllMonitorsPort;
@@ -36,6 +37,11 @@ public class FellaConfiguration {
 
 	@Bean
 	LoadAllMonitorTypesPort loadAllMonitorTypes(final MonitorTypeRepository monitorTypeRepository) {
+		return new MonitorTypePersistenceAdapter(monitorTypeRepository);
+	}
+
+	@Bean
+	CreateMonitorTypePort createMonitorTypePort(final MonitorTypeRepository monitorTypeRepository) {
 		return new MonitorTypePersistenceAdapter(monitorTypeRepository);
 	}
 
@@ -81,7 +87,7 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	AttachNewUserService attachNewUserService(final LoadUserPort loadUser, final CreateUserPort createUser, final UserMapper userMapper) {
-		return new AttachNewUserService(loadUser, createUser, userMapper);
+	AttachNewUserService attachNewUserService(final LoadUserPort loadUser, final CreateUserPort createUser, final UserMapper userMapper, final CreateMonitorTypePort createMonitorTypePort) {
+		return new AttachNewUserService(loadUser, createUser, userMapper, createMonitorTypePort);
 	}
 }

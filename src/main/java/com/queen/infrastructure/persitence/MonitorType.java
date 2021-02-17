@@ -1,28 +1,39 @@
 package com.queen.infrastructure.persitence;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("monitor_type")
-public class MonitorType {
+public class MonitorType implements Persistable<String> {
 	@Id
 	@Column("id")
-	private final int id;
+	private final String id;
 
 	@Column("name")
 	private final String name;
 
 	@Column("userId")
-	private final int userId;
+	private final String userId;
 
-	public MonitorType(final int id, final String name, final int userId) {
+	@Transient
+	private boolean newMonitorType;
+
+	public MonitorType(final String id, final String name, final String userId) {
 		this.id = id;
 		this.name = name;
 		this.userId = userId;
 	}
 
-	public int getId() {
+	@Override
+	@Transient
+	public boolean isNew() {
+		return this.newMonitorType || id == null || id.isEmpty();
+	}
+
+	public String getId() {
 		return id;
 	}
 
@@ -30,7 +41,11 @@ public class MonitorType {
 		return name;
 	}
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
+	}
+
+	public void setAsNew() {
+		this.newMonitorType = true;
 	}
 }
