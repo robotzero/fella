@@ -1,27 +1,28 @@
 package com.queen.application.service;
 
 import com.queen.adapters.persistance.UserMapper;
+import com.queen.adapters.web.MonitorTypeDTO;
 import com.queen.application.ports.in.AttachNewUserCommand;
-import com.queen.application.ports.out.CreateMonitorTypePort;
+import com.queen.application.ports.in.CreateUserTemplateUseCase;
 import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadUserPort;
-import com.queen.infrastructure.persitence.MonitorType;
 import com.queen.infrastructure.persitence.User;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class AttachNewUserService implements com.queen.application.ports.in.AttachNewUserUseCase {
 	private final LoadUserPort loadUser;
 	private final CreateUserPort createUser;
-	private final CreateMonitorTypePort createMonitorTypePort;
+	private final CreateUserTemplateUseCase createUserTemplateUseCase;
 	private final UserMapper userMapper;
 
-	public AttachNewUserService(final LoadUserPort loadUser, final CreateUserPort createUser, final UserMapper userMapper, final CreateMonitorTypePort createMonitorTypePort) {
+	public AttachNewUserService(final LoadUserPort loadUser, final CreateUserPort createUser, final UserMapper userMapper, final CreateUserTemplateUseCase createUserTemplateUseCase) {
 		this.loadUser = loadUser;
 		this.createUser = createUser;
 		this.userMapper = userMapper;
-		this.createMonitorTypePort = createMonitorTypePort;
+		this.createUserTemplateUseCase = createUserTemplateUseCase;
 	}
 
 	@Override
@@ -33,12 +34,9 @@ public class AttachNewUserService implements com.queen.application.ports.in.Atta
 				final var user = new com.queen.infrastructure.persitence.User(UUID.randomUUID().toString(), createNewUserCommand.jwtAuthenticationToken().getName());
 				attachUserDetailsToToken(user, createNewUserCommand);
 				createUser.createUser(user);
-				MonitorType monitorTypePeriod  = new MonitorType(UUID.randomUUID().toString(), "Period", user.getId());
-				monitorTypePeriod.setAsNew();
-				MonitorType monitorTypeStomach = new MonitorType(UUID.randomUUID().toString(), "Stomach", user.getId());
-				monitorTypeStomach.setAsNew();
-				createMonitorTypePort.createMonitorType(monitorTypePeriod);
-				createMonitorTypePort.createMonitorType(monitorTypeStomach);
+				MonitorTypeDTO monitorTypePeriod  = new MonitorTypeDTO(UUID.randomUUID().toString(), "Period", user.getId());
+				MonitorTypeDTO monitorTypeStomach = new MonitorTypeDTO(UUID.randomUUID().toString(), "Stomach", user.getId());
+				createUserTemplateUseCase.publishCreateUserTemplateEvent(List.of(monitorTypePeriod, monitorTypeStomach));
 			} else {
 				throw new RuntimeException("Error", throwable);
 			}

@@ -4,6 +4,6 @@ import com.queen.domain.monitortype.MonitorType;
 
 public class MonitorTypeToDTO {
 	public MonitorTypeDTO toDTO(final MonitorType monitorType) {
-		return new MonitorTypeDTO(monitorType.id(), monitorType.name());
+		return new MonitorTypeDTO(monitorType.id(), monitorType.name(), monitorType.userId());
 	}
 }
