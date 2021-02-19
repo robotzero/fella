@@ -45,7 +45,8 @@ public class MonitorType implements Persistable<String> {
 		return userId;
 	}
 
-	public void setAsNew() {
+	public MonitorType setAsNew() {
 		this.newMonitorType = true;
+		return this;
 	}
 }

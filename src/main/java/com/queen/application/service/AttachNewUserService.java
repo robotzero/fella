@@ -3,7 +3,7 @@ package com.queen.application.service;
 import com.queen.adapters.persistance.UserMapper;
 import com.queen.adapters.web.MonitorTypeDTO;
 import com.queen.application.ports.in.AttachNewUserCommand;
-import com.queen.application.ports.in.CreateUserTemplateUseCase;
+import com.queen.application.ports.in.CreateUserTemplateEvent;
 import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadUserPort;
 import com.queen.infrastructure.persitence.User;
@@ -15,10 +15,10 @@ import java.util.UUID;
 public class AttachNewUserService implements com.queen.application.ports.in.AttachNewUserUseCase {
 	private final LoadUserPort loadUser;
 	private final CreateUserPort createUser;
-	private final CreateUserTemplateUseCase createUserTemplateUseCase;
+	private final CreateUserTemplateEvent createUserTemplateUseCase;
 	private final UserMapper userMapper;
 
-	public AttachNewUserService(final LoadUserPort loadUser, final CreateUserPort createUser, final UserMapper userMapper, final CreateUserTemplateUseCase createUserTemplateUseCase) {
+	public AttachNewUserService(final LoadUserPort loadUser, final CreateUserPort createUser, final UserMapper userMapper, final CreateUserTemplateEvent createUserTemplateUseCase) {
 		this.loadUser = loadUser;
 		this.createUser = createUser;
 		this.userMapper = userMapper;

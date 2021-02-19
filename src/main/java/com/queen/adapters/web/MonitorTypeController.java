@@ -1,6 +1,8 @@
 package com.queen.adapters.web;
 
 import com.queen.application.ports.in.AllMonitorTypesQuery;
+import com.queen.domain.user.User;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +20,10 @@ public class MonitorTypeController {
 
 	@GetMapping("/monitor-types")
 	//@TODO response entity?
-	Flux<MonitorTypeDTO> loadMonitorTypes() {
-		return allMonitorTypesQuery.load().map(monitorType -> {
+	//@TODO UserDetails implementation, so we can inject user here?
+	Flux<MonitorTypeDTO> loadMonitorTypes(final JwtAuthenticationToken jwtAuthenticationToken) {
+		String userId = ((User) jwtAuthenticationToken.getDetails()).id();
+		return allMonitorTypesQuery.load(userId).map(monitorType -> {
 			return monitorTypeToDTO.toDTO(monitorType);
 		});
 	}
