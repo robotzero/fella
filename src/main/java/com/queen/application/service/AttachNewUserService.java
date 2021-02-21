@@ -1,6 +1,7 @@
 package com.queen.application.service;
 
 import com.queen.adapters.persistance.UserMapper;
+import com.queen.adapters.web.FieldsDTO;
 import com.queen.adapters.web.MonitorTypeDTO;
 import com.queen.application.ports.in.AttachNewUserCommand;
 import com.queen.application.ports.in.CreateUserTemplateEvent;
@@ -34,8 +35,23 @@ public class AttachNewUserService implements com.queen.application.ports.in.Atta
 				final var user = new com.queen.infrastructure.persitence.User(UUID.randomUUID().toString(), createNewUserCommand.jwtAuthenticationToken().getName());
 				attachUserDetailsToToken(user, createNewUserCommand);
 				createUser.createUser(user);
-				MonitorTypeDTO monitorTypePeriod  = new MonitorTypeDTO(UUID.randomUUID().toString(), "Period", user.getId());
-				MonitorTypeDTO monitorTypeStomach = new MonitorTypeDTO(UUID.randomUUID().toString(), "Stomach", user.getId());
+				//@TODO delegate somewhere else
+				String monitorTypeIdPeriod = UUID.randomUUID().toString();
+				String monitorTypeIdStomach = UUID.randomUUID().toString();
+
+				FieldsDTO fieldType1 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdPeriod, "1");
+				FieldsDTO fieldType2 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdPeriod, "2");
+				FieldsDTO fieldType3 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdPeriod, "3");
+				FieldsDTO fieldType4 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdPeriod, "4");
+				FieldsDTO fieldType5 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdPeriod, "5");
+
+				FieldsDTO fieldType6 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdStomach, "1");
+				FieldsDTO fieldType7 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdStomach, "2");
+				FieldsDTO fieldType8 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdStomach, "3");
+				FieldsDTO fieldType9 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdStomach, "5");
+
+				MonitorTypeDTO monitorTypePeriod  = new MonitorTypeDTO(monitorTypeIdPeriod, "Period", user.getId(), List.of(fieldType1, fieldType2, fieldType3, fieldType4, fieldType5));
+				MonitorTypeDTO monitorTypeStomach = new MonitorTypeDTO(monitorTypeIdStomach, "Stomach", user.getId(), List.of(fieldType6, fieldType7, fieldType8, fieldType9));
 				createUserTemplateUseCase.publishCreateUserTemplateEvent(List.of(monitorTypePeriod, monitorTypeStomach));
 			} else {
 				throw new RuntimeException("Error", throwable);

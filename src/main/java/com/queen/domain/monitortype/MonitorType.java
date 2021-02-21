@@ -1,6 +1,9 @@
 package com.queen.domain.monitortype;
 
-import javax.validation.constraints.NotNull;
+import com.queen.domain.fieldtype.FieldType;
 
-public record MonitorType(@NotNull String id, @NotNull String name, @NotNull String userId) {
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
+public record MonitorType(@NotNull String id, @NotNull String name, @NotNull String userId, @NotNull List<FieldType> fieldTypes) {
 }
