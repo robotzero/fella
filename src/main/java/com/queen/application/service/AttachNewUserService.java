@@ -47,11 +47,11 @@ public class AttachNewUserService implements com.queen.application.ports.in.Atta
 
 				FieldsDTO fieldType6 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdStomach, "1");
 				FieldsDTO fieldType7 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdStomach, "2");
-				FieldsDTO fieldType8 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdStomach, "3");
+				FieldsDTO fieldType8 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdStomach, "4");
 				FieldsDTO fieldType9 = new FieldsDTO(UUID.randomUUID().toString(), monitorTypeIdStomach, "5");
 
-				MonitorTypeDTO monitorTypePeriod  = new MonitorTypeDTO(monitorTypeIdPeriod, "Period", user.getId(), List.of(fieldType1, fieldType2, fieldType3, fieldType4, fieldType5));
-				MonitorTypeDTO monitorTypeStomach = new MonitorTypeDTO(monitorTypeIdStomach, "Stomach", user.getId(), List.of(fieldType6, fieldType7, fieldType8, fieldType9));
+				MonitorTypeDTO monitorTypePeriod  = new MonitorTypeDTO(monitorTypeIdPeriod, "Period", user.getId(), List.of(fieldType1, fieldType2, fieldType3, fieldType4, fieldType5), List.of());
+				MonitorTypeDTO monitorTypeStomach = new MonitorTypeDTO(monitorTypeIdStomach, "Stomach", user.getId(), List.of(fieldType6, fieldType7, fieldType8, fieldType9), List.of());
 				createUserTemplateUseCase.publishCreateUserTemplateEvent(List.of(monitorTypePeriod, monitorTypeStomach));
 			} else {
 				throw new RuntimeException("Error", throwable);
