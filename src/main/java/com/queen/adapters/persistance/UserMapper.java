@@ -1,9 +1,11 @@
 package com.queen.adapters.persistance;
 
-import com.queen.domain.user.User;
+import com.queen.domain.user.FellaUser;
+
+import java.util.List;
 
 public class UserMapper {
-	public User mapToDomain(com.queen.infrastructure.persitence.User user) {
-		return new User(user.getId(), user.getUserName());
+	public FellaUser mapToDomain(com.queen.infrastructure.persitence.User user) {
+		return new FellaUser(user.getId(), user.getUserName(), "", List.of());
 	}
 }

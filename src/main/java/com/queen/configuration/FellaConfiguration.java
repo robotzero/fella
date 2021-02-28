@@ -5,10 +5,10 @@ import com.queen.adapters.persistance.FieldTypeMapper;
 import com.queen.adapters.persistance.FieldTypePersistenceAdapter;
 import com.queen.adapters.persistance.FieldsMapper;
 import com.queen.adapters.persistance.FieldsPersistenceAdapter;
-import com.queen.adapters.persistance.MonitorTypePersistenceAdapter;
-import com.queen.adapters.persistance.MonitorPersistenceAdapter;
 import com.queen.adapters.persistance.MonitorMapper;
+import com.queen.adapters.persistance.MonitorPersistenceAdapter;
 import com.queen.adapters.persistance.MonitorTypeMapper;
+import com.queen.adapters.persistance.MonitorTypePersistenceAdapter;
 import com.queen.adapters.persistance.UserMapper;
 import com.queen.adapters.persistance.UserPersistenceAdapter;
 import com.queen.adapters.web.FieldTypeToDTO;
@@ -34,6 +34,7 @@ import com.queen.infrastructure.persitence.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class FellaConfiguration {
@@ -121,12 +122,15 @@ public class FellaConfiguration {
 		return new MonitorToDTO();
 	}
 
+
+	// User
 	@Bean
 	UserMapper userMapper() {
 		return new UserMapper();
 	}
 
 	@Bean
+	@Primary
 	LoadUserPort loadUser(final UserRepository userRepository) {
 		return new UserPersistenceAdapter(userRepository);
 	}
