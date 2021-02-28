@@ -26,7 +26,7 @@ CREATE TABLE `monitor_type` (
                           `id` varchar (255) NOT NULL COMMENT '',
                           `userId` varchar (255) NOT NULL COMMENT '',
                           `name` varchar (255) NOT NULL COMMENT '',
-                          `created_at` timestamp NOT NULL DEFAULT NOW(),
+                          `created_at` timestamp NOT NULL,
                           PRIMARY KEY (`id`)
 );
 

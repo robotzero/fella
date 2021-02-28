@@ -11,10 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -30,14 +27,11 @@ public class SecurityConfiguration {
 		return http.authorizeExchange().pathMatchers("/**").hasAuthority("SCOPE_message.read").anyExchange()
 				.authenticated()
 				.and()
+				.httpBasic().disable()
 				.oauth2ResourceServer()
 				.jwt(withDefaults())
 				.and()
 				.build();
-	}
-
-	public AuthenticationWebFilter authenticationWebFilter() {
-		return new AuthenticationWebFilter(reactiveAuthenticationManager());
 	}
 
 	@Bean
@@ -48,11 +42,6 @@ public class SecurityConfiguration {
 	@Bean
 	ReactiveAuthenticationManager reactiveAuthenticationManager() {
 		return new FellaReactiveAuthenticationManager();
-	}
-
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
 	@Bean

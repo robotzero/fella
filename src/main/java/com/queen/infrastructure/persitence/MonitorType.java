@@ -1,10 +1,14 @@
 package com.queen.infrastructure.persitence;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.time.Instant;
 
 @Table("monitor_type")
 public class MonitorType implements Persistable<String> {
@@ -16,15 +20,25 @@ public class MonitorType implements Persistable<String> {
 	private final String name;
 
 	@Column("userId")
-	private final String userId;
+	@CreatedBy
+	private String userId;
+
+	@Column("created_at")
+	@CreatedDate
+	private Instant createdDate;
 
 	@Transient
 	private boolean newMonitorType;
 
-	public MonitorType(final String id, final String name, final String userId) {
+//	public MonitorType(final String id, final String name, final String userId) {
+//		this.id = id;
+//		this.name = name;
+//		this.userId = userId;
+//	}
+
+	public MonitorType(final String id, final String name) {
 		this.id = id;
 		this.name = name;
-		this.userId = userId;
 	}
 
 	@Override
