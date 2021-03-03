@@ -2,6 +2,8 @@ package com.queen.configuration;
 
 import com.queen.application.ports.in.AttachNewUserCommand;
 import com.queen.application.service.AttachNewUserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -20,7 +22,8 @@ public class CustomWebFilter implements WebFilter {
 				return exchange.getPrincipal()
 				.filter(token -> token instanceof JwtAuthenticationToken).flatMap(sc -> {
 					attachNewUserService.attachNewUserDetails(new AttachNewUserCommand((JwtAuthenticationToken) sc));
-					return chain.filter(exchange);
+							Authentication authentication = (Authentication) sc;
+					return chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(authentication));
 				});
 	}
 }
