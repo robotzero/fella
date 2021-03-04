@@ -3,9 +3,7 @@ package com.queen.infrastructure.persitence;
 import com.queen.adapters.persistance.UserMapper;
 import com.queen.domain.user.FellaUser;
 import org.springframework.data.domain.ReactiveAuditorAware;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import reactor.core.publisher.Mono;
 
 public class SpringSecurityAuditorAware implements ReactiveAuditorAware<String> {

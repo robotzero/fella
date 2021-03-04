@@ -4,6 +4,7 @@ import com.queen.adapters.persistance.UserMapper;
 import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.AttachNewUserService;
 import com.queen.application.service.UserService;
+import org.glassfish.jersey.process.internal.RequestScoped;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,8 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
+import javax.inject.Scope;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -45,7 +48,6 @@ public class SecurityConfiguration {
 				.httpBasic().disable()
 				.oauth2ResourceServer()
 				.jwt()
-				.jwtDecoder(jwtDecoder())
 				.and()
 				.and().build();
 	}
@@ -61,28 +63,29 @@ public class SecurityConfiguration {
 //	}
 
 	@Bean
+	@RequestScoped
 	public CustomWebFilter CustomWebFilter(final AttachNewUserService attachNewUserService) {
 		return new CustomWebFilter(attachNewUserService);
 	}
 
 
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	}
-
-	ReactiveJwtDecoder jwtDecoder() {
-		OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
-		OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(withIssuer);
-
-		NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuer);
-		jwtDecoder.setJwtValidator(validator);
-
-		return new ReactiveJwtDecoder() {
-			@Override
-			public Mono<Jwt> decode(String token) throws JwtException {
-				return Mono.just(jwtDecoder.decode(token));
-			}
-		};
-	}
+//	@Bean
+//	PasswordEncoder passwordEncoder() {
+//		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//	}
+//
+//	ReactiveJwtDecoder jwtDecoder() {
+//		OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
+//		OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(withIssuer);
+//
+//		NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuer);
+//		jwtDecoder.setJwtValidator(validator);
+//
+//		return new ReactiveJwtDecoder() {
+//			@Override
+//			public Mono<Jwt> decode(String token) throws JwtException {
+//				return Mono.just(jwtDecoder.decode(token));
+//			}
+//		};
+//	}
 }

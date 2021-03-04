@@ -14,23 +14,25 @@ import reactor.core.scheduler.Schedulers;
  * @author Rob Winch
  * @since 5.0
  */
-@Component
 public class FellaAuthenticationManager
 		implements ReactiveAuthenticationManager {
-	private final UserRepository users;
-	private final ReactiveAuthenticationManager delegate;
-	private final PasswordEncoder encoder;
+//	private final UserRepository users;
+//	private final ReactiveAuthenticationManager delegate;
+//	private final PasswordEncoder encoder;
 
-	FellaAuthenticationManager(UserRepository users,
-			ReactiveUserDetailsService userDetailsService, PasswordEncoder encoder) {
-		this.users = users;
-		this.delegate = createDelegate(userDetailsService, encoder);
-		this.encoder = encoder;
-	}
+//	FellaAuthenticationManager(
+//			UserRepository users,
+//			ReactiveUserDetailsService userDetailsService, PasswordEncoder encoder) {
+//		this.users = users;
+//		this.delegate = createDelegate(userDetailsService, encoder);
+//		this.encoder = encoder;
+//	}
 
 	@Override
 	public Mono<Authentication> authenticate(Authentication authentication) {
-		return this.delegate.authenticate(authentication);
+		System.out.println("BLAsfsfsfsffAA!!!!!!!!!!!!!!A");
+		return Mono.just(authentication);
+//		return this.delegate.authenticate(authentication);
 //				.delayUntil(a -> updatePassword(authentication));
 	}
 
