@@ -141,8 +141,8 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	AttachNewUserService attachNewUserService(final LoadUserPort loadUser, final CreateUserPort createUser, final UserMapper userMapper, final CreateUserTemplateEvent createUserTemplateUseCase) {
-		return new AttachNewUserService(loadUser, createUser, userMapper, createUserTemplateUseCase);
+	AttachNewUserService attachNewUserService(final LoadUserPort loadUser, final CreateUserPort createUser, final UserMapper userMapper) {
+		return new AttachNewUserService(loadUser, createUser, userMapper);
 	}
 
 	@Bean

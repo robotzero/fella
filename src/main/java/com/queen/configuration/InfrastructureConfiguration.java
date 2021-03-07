@@ -1,8 +1,6 @@
 package com.queen.configuration;
 
-import com.queen.adapters.persistance.UserMapper;
 import com.queen.infrastructure.persitence.SpringSecurityAuditorAware;
-import com.queen.infrastructure.persitence.User;
 import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +25,7 @@ public class InfrastructureConfiguration {
 	}
 
 	@Bean
-	public ReactiveAuditorAware<String> reactiveAuditorAware(final UserMapper userMapper) {
-		return new SpringSecurityAuditorAware(userMapper);
+	public ReactiveAuditorAware<String> reactiveAuditorAware() {
+		return new SpringSecurityAuditorAware();
 	}
 }

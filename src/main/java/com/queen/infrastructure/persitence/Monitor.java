@@ -1,8 +1,12 @@
 package com.queen.infrastructure.persitence;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.time.Instant;
 
 @Table("monitor")
 public class Monitor {
@@ -14,12 +18,16 @@ public class Monitor {
 	private final String name;
 
 	@Column("userId")
-	private final int userId;
+	@CreatedBy
+	private String userId;
 
-	public Monitor(final int id, final String name, final int userId) {
+	@Column("created_at")
+	@CreatedDate
+	private Instant createdDate;
+
+	public Monitor(final int id, final String name) {
 		this.id = id;
 		this.name = name;
-		this.userId = userId;
 	}
 
 	public int getId() {
@@ -30,7 +38,7 @@ public class Monitor {
 		return name;
 	}
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 }

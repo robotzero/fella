@@ -15,7 +15,6 @@ public class MonitorTypeToDTO {
 		return new MonitorTypeDTO(
 				monitorType.id(),
 				monitorType.name(),
-				monitorType.userId(),
 				List.of(),
 				monitorType.fieldTypes().stream().map(fieldTypeToDTO::toDTO).toList()
 		);

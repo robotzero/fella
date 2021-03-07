@@ -30,12 +30,6 @@ public class MonitorType implements Persistable<String> {
 	@Transient
 	private boolean newMonitorType;
 
-//	public MonitorType(final String id, final String name, final String userId) {
-//		this.id = id;
-//		this.name = name;
-//		this.userId = userId;
-//	}
-
 	public MonitorType(final String id, final String name) {
 		this.id = id;
 		this.name = name;
