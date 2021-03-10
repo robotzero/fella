@@ -5,6 +5,7 @@ import com.queen.application.ports.out.CreateMonitorTypePort;
 import com.queen.application.ports.out.LoadAllMonitorTypesPort;
 import com.queen.infrastructure.persitence.MonitorType;
 import com.queen.infrastructure.persitence.MonitorTypeRepository;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 
 import javax.validation.constraints.NotNull;
@@ -19,8 +20,8 @@ public class MonitorTypePersistenceAdapter implements LoadAllMonitorTypesPort, C
 	}
 
 	@Override
-	public Flux<MonitorType> loadAllMonitorTypes(final @NotNull String userId) {
-		return this.monitorTypeRepository.findByUserId(userId);
+	public Flux<MonitorType> loadAllMonitorTypes(final String userId, final Pageable pageable) {
+		return this.monitorTypeRepository.findByUserId(userId, pageable);
 	}
 
 	@Override
