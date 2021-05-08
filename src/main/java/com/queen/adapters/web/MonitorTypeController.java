@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 @RestController
-@EnableReactiveMethodSecurity
 public class MonitorTypeController {
 	private final AllMonitorTypesQuery allMonitorTypesQuery;
 	private final MonitorTypeToDTO monitorTypeToDTO;

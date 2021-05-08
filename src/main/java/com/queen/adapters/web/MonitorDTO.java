@@ -2,9 +2,7 @@ package com.queen.adapters.web;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 
-import javax.validation.constraints.NotNull;
-
-public record MonitorDTO(@NotNull int id, @NotNull String name) {
+public record MonitorDTO(int id, String name) {
 	@JsonGetter("id")
 	@Override
 	public int id() {

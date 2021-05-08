@@ -8,7 +8,6 @@ import com.queen.infrastructure.persitence.MonitorTypeRepository;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,13 +25,13 @@ public class MonitorTypePersistenceAdapter implements LoadAllMonitorTypesPort, C
 
 	@Override
 	//@TODO ask how to get rid of this subscribe from internal
-	public void createMonitorType(final @NotNull MonitorType monitorType) {
+	public void createMonitorType(final MonitorType monitorType) {
 		final var disposable = this.monitorTypeRepository.save(monitorType).subscribe();
 		Optional.of(disposable.isDisposed()).ifPresentOrElse(d -> {}, disposable::dispose);
 	}
 
 	@Override
-	public void createMonitorTypes(final @NotNull List<MonitorType> monitorTypes) {
+	public void createMonitorTypes(final List<MonitorType> monitorTypes) {
 		final var disposable = this.monitorTypeRepository.saveAll(monitorTypes).subscribe();
 		Optional.of(disposable.isDisposed()).ifPresentOrElse(d -> {}, disposable::dispose);
 	}

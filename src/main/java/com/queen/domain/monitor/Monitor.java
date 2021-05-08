@@ -1,8 +1,6 @@
 package com.queen.domain.monitor;
 
-import javax.validation.constraints.NotNull;
-
-public record Monitor(@NotNull int id, @NotNull String name) {
+public record Monitor(int id, String name) {
 	@Override
 	public String name() {
 		return name;

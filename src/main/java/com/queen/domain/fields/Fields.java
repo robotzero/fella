@@ -1,6 +1,4 @@
 package com.queen.domain.fields;
 
-import javax.validation.constraints.NotNull;
-
-public record Fields(@NotNull String id, @NotNull String fieldTypeId, @NotNull String monitorTypeId) {
+public record Fields(String id, String fieldTypeId, String monitorTypeId) {
 }
