@@ -1,4 +1,7 @@
-package com.queen.adapters.web;
+package com.queen.adapters.web.dto;
+
+import com.queen.adapters.web.dto.FieldTypeDTO;
+import com.queen.adapters.web.dto.FieldsDTO;
 
 import java.util.List;
 

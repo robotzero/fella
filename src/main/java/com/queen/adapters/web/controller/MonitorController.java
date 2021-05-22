@@ -1,5 +1,7 @@
-package com.queen.adapters.web;
+package com.queen.adapters.web.controller;
 
+import com.queen.adapters.web.dto.MonitorDTO;
+import com.queen.adapters.web.dto.MonitorToDTO;
 import com.queen.application.service.MonitorService;
 import com.queen.configuration.FellaJwtAuthenticationToken;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;

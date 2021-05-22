@@ -1,6 +1,6 @@
 package com.queen.adapters.persistance;
 
-import com.queen.adapters.web.FieldsDTO;
+import com.queen.adapters.web.dto.FieldsDTO;
 import com.queen.domain.fields.Fields;
 
 public class FieldsMapper {

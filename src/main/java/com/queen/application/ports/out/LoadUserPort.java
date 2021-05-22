@@ -4,5 +4,5 @@ import com.queen.infrastructure.persitence.User;
 import reactor.core.publisher.Mono;
 
 public interface LoadUserPort {
-	Mono<User> loadUser(final String name);
+	Mono<User> loadUser(final String email);
 }

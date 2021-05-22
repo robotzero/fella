@@ -1,8 +1,10 @@
-package com.queen.adapters.web;
+package com.queen.adapters.web.controller;
 
+import com.queen.adapters.web.dto.MonitorTypeDTO;
+import com.queen.adapters.web.dto.MonitorTypeToDTO;
+import com.queen.adapters.web.dto.PageSupportDTO;
 import com.queen.application.ports.in.AllMonitorTypesQuery;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

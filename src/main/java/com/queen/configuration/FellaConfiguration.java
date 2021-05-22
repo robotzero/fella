@@ -11,9 +11,10 @@ import com.queen.adapters.persistance.MonitorTypeMapper;
 import com.queen.adapters.persistance.MonitorTypePersistenceAdapter;
 import com.queen.adapters.persistance.UserMapper;
 import com.queen.adapters.persistance.UserPersistenceAdapter;
-import com.queen.adapters.web.FieldTypeToDTO;
-import com.queen.adapters.web.MonitorToDTO;
-import com.queen.adapters.web.MonitorTypeToDTO;
+import com.queen.adapters.web.dto.FieldTypeToDTO;
+import com.queen.adapters.web.dto.MonitorToDTO;
+import com.queen.adapters.web.dto.MonitorTypeToDTO;
+import com.queen.adapters.web.dto.UserToDTO;
 import com.queen.application.ports.in.CreateUserTemplateEvent;
 import com.queen.application.ports.out.CreateFieldsPort;
 import com.queen.application.ports.out.CreateManyMonitorTypesPort;
@@ -26,6 +27,8 @@ import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.AttachNewUserService;
 import com.queen.application.service.MonitorService;
 import com.queen.application.service.MonitorTypeService;
+import com.queen.application.service.UserEmailService;
+import com.queen.application.service.UserService;
 import com.queen.infrastructure.persitence.FieldTypesRepository;
 import com.queen.infrastructure.persitence.FieldsRepository;
 import com.queen.infrastructure.persitence.MonitorRepository;
@@ -148,5 +151,20 @@ public class FellaConfiguration {
 	@Bean
 	StartUpTemplateEventHandler genericEventHandler(final MonitorTypeService monitorTypeService) {
 		return new StartUpTemplateEventHandler(monitorTypeService);
+	}
+
+	@Bean
+	UserEmailService userEmailService(final LoadUserPort loadUserPort, final UserMapper userMapper) {
+		return new UserEmailService(loadUserPort, userMapper);
+	}
+
+	@Bean
+	UserToDTO userToDTO() {
+		return new UserToDTO();
+	}
+
+	@Bean
+	UserService userService(final LoadUserPort loadUserPort, final UserMapper userMapper, final MonitorTypeService monitorTypeService, final CreateUserPort createUserPort) {
+		return new UserService(loadUserPort, userMapper, monitorTypeService, createUserPort);
 	}
 }

@@ -2,8 +2,10 @@ package com.queen.configuration;
 
 import com.queen.adapters.persistance.UserMapper;
 import com.queen.application.ports.in.CreateUserTemplateEvent;
+import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.AttachNewUserService;
+import com.queen.application.service.MonitorTypeService;
 import com.queen.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -41,8 +43,8 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
-	ReactiveUserDetailsService reactiveUserDetailsService(final LoadUserPort loadUserPort, final UserMapper userMapper) {
-		return new UserService(loadUserPort, userMapper);
+	ReactiveUserDetailsService reactiveUserDetailsService(final LoadUserPort loadUserPort, final UserMapper userMapper, final MonitorTypeService monitorTypeService, final CreateUserPort createUserPort) {
+		return new UserService(loadUserPort, userMapper, monitorTypeService, createUserPort);
 	}
 
 	@Bean

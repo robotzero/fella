@@ -1,4 +1,4 @@
-package com.queen.adapters.web;
+package com.queen.adapters.web.dto;
 
 public record MonitorDTO(int id, String name) {
 }
