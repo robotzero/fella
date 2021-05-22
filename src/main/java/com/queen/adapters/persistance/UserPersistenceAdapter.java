@@ -14,12 +14,9 @@ public class UserPersistenceAdapter implements CreateUserPort, LoadUserPort {
 	}
 
 	@Override
-	public void createUser(final User user) {
-		//TODO is there a better way than just have to subscribe? Maybe return created user to the caller and let
-		//Spring to subscribe to the output
+	public Mono<User> createUser(final User user) {
 		user.setAsNew();
-		final var created = this.userRepository.save(user);
-		created.subscribe();
+		return this.userRepository.save(user);
 	}
 
 	@Override

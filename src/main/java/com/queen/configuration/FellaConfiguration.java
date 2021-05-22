@@ -1,6 +1,5 @@
 package com.queen.configuration;
 
-import com.queen.adapters.event.StartUpTemplateEventHandler;
 import com.queen.adapters.persistance.FieldTypeMapper;
 import com.queen.adapters.persistance.FieldTypePersistenceAdapter;
 import com.queen.adapters.persistance.FieldsMapper;
@@ -24,10 +23,9 @@ import com.queen.application.ports.out.LoadAllMonitorTypesPort;
 import com.queen.application.ports.out.LoadAllMonitorsPort;
 import com.queen.application.ports.out.LoadFieldTypesPort;
 import com.queen.application.ports.out.LoadUserPort;
-import com.queen.application.service.AttachNewUserService;
+import com.queen.application.service.AttachUserService;
 import com.queen.application.service.MonitorService;
 import com.queen.application.service.MonitorTypeService;
-import com.queen.application.service.UserEmailService;
 import com.queen.application.service.UserService;
 import com.queen.infrastructure.persitence.FieldTypesRepository;
 import com.queen.infrastructure.persitence.FieldsRepository;
@@ -144,18 +142,8 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	AttachNewUserService attachNewUserService(final LoadUserPort loadUser, final CreateUserPort createUser, final UserMapper userMapper) {
-		return new AttachNewUserService(loadUser, createUser, userMapper);
-	}
-
-	@Bean
-	StartUpTemplateEventHandler genericEventHandler(final MonitorTypeService monitorTypeService) {
-		return new StartUpTemplateEventHandler(monitorTypeService);
-	}
-
-	@Bean
-	UserEmailService userEmailService(final LoadUserPort loadUserPort, final UserMapper userMapper) {
-		return new UserEmailService(loadUserPort, userMapper);
+	AttachUserService attachNewUserService(final LoadUserPort loadUser, final UserMapper userMapper) {
+		return new AttachUserService(loadUser, userMapper);
 	}
 
 	@Bean

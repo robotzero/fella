@@ -35,10 +35,9 @@ public class UserController {
 	@PostMapping("/user")
 	// @TODO check if indeed transactional works with weblux
 	@Transactional
-	Mono<Void> createUser(@CurrentSecurityContext() FellaJwtAuthenticationToken token) {
+	Mono<UserDTO> createUser(@CurrentSecurityContext() FellaJwtAuthenticationToken token) {
 		//TODO Response entity with proper code
 		final var createUserCommand = new CreateUserCommand(token.getName());
-		createUserUseCase.createUser(createUserCommand);
-		return Mono.empty();
+		return createUserUseCase.createUser(createUserCommand).map(userToDTO::userDTO);
 	}
 }
