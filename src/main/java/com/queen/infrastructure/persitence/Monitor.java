@@ -30,6 +30,12 @@ public class Monitor {
 		this.name = name;
 	}
 
+	public Monitor(final int id, final String name, final String userId) {
+		this.id = id;
+		this.name = name;
+		this.userId = userId;
+	}
+
 	public int getId() {
 		return id;
 	}

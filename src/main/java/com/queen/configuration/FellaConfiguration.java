@@ -14,7 +14,6 @@ import com.queen.adapters.web.dto.FieldTypeToDTO;
 import com.queen.adapters.web.dto.MonitorToDTO;
 import com.queen.adapters.web.dto.MonitorTypeToDTO;
 import com.queen.adapters.web.dto.UserToDTO;
-import com.queen.application.ports.in.CreateUserTemplateEvent;
 import com.queen.application.ports.out.CreateFieldsPort;
 import com.queen.application.ports.out.CreateManyMonitorTypesPort;
 import com.queen.application.ports.out.CreateMonitorTypePort;
@@ -32,7 +31,6 @@ import com.queen.infrastructure.persitence.FieldsRepository;
 import com.queen.infrastructure.persitence.MonitorRepository;
 import com.queen.infrastructure.persitence.MonitorTypeRepository;
 import com.queen.infrastructure.persitence.UserRepository;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -68,8 +66,8 @@ public class FellaConfiguration {
 
 	// Monitor Types
 	@Bean
-	MonitorTypeService monitorTypeService(final MonitorTypeMapper monitorTypeMapper, final ApplicationEventPublisher applicationEventPublisher, final LoadAllMonitorTypesPort loadAllMonitorTypes, final CreateMonitorTypePort createMonitorTypePort, final CreateManyMonitorTypesPort createManyMonitorTypesPort, final CreateFieldsPort createFieldsPort, final LoadFieldTypesPort loadFieldTypesPort, final FieldsMapper fieldsMapper, final FieldTypeMapper fieldTypeMapper) {
-		return new MonitorTypeService(loadAllMonitorTypes, applicationEventPublisher, createMonitorTypePort, createManyMonitorTypesPort, createFieldsPort, loadFieldTypesPort, monitorTypeMapper, fieldsMapper, fieldTypeMapper);
+	MonitorTypeService monitorTypeService(final MonitorTypeMapper monitorTypeMapper, final LoadAllMonitorTypesPort loadAllMonitorTypes, final CreateMonitorTypePort createMonitorTypePort, final CreateManyMonitorTypesPort createManyMonitorTypesPort, final CreateFieldsPort createFieldsPort, final LoadFieldTypesPort loadFieldTypesPort, final FieldsMapper fieldsMapper, final FieldTypeMapper fieldTypeMapper) {
+		return new MonitorTypeService(loadAllMonitorTypes, createMonitorTypePort, createManyMonitorTypesPort, createFieldsPort, loadFieldTypesPort, monitorTypeMapper, fieldsMapper, fieldTypeMapper);
 	}
 
 	@Bean
@@ -92,10 +90,7 @@ public class FellaConfiguration {
 		return new MonitorTypePersistenceAdapter(monitorTypeRepository);
 	}
 
-	@Bean
-	CreateUserTemplateEvent createUserTemplateUseCase(final MonitorTypeMapper monitorTypeMapper, final ApplicationEventPublisher applicationEventPublisher, final LoadAllMonitorTypesPort loadAllMonitorTypes, final CreateMonitorTypePort createMonitorTypePort, final CreateManyMonitorTypesPort createManyMonitorTypesPort, final CreateFieldsPort createFieldsPort, final LoadFieldTypesPort loadFieldTypesPort, final FieldsMapper fieldsMapper, final FieldTypeMapper fieldTypeMapper) {
-		return new MonitorTypeService(loadAllMonitorTypes, applicationEventPublisher, createMonitorTypePort, createManyMonitorTypesPort, createFieldsPort, loadFieldTypesPort, monitorTypeMapper, fieldsMapper, fieldTypeMapper);
-	}
+
 
 	@Bean
 	MonitorTypeToDTO monitorTypeToDTO(final FieldTypeToDTO fieldTypeToDTO) {

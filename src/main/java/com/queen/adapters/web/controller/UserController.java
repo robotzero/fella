@@ -29,7 +29,10 @@ public class UserController {
 	@Transactional(readOnly = true)
 	Mono<UserDTO> getUser(@CurrentSecurityContext() FellaJwtAuthenticationToken token) {
 		//@TODO validate the email
-		return userEmailQuery.getUserByEmail(token.getName()).map(userToDTO::userDTO);
+		//@TODO custom exception throwing 401
+		return userEmailQuery.getUserByEmail(token.getName()).map(userToDTO::userDTO).switchIfEmpty(Mono.defer(() -> {
+			return Mono.error(new RuntimeException("Unknown error"));
+		}));
 	}
 
 	@PostMapping("/user")

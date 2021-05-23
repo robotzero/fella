@@ -16,7 +16,8 @@ public class MonitorTypeToDTO {
 				monitorType.id(),
 				monitorType.name(),
 				List.of(),
-				monitorType.fieldTypes().stream().map(fieldTypeToDTO::toDTO).toList()
+				monitorType.fieldTypes().stream().map(fieldTypeToDTO::toDTO).toList(),
+				null
 		);
 	}
 }
