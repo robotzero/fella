@@ -1,7 +1,6 @@
 package com.queen.configuration;
 
 import com.queen.application.service.AttachUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -19,9 +18,6 @@ import reactor.core.publisher.Mono;
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class SecurityConfiguration {
-	@Autowired
-	AttachUserService attachNewUserService;
-
 	@Bean
 	public SecurityWebFilterChain securityWebFilterChain(
 			ServerHttpSecurity http) {
@@ -36,13 +32,13 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
-	public CustomWebFilter CustomWebFilter() {
-		return new CustomWebFilter();
+	public CustomWebFilter CustomWebFilter(final AttachUserService attachUserService) {
+		return new CustomWebFilter(attachUserService);
 	}
 
 	Converter<Jwt, Mono<AbstractAuthenticationToken>> userIdExtractor() {
 		final var jwtAuthenticationConverter =
-				new JwtAuthenticationConverter().andThen(new FellaJwtAuthenticationConverter(attachNewUserService));
+				new JwtAuthenticationConverter().andThen(new FellaJwtAuthenticationConverter());
 		return new ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter);
 	}
 }

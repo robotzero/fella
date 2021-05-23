@@ -1,7 +1,7 @@
 package com.queen.application.ports.in;
 
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import com.queen.configuration.FellaJwtAuthenticationToken;
 
-public record AttachUserCommand(JwtAuthenticationToken jwtAuthenticationToken) {
+public record AttachUserCommand(FellaJwtAuthenticationToken jwtAuthenticationToken) {
 
 }

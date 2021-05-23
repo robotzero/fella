@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
+import java.util.List;
 
 public class FellaUser extends User {
 	private final String id;
@@ -15,5 +16,9 @@ public class FellaUser extends User {
 
 	public String getId() {
 		return id;
+	}
+
+	public static FellaUser empty(String name) {
+		return new FellaUser(null, name, name, List.of());
 	}
 }
