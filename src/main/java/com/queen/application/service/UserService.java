@@ -13,7 +13,6 @@ import com.queen.application.ports.out.LoadUserPort;
 import com.queen.configuration.FellaJwtAuthenticationToken;
 import com.queen.domain.user.FellaUser;
 import com.queen.infrastructure.persitence.User;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import reactor.core.publisher.Mono;
