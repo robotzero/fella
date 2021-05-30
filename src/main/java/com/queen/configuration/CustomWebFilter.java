@@ -28,10 +28,14 @@ public class CustomWebFilter implements WebFilter {
 							if (!("/user".equals(exchange.getRequest().getPath().pathWithinApplication().value()) &&
 									(Objects.requireNonNull(exchange.getRequest().getMethod()).name().equals(HttpMethod.POST.name()) ||
 											Objects.requireNonNull(exchange.getRequest().getMethod()).name().equals(HttpMethod.GET.name())))) {
-								attachUserService.attachNewUserDetails(new AttachUserCommand((FellaJwtAuthenticationToken) sc));
-								FellaUser fellaUser = (FellaUser) authentication.getDetails();
-								FellaJwtAuthenticationToken token = (FellaJwtAuthenticationToken) sc;
-								token.setUserId(fellaUser.getId());
+
+								//@TODO get rid of when proper client is implemented
+								if (!"/messages".equals(exchange.getRequest().getPath().pathWithinApplication().value())) {
+									attachUserService.attachNewUserDetails(new AttachUserCommand((FellaJwtAuthenticationToken) sc));
+									FellaUser fellaUser = (FellaUser) authentication.getDetails();
+									FellaJwtAuthenticationToken token = (FellaJwtAuthenticationToken) sc;
+									token.setUserId(fellaUser.getId());
+								}
 							}
 							SecurityContextImpl securityContext = new SecurityContextImpl();
 							securityContext.setAuthentication(authentication);

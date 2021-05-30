@@ -2,8 +2,6 @@ package com.queen.adapters.web.dto;
 
 import com.queen.domain.monitortype.MonitorType;
 
-import java.util.List;
-
 public class MonitorTypeToDTO {
 	private final FieldTypeToDTO fieldTypeToDTO;
 
@@ -15,9 +13,7 @@ public class MonitorTypeToDTO {
 		return new MonitorTypeDTO(
 				monitorType.id(),
 				monitorType.name(),
-				List.of(),
-				monitorType.fieldTypes().stream().map(fieldTypeToDTO::toDTO).toList(),
-				null
+				monitorType.fieldTypes().stream().map(fieldTypeToDTO::toDTO).toList()
 		);
 	}
 }
