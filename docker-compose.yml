@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  fella:
+    image: registry.local:5000/fella:latest
+    environment:
+      JAVA_ARGS: -Xmx256m -Xms256m
+    links:
+      - fellaauth:auth-server
+    expose:
+      - 8090
+    ports:
+      - "8090:8090"
+
+  fellaauth:
+    image: registry.local:5000/fellaauth:latest
+    environment:
+      JAVA_ARGS: -Xmx256m -Xms256m
+    expose:
+      - 9000
+    ports:
+      - "9000:9000"
+
+  fellaclient:
+    image: registry.local:5000/fellaclient:latest
+    links:
+      - fella:fellaapp
+      - fellaauth:auth-server
+    environment:
+      JAVA_ARGS: -Xmx256m -Xms256m
+    expose:
+      - 8085
+    ports:
+      - "8085:8080"
