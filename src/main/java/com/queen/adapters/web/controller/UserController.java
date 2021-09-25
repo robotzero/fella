@@ -40,7 +40,7 @@ public class UserController {
 	@Transactional
 	Mono<UserDTO> createUser(@CurrentSecurityContext() FellaJwtAuthenticationToken token) {
 		//TODO Response entity with proper code
-		final var createUserCommand = new CreateUserCommand(token.getName());
+		final var createUserCommand = new CreateUserCommand(token.getName(), token);
 		return createUserUseCase.createUser(createUserCommand).map(userToDTO::userDTO);
 	}
 }

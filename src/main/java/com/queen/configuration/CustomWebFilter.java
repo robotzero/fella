@@ -37,9 +37,9 @@ public class CustomWebFilter implements WebFilter {
 									token.setUserId(fellaUser.getId());
 								}
 							}
-							SecurityContextImpl securityContext = new SecurityContextImpl();
-							securityContext.setAuthentication(authentication);
-							SecurityContextHolder.setContext(securityContext);
+//							SecurityContextImpl securityContext = new SecurityContextImpl();
+//							securityContext.setAuthentication(authentication);
+//							SecurityContextHolder.setContext(securityContext);
 							return chain.filter(exchange);
 				});
 	}

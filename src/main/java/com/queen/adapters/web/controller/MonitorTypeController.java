@@ -32,9 +32,7 @@ public class MonitorTypeController {
 			@RequestParam(name = "page", defaultValue = PageSupportDTO.FIRST_PAGE_NUM) int page,
 			@RequestParam(name = "size", defaultValue = PageSupportDTO.DEFAULT_PAGE_SIZE) int size
 	) {
-		return allMonitorTypesQuery.load(userId, PageRequest.of(page, size)).map(monitorType -> {
-			return monitorTypeToDTO.toDTO(monitorType);
-		}).collectList().map(monitoryTypeDTOs -> {
+		return allMonitorTypesQuery.load(userId, PageRequest.of(page, size)).map(monitorTypeToDTO::toDTO).collectList().map(monitoryTypeDTOs -> {
 			return ResponseEntity.status(HttpStatus.OK).body(monitoryTypeDTOs);
 		}).defaultIfEmpty(ResponseEntity.notFound().build());
 	}

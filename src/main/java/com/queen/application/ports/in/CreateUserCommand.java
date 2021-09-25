@@ -1,4 +1,6 @@
 package com.queen.application.ports.in;
 
-public record CreateUserCommand(String username) {
+import com.queen.configuration.FellaJwtAuthenticationToken;
+
+public record CreateUserCommand(String username, FellaJwtAuthenticationToken token) {
 }
