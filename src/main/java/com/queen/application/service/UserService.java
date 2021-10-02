@@ -10,10 +10,8 @@ import com.queen.application.ports.out.LoadSpringUserPort;
 import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.dto.FieldsDTO;
 import com.queen.application.service.dto.MonitorTypeDTO;
-import com.queen.configuration.FellaJwtAuthenticationToken;
 import com.queen.domain.user.FellaUser;
 import com.queen.infrastructure.persitence.User;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import reactor.core.publisher.Mono;
 
@@ -63,8 +61,6 @@ public class UserService implements LoadSpringUserPort, CreateUserUseCase, UserE
 			final MonitorTypeDTO monitorTypeStomach = new MonitorTypeDTO(monitorTypeIdStomach, STOMACH, List.of(field6, field7, field8, field9), userId);
 
 			final var user = createUserPort.createUser(new User(userId, createUserCommand.username())).map(userMapper::mapToDomain);
-//			final var authentication = SecurityContextHolder.getContext().getAuthentication();
-//			FellaJwtAuthenticationToken token = (FellaJwtAuthenticationToken) authentication;
 			createUserCommand.token().setUserId(userId);
 			//TODO change to ports maybe?
 			monitorTypeService.createManyMonitorTypes(new CreateMonitorTypeCommand(List.of(monitorTypePeriod, monitorTypeStomach)));

@@ -6,6 +6,7 @@ import com.queen.application.ports.in.CreateUserCommand;
 import com.queen.application.ports.in.CreateUserUseCase;
 import com.queen.application.ports.in.UserEmailQuery;
 import com.queen.configuration.FellaJwtAuthenticationToken;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class UserController {
 		//@TODO validate the email
 		//@TODO custom exception throwing 401
 		return userEmailQuery.getUserByEmail(token.getName()).map(userToDTO::userDTO).switchIfEmpty(Mono.defer(() -> {
-			return Mono.error(new RuntimeException("Unknown error"));
+			return Mono.error(new BadCredentialsException("Unknown error"));
 		}));
 	}
 

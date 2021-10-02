@@ -7,6 +7,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -20,8 +21,10 @@ import reactor.core.publisher.Mono;
 public class SecurityConfiguration {
 	@Bean
 	public SecurityWebFilterChain securityWebFilterChain(
-			ServerHttpSecurity http) {
-		return http.authorizeExchange().pathMatchers("/**").hasAuthority("SCOPE_message.read").anyExchange()
+			ServerHttpSecurity http, CustomWebFilter customWebFilter) {
+		return http.
+//				addFilterAt(customWebFilter, SecurityWebFiltersOrder.LAST)
+				authorizeExchange().pathMatchers("/**").hasAuthority("SCOPE_message.read").anyExchange()
 				.authenticated()
 				.and()
 				.httpBasic().disable()
