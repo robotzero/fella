@@ -23,29 +23,30 @@ import java.util.Objects;
 public class CustomWebFilter implements WebFilter {
 	private final AttachUserService attachUserService;
 	private static final Log logger = LogFactory.getLog(CustomWebFilter.class);
+
 	public CustomWebFilter(final AttachUserService attachUserService) {
 		this.attachUserService = attachUserService;
 	}
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-		logger.info("AAAAAAAAAAAAAAAA");
-		return exchange.getPrincipal().flatMap(token -> {
-			FellaJwtAuthenticationToken t = (FellaJwtAuthenticationToken) token;
-			return ReactiveSecurityContextHolder.getContext().switchIfEmpty(Mono.defer(() -> {
-				SecurityContext securityContext = new SecurityContextImpl(t);
-				logger.info(LogMessage.format("Populated SecurityContext with anonymous token: '%s'", t));
-				return chain.filter(exchange)
-						.subscriberContext(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)))
-						.then(Mono.empty());
-			})).flatMap((securityContext) -> {
-				logger.info(LogMessage.format("SecurityContext contains anonymous token: '%s'",
-						securityContext.getAuthentication()));
-				return chain.filter(exchange).and(attachUserService.attachNewUserDetails(new AttachUserCommand(t)));
-			});
-
-			//return chain.filter(exchange);
-		});
+//		logger.info("AAAAAAAAAAAAAAAA");
+//		return exchange.getPrincipal().flatMap(token -> {
+//			FellaJwtAuthenticationToken t = (FellaJwtAuthenticationToken) token;
+//			return ReactiveSecurityContextHolder.getContext().switchIfEmpty(Mono.defer(() -> {
+//				SecurityContext securityContext = new SecurityContextImpl(t);
+//				logger.info(LogMessage.format("Populated SecurityContext with anonymous token: '%s'", t));
+//				return chain.filter(exchange)
+//						.subscriberContext(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)))
+//						.then(Mono.empty());
+//			})).flatMap((securityContext) -> {
+//				logger.info(LogMessage.format("SecurityContext contains anonymous token: '%s'",
+//						securityContext.getAuthentication()));
+//				return chain.filter(exchange).and(attachUserService.attachNewUserDetails(new AttachUserCommand(t)));
+//			});
+//
+//			//return chain.filter(exchange);
+//		});
 //		return ReactiveSecurityContextHolder.getContext().switchIfEmpty(Mono.defer(() -> {
 //			return exchange.getPrincipal().flatMap(token -> {
 //				SecurityContext securityContext = new SecurityContextImpl((FellaJwtAuthenticationToken) token);
@@ -59,7 +60,6 @@ public class CustomWebFilter implements WebFilter {
 //						return chain.filter(exchange);
 //					});
 //			}));
-
 
 
 //		ReactiveSecurityContextHolder.getContext().switchIfEmpty(Mono.defer(() -> {
@@ -90,8 +90,8 @@ public class CustomWebFilter implements WebFilter {
 //			return null;
 //		}));
 //		return Mono.empty();
-	}
-}
+//	}
+//}
 //			Authentication authentication = createAuthentication(exchange);
 //			SecurityContext securityContext = new SecurityContextImpl(authentication);
 //			logger.debug(LogMessage.format("Populated SecurityContext with anonymous token: '%s'", authentication));
@@ -105,31 +105,32 @@ public class CustomWebFilter implements WebFilter {
 //		});
 
 
-//		return exchange.getPrincipal()
-//				.filter(token -> token instanceof FellaJwtAuthenticationToken).flatMap(sc -> {
-//							FellaJwtAuthenticationToken token = (FellaJwtAuthenticationToken) sc;
-//							if (!("/user".equals(exchange.getRequest().getPath().pathWithinApplication().value()) &&
-//								Objects.requireNonNull(exchange.getRequest().getMethod()).name().equals(HttpMethod.POST.name()))) {
-//
-//								//@TODO get rid of when proper client is implemented
-//								if (!"/messages".equals(exchange.getRequest().getPath().pathWithinApplication().value())) {
-//									return chain.filter(exchange).and(setUpSecurityHolder(token)).and(attachUserService.attachNewUserDetails(new AttachUserCommand(token)));
-//								}
-//							}
-////							SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
-////							SecurityContextImpl securityContext = new SecurityContextImpl();
-////							securityContext.setAuthentication((FellaJwtAuthenticationToken) sc);
-////							SecurityContextHolder.setContext(securityContext);
-//							return chain.filter(exchange).doFirst(() -> setUpSecurityHolder(token));
-//				});
-//	}
+		return exchange.getPrincipal()
+				.filter(token -> token instanceof FellaJwtAuthenticationToken).flatMap(sc -> {
+					FellaJwtAuthenticationToken token = (FellaJwtAuthenticationToken) sc;
+					if (!("/user".equals(exchange.getRequest().getPath().pathWithinApplication().value()) &&
+							Objects.requireNonNull(exchange.getRequest().getMethod()).name().equals(HttpMethod.POST.name()))) {
 
-//	private Mono<Void> setUpSecurityHolder(FellaJwtAuthenticationToken token) {
-//		return Mono.fromCallable(() -> {
-//			SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
-//			SecurityContextImpl securityContext = new SecurityContextImpl();
-//			securityContext.setAuthentication(token);
-//			SecurityContextHolder.setContext(securityContext);
-//			return null;
-//		});
-//	}
+						//@TODO get rid of when proper client is implemented
+						if (!"/messages".equals(exchange.getRequest().getPath().pathWithinApplication().value())) {
+							return chain.filter(exchange).and(setUpSecurityHolder(token)).and(attachUserService.attachNewUserDetails(new AttachUserCommand(token)));
+						}
+					}
+					SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
+					SecurityContextImpl securityContext = new SecurityContextImpl();
+					securityContext.setAuthentication((FellaJwtAuthenticationToken) sc);
+					SecurityContextHolder.setContext(securityContext);
+					return chain.filter(exchange);
+				});
+	}
+
+	private Mono<Void> setUpSecurityHolder(FellaJwtAuthenticationToken token) {
+		return Mono.fromCallable(() -> {
+			SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
+			SecurityContextImpl securityContext = new SecurityContextImpl();
+			securityContext.setAuthentication(token);
+			SecurityContextHolder.setContext(securityContext);
+			return null;
+		});
+	}
+}

@@ -18,15 +18,15 @@ public class AttachUserService implements com.queen.application.ports.in.AttachN
 
 //	@Override
 //	public void attachNewUserDetails(final AttachUserCommand attachNewUserCommand) {
-//		final var disposable = this.loadUser.loadUser(attachNewUserCommand.jwtAuthenticationToken().getName()).single().block();
-//		subscribe((user) -> {
+//		final var disposable = this.loadUser.loadUser(attachNewUserCommand.jwtAuthenticationToken().getName()).single()
+//				.subscribe((user) -> {
 //			attachUserDetailsToToken(user, attachNewUserCommand);
 //			FellaJwtAuthenticationToken token = attachNewUserCommand.jwtAuthenticationToken();
 //			token.setUserId(user.getId());
 //		}, (throwable) -> {
 //			throw new RuntimeException("Unknown Error");
 //		});
-		//disposable.dispose();
+//		disposable.dispose();
 //	}
 
 	@Override
