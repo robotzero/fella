@@ -20,7 +20,7 @@ public class MonitorType implements Persistable<String> {
 	private final String name;
 
 	@Column("userId")
-	@CreatedBy
+	//@CreatedBy
 	private String userId;
 
 	@Column("created_at")
@@ -30,9 +30,10 @@ public class MonitorType implements Persistable<String> {
 	@Transient
 	private boolean newMonitorType;
 
-	public MonitorType(final String id, final String name) {
+	public MonitorType(final String id, final String name, final String userId) {
 		this.id = id;
 		this.name = name;
+		this.userId = userId;
 	}
 
 	@Override

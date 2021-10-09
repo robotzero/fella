@@ -1,5 +1,6 @@
 package com.queen.configuration;
 
+import com.queen.domain.user.FellaUser;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.Transient;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -15,12 +16,13 @@ public class FellaJwtAuthenticationToken extends AbstractOAuth2TokenAuthenticati
 	@Serial
 	private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 	private final String name;
-	private String userId;
+	private final FellaUser fellaUser;
 
-	public FellaJwtAuthenticationToken(final JwtAuthenticationToken jwtAuthenticationToken) {
+	public FellaJwtAuthenticationToken(final JwtAuthenticationToken jwtAuthenticationToken, final FellaUser fellaUser) {
 		super(jwtAuthenticationToken.getToken(), jwtAuthenticationToken.getAuthorities());
 		this.setAuthenticated(true);
 		this.jwtAuthenticationToken = jwtAuthenticationToken;
+		this.fellaUser = fellaUser;
 		this.name = jwtAuthenticationToken.getName();
 	}
 
@@ -30,15 +32,11 @@ public class FellaJwtAuthenticationToken extends AbstractOAuth2TokenAuthenticati
 	}
 
 	public String getUserId() {
-		return userId;
+		return fellaUser.getId();
 	}
 
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 }

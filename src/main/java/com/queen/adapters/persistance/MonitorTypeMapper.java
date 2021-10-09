@@ -12,11 +12,7 @@ public class MonitorTypeMapper {
 		return new MonitorType(monitorTypeDTO.id(), monitorTypeDTO.name(), null);
 	}
 
-	public com.queen.infrastructure.persitence.MonitorType mapToPersistence(final MonitorTypeDTO monitorTypeDTO) {
-		return new com.queen.infrastructure.persitence.MonitorType(monitorTypeDTO.id(), monitorTypeDTO.name());
-	}
-
 	public com.queen.infrastructure.persitence.MonitorType mapToPersistence(final com.queen.application.service.dto.MonitorTypeDTO monitorTypeDTO) {
-		return new com.queen.infrastructure.persitence.MonitorType(monitorTypeDTO.id(), monitorTypeDTO.name());
+		return new com.queen.infrastructure.persitence.MonitorType(monitorTypeDTO.id(), monitorTypeDTO.name(), monitorTypeDTO.userId());
 	}
 }

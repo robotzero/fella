@@ -4,7 +4,6 @@ import com.queen.adapters.web.dto.MonitorTypeDTO;
 import com.queen.adapters.web.dto.MonitorTypeToDTO;
 import com.queen.adapters.web.dto.PageSupportDTO;
 import com.queen.application.ports.in.AllMonitorTypesQuery;
-import com.queen.configuration.FellaJwtAuthenticationToken;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +29,9 @@ public class MonitorTypeController {
 	//@TODO errors
 	Mono<ResponseEntity<List<MonitorTypeDTO>>> loadMonitorTypes(
 			@CurrentSecurityContext(expression = "authentication.userId") String userId,
-			@CurrentSecurityContext FellaJwtAuthenticationToken token,
 			@RequestParam(name = "page", defaultValue = PageSupportDTO.FIRST_PAGE_NUM) int page,
 			@RequestParam(name = "size", defaultValue = PageSupportDTO.DEFAULT_PAGE_SIZE) int size
 	) {
-		System.out.println("GETTING CRAP AAAAAAAAAAAAA");
 		return allMonitorTypesQuery.load(userId, PageRequest.of(page, size)).map(monitorTypeToDTO::toDTO).collectList().map(monitoryTypeDTOs -> {
 			return ResponseEntity.status(HttpStatus.OK).body(monitoryTypeDTOs);
 		}).defaultIfEmpty(ResponseEntity.notFound().build());

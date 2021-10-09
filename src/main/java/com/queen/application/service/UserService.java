@@ -61,7 +61,6 @@ public class UserService implements LoadSpringUserPort, CreateUserUseCase, UserE
 			final MonitorTypeDTO monitorTypeStomach = new MonitorTypeDTO(monitorTypeIdStomach, STOMACH, List.of(field6, field7, field8, field9), userId);
 
 			final var user = createUserPort.createUser(new User(userId, createUserCommand.username())).map(userMapper::mapToDomain);
-			createUserCommand.token().setUserId(userId);
 			//TODO change to ports maybe?
 			monitorTypeService.createManyMonitorTypes(new CreateMonitorTypeCommand(List.of(monitorTypePeriod, monitorTypeStomach)));
 			return user;

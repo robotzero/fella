@@ -8,6 +8,7 @@ import com.queen.application.ports.in.UserEmailQuery;
 import com.queen.configuration.FellaJwtAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +32,7 @@ public class UserController {
 	Mono<UserDTO> getUser(@CurrentSecurityContext() FellaJwtAuthenticationToken token) {
 		//@TODO validate the email
 		//@TODO custom exception throwing 401
+		ReactiveSecurityContextHolder.getContext().subscribe(a -> System.out.println("ererfdfdfdddddddddddddddddddddddddd"));
 		return userEmailQuery.getUserByEmail(token.getName()).map(userToDTO::userDTO).switchIfEmpty(Mono.defer(() -> {
 			return Mono.error(new BadCredentialsException("Unknown error"));
 		}));
@@ -39,7 +41,7 @@ public class UserController {
 	@PostMapping("/user")
 	// @TODO check if indeed transactional works with weblux
 	@Transactional
-	Mono<UserDTO> createUser(@CurrentSecurityContext() FellaJwtAuthenticationToken token) {
+	Mono<UserDTO> createUser(FellaJwtAuthenticationToken token) {
 		//TODO Response entity with proper code
 		final var createUserCommand = new CreateUserCommand(token.getName(), token);
 		return createUserUseCase.createUser(createUserCommand).map(userToDTO::userDTO);
