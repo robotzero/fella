@@ -23,10 +23,7 @@ public class InfrastructureConfiguration {
 
 	@Bean
 	public ReactiveAuditorAware<String> reactiveAuditorAware() {
-		return () -> ReactiveSecurityContextHolder.getContext().map(context -> {
-			FellaJwtAuthenticationToken token = (FellaJwtAuthenticationToken) context.getAuthentication();
-			System.out.println("TOKEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			return token.getUserId();
-		});
+		return () -> ReactiveSecurityContextHolder.getContext().map(securityContext -> securityContext.getAuthentication())
+				.map(authentication -> ((FellaJwtAuthenticationToken) authentication).getUserId());
 	}
 }
