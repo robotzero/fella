@@ -32,7 +32,6 @@ public class UserController {
 	Mono<UserDTO> getUser(@CurrentSecurityContext() FellaJwtAuthenticationToken token) {
 		//@TODO validate the email
 		//@TODO custom exception throwing 401
-		ReactiveSecurityContextHolder.getContext().subscribe(a -> System.out.println("ererfdfdfdddddddddddddddddddddddddd"));
 		return userEmailQuery.getUserByEmail(token.getName()).map(userToDTO::userDTO).switchIfEmpty(Mono.defer(() -> {
 			return Mono.error(new BadCredentialsException("Unknown error"));
 		}));
@@ -45,5 +44,11 @@ public class UserController {
 		//TODO Response entity with proper code
 		final var createUserCommand = new CreateUserCommand(token.getName(), token);
 		return createUserUseCase.createUser(createUserCommand).map(userToDTO::userDTO);
+	}
+
+	@GetMapping("/user/context")
+	@Transactional(readOnly = true)
+	Mono<Object> getUserContext(@CurrentSecurityContext() FellaJwtAuthenticationToken token) {
+		return ReactiveSecurityContextHolder.getContext().map(securityContext -> (securityContext.getAuthentication().getCredentials()));
 	}
 }

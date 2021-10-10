@@ -34,7 +34,6 @@ public class MonitorTypePersistenceAdapter implements LoadAllMonitorTypesPort, C
 
 	@Override
 	public void createMonitorTypes(final List<MonitorType> monitorTypes) {
-		logger.debug("TRYING");
 		final var disposable = this.monitorTypeRepository.saveAll(monitorTypes).subscribe(
 				result -> logger.info("saved monitors"),
 				error -> logger.error("error", error));

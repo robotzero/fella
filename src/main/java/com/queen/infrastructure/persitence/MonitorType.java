@@ -20,7 +20,7 @@ public class MonitorType implements Persistable<String> {
 	private final String name;
 
 	@Column("userId")
-	//@CreatedBy
+	@CreatedBy
 	private String userId;
 
 	@Column("created_at")

@@ -1,6 +1,5 @@
 package com.queen.configuration;
 
-import com.queen.infrastructure.persitence.SpringSecurityAuditorAware;
 import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +7,7 @@ import org.springframework.data.domain.ReactiveAuditorAware;
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 
 @Configuration
 @EnableR2dbcRepositories(basePackages = "com.queen.infrastructure.persistence")
@@ -23,6 +23,10 @@ public class InfrastructureConfiguration {
 
 	@Bean
 	public ReactiveAuditorAware<String> reactiveAuditorAware() {
-		return new SpringSecurityAuditorAware();
+		return () -> ReactiveSecurityContextHolder.getContext().map(context -> {
+			FellaJwtAuthenticationToken token = (FellaJwtAuthenticationToken) context.getAuthentication();
+			System.out.println("TOKEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			return token.getUserId();
+		});
 	}
 }
