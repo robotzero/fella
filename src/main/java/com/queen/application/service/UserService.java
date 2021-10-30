@@ -13,9 +13,11 @@ import com.queen.application.service.dto.MonitorTypeDTO;
 import com.queen.domain.user.FellaUser;
 import com.queen.infrastructure.persitence.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class UserService implements LoadSpringUserPort, CreateUserUseCase, UserEmailQuery {
@@ -39,6 +41,7 @@ public class UserService implements LoadSpringUserPort, CreateUserUseCase, UserE
 	}
 
 	@Override
+	@Transactional
 	public Mono<FellaUser> createUser(final CreateUserCommand createUserCommand) {
 		return loadUserPort.loadUser(createUserCommand.username()).map(userMapper::mapToDomain).switchIfEmpty(Mono.defer(() -> {
 			final String monitorTypeIdPeriod = UUID.randomUUID().toString();
@@ -60,10 +63,19 @@ public class UserService implements LoadSpringUserPort, CreateUserUseCase, UserE
 			final MonitorTypeDTO monitorTypePeriod = new MonitorTypeDTO(monitorTypeIdPeriod, PERIOD, List.of(field1, field2, field3, field4, field5), userId);
 			final MonitorTypeDTO monitorTypeStomach = new MonitorTypeDTO(monitorTypeIdStomach, STOMACH, List.of(field6, field7, field8, field9), userId);
 
-			final var user = createUserPort.createUser(new User(userId, createUserCommand.username())).map(userMapper::mapToDomain);
-			//TODO change to ports maybe?
-			monitorTypeService.createManyMonitorTypes(new CreateMonitorTypeCommand(List.of(monitorTypePeriod, monitorTypeStomach)));
-			return user;
+			final var user = createUserPort.createUser(new User(userId, createUserCommand.username())).map(userMapper::mapToDomain).doOnError(error -> {
+				System.out.println("USER ERRR");
+				throw new RuntimeException("AAAAAAA");
+			});
+			return Mono.fromFuture(monitorTypeService.createManyMonitorTypes(new CreateMonitorTypeCommand(List.of(monitorTypePeriod, monitorTypeStomach)))
+					.collectList()
+					.toFuture()
+					.thenCompose(fields -> {
+				return user.toFuture();
+			})).doOnError(e -> {
+				System.out.println("BLA");
+				throw new RuntimeException("BBB");
+			});
 		}));
 	}
 

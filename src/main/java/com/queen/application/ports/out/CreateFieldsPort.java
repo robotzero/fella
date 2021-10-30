@@ -1,9 +1,10 @@
 package com.queen.application.ports.out;
 
 import com.queen.infrastructure.persitence.Fields;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
 public interface CreateFieldsPort {
-	void createFields(List<Fields> fieldsType);
+	Flux<Fields> createFields(List<Fields> fieldsType);
 }

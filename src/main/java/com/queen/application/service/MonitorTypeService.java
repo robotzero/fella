@@ -12,7 +12,11 @@ import com.queen.application.ports.out.CreateMonitorTypePort;
 import com.queen.application.ports.out.LoadAllMonitorTypesPort;
 import com.queen.application.ports.out.LoadFieldTypesPort;
 import com.queen.domain.monitortype.MonitorType;
+import com.queen.infrastructure.persitence.Fields;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -25,6 +29,7 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 	private final MonitorTypeMapper monitorTypeMapper;
 	private final FieldsMapper fieldsMapper;
 	private final FieldTypeMapper fieldTypeMapper;
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public MonitorTypeService(
 			final LoadAllMonitorTypesPort loadAllMonitorTypes,
@@ -58,14 +63,25 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 	}
 
 	@Override
-	public void createManyMonitorTypes(CreateMonitorTypeCommand createMonitorTypeCommand) {
-		createManyMonitorTypesPort.createMonitorTypes(createMonitorTypeCommand.monitorTypeDTOs()
+	public Flux<Fields> createManyMonitorTypes(CreateMonitorTypeCommand createMonitorTypeCommand) {
+		final var monitorTypesFlux = createManyMonitorTypesPort.createMonitorTypes(createMonitorTypeCommand.monitorTypeDTOs()
 				.stream()
 				.map(monitorTypeDTO -> monitorTypeMapper.mapToPersistence(monitorTypeDTO).setAsNew())
-				.toList());
+				.toList())
+				.doOnError(error -> {
+					log.error("Failed to save many monitor types", error);
+					throw new RuntimeException("bla");
+				})
+				.doOnComplete(() -> log.info("Done saving monitor types"));
 
-		createFieldsPort.createFields(createMonitorTypeCommand.monitorTypeDTOs().stream().flatMap(monitorTypeDTO -> {
+		final var fieldsFlux = createFieldsPort.createFields(createMonitorTypeCommand.monitorTypeDTOs().stream().flatMap(monitorTypeDTO -> {
 			return monitorTypeDTO.fieldDTOs().stream();
-		}).map(fieldsDTO -> fieldsMapper.mapToPersistence(fieldsDTO).setAsNew()).toList());
+		}).map(fieldsDTO -> fieldsMapper.mapToPersistence(fieldsDTO).setAsNew()).toList())
+				.doOnError(error -> {
+					log.error("Failed to save many field types", error);
+					throw new RuntimeException("blah");
+				})
+				.doOnComplete(() -> log.info("Done saving field types"));
+		return monitorTypesFlux.thenMany(fieldsFlux);
 	}
 }
