@@ -11,12 +11,12 @@ import com.queen.application.ports.out.CreateManyMonitorTypesPort;
 import com.queen.application.ports.out.CreateMonitorTypePort;
 import com.queen.application.ports.out.LoadAllMonitorTypesPort;
 import com.queen.application.ports.out.LoadFieldTypesPort;
+import com.queen.application.service.exception.MonitorTypeException;
 import com.queen.domain.monitortype.MonitorType;
 import com.queen.infrastructure.persitence.Fields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -70,7 +70,7 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 				.toList())
 				.doOnError(error -> {
 					log.error("Failed to save many monitor types", error);
-					throw new RuntimeException("bla");
+					throw new MonitorTypeException("Failed to save monitor types", error);
 				})
 				.doOnComplete(() -> log.info("Done saving monitor types"));
 
@@ -79,7 +79,7 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 		}).map(fieldsDTO -> fieldsMapper.mapToPersistence(fieldsDTO).setAsNew()).toList())
 				.doOnError(error -> {
 					log.error("Failed to save many field types", error);
-					throw new RuntimeException("blah");
+					throw new MonitorTypeException("Failed to save fields", error);
 				})
 				.doOnComplete(() -> log.info("Done saving field types"));
 		return monitorTypesFlux.thenMany(fieldsFlux);

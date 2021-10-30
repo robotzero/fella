@@ -1,7 +1,5 @@
 package com.queen.infrastructure.persitence;
 
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
@@ -20,12 +18,10 @@ public class MonitorType implements Persistable<String> {
 	private final String name;
 
 	@Column("userId")
-	@CreatedBy
 	private String userId;
 
 	@Column("created_at")
-	@CreatedDate
-	private Instant createdDate;
+	private Instant createdDate = Instant.now();
 
 	@Transient
 	private boolean newMonitorType;
