@@ -5,6 +5,7 @@ services:
     image: registry.local:5000/fella:latest
     environment:
       JAVA_ARGS: -Xmx256m -Xms256m
+      DB_SERVER: 192.168.0.64
     links:
       - fellaauth:auth-server
     expose:
