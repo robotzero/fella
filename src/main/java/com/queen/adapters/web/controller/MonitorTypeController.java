@@ -25,7 +25,7 @@ public class MonitorTypeController {
 		this.monitorTypeToDTO     = monitorTypeToDTO;
 	}
 
-	@GetMapping("/monitor-types")
+	@GetMapping(value = "/monitor-types")
 	//@TODO errors
 	Mono<ResponseEntity<List<MonitorTypeDTO>>> loadMonitorTypes(
 			@CurrentSecurityContext(expression = "authentication.userId") String userId,
