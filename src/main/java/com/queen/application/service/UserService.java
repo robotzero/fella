@@ -67,7 +67,7 @@ public class UserService implements LoadSpringUserPort, CreateUserUseCase, UserE
 				throw new UserServiceException("Failed to create new user", error);
 			});
 
-			return monitorTypeService.createManyMonitorTypes(new CreateMonitorTypeCommand(List.of(monitorTypePeriod, monitorTypeStomach))).collectList().then(user);
+			return monitorTypeService.createManyMonitorTypes(new CreateMonitorTypeCommand(List.of(monitorTypePeriod, monitorTypeStomach), userId)).collectList().then(user);
 		}));
 	}
 

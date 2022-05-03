@@ -1,8 +1,8 @@
 package com.queen.application.ports.in;
 
-import com.queen.infrastructure.persitence.Fields;
+import com.queen.domain.monitortype.MonitorType;
 import reactor.core.publisher.Flux;
 
 public interface CreateMonitorTypeUseCase {
-	Flux<Fields> createManyMonitorTypes(final CreateMonitorTypeCommand createMonitorTypeCommand);
+	Flux<MonitorType> createManyMonitorTypes(final CreateMonitorTypeCommand createMonitorTypeCommand);
 }

@@ -8,21 +8,21 @@ import com.queen.application.ports.in.CreateMonitorTypeCommand;
 import com.queen.application.ports.in.CreateMonitorTypeUseCase;
 import com.queen.application.ports.out.CreateFieldsPort;
 import com.queen.application.ports.out.CreateManyMonitorTypesPort;
-import com.queen.application.ports.out.CreateMonitorTypePort;
-import com.queen.application.ports.out.LoadAllMonitorTypesPort;
+import com.queen.application.ports.out.LoadMonitorTypesPort;
 import com.queen.application.ports.out.LoadFieldTypesPort;
 import com.queen.application.service.exception.MonitorTypeException;
 import com.queen.domain.monitortype.MonitorType;
-import com.queen.infrastructure.persitence.Fields;
+import com.queen.domain.validation.ItemExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.stream.Collectors;
+
 public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTypeUseCase {
-	private final LoadAllMonitorTypesPort loadAllMonitorTypes;
-	private final CreateMonitorTypePort createMonitorTypePort;
+	private final LoadMonitorTypesPort loadMonitorTypesPort;
 	private final CreateManyMonitorTypesPort createManyMonitorTypesPort;
 	private final CreateFieldsPort createFieldsPort;
 	private final LoadFieldTypesPort loadAllFieldTypesPort;
@@ -32,8 +32,7 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public MonitorTypeService(
-			final LoadAllMonitorTypesPort loadAllMonitorTypes,
-			final CreateMonitorTypePort createMonitorTypePort,
+			final LoadMonitorTypesPort loadMonitorTypes,
 			final CreateManyMonitorTypesPort createManyMonitorTypesPort,
 			final CreateFieldsPort createFieldsPort,
 			final LoadFieldTypesPort loadAllFieldTypesPort,
@@ -41,8 +40,7 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 			final FieldsMapper fieldsMapper,
 			final FieldTypeMapper fieldTypeMapper
 	) {
-		this.loadAllMonitorTypes = loadAllMonitorTypes;
-		this.createMonitorTypePort = createMonitorTypePort;
+		this.loadMonitorTypesPort = loadMonitorTypes;
 		this.createManyMonitorTypesPort = createManyMonitorTypesPort;
 		this.createFieldsPort = createFieldsPort;
 		this.monitorTypeMapper = monitorTypeMapper;
@@ -53,7 +51,7 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 
 	@Override
 	public Flux<MonitorType> load(final String userId, final Pageable pageable) {
-		final var allMonitorTypes = this.loadAllMonitorTypes.loadAllMonitorTypes(userId, pageable);
+		final var allMonitorTypes = this.loadMonitorTypesPort.loadAllMonitorTypes(userId, pageable);
 		return allMonitorTypes.flatMap((monitorType -> {
 			final var monitorTypeDomain = monitorTypeMapper.mapToDomain(monitorType);
 			return loadAllFieldTypesPort.loadFieldTypesByMonitorType(monitorType.getId()).collectList().zipWith(Mono.just(monitorTypeDomain), (fieldTypes, monitorTypeD) -> {
@@ -63,16 +61,24 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 	}
 
 	@Override
-	public Flux<Fields> createManyMonitorTypes(CreateMonitorTypeCommand createMonitorTypeCommand) {
-		final var monitorTypesFlux = createManyMonitorTypesPort.createMonitorTypes(createMonitorTypeCommand.monitorTypeDTOs()
-				.stream()
-				.map(monitorTypeDTO -> monitorTypeMapper.mapToPersistence(monitorTypeDTO).setAsNew())
-				.toList())
-				.doOnError(error -> {
-					log.error("Failed to save many monitor types", error);
-					throw new MonitorTypeException("Failed to save monitor types", error);
-				})
-				.doOnComplete(() -> log.info("Done saving monitor types"));
+	public Flux<MonitorType> createManyMonitorTypes(CreateMonitorTypeCommand createMonitorTypeCommand) {
+		final var monitorTypesFlux = this.loadMonitorTypesPort.findByUserIdAndNames(createMonitorTypeCommand.monitorTypeDTOs().stream()
+				.map(dto -> dto.name())
+				.collect(Collectors.toList()), createMonitorTypeCommand.userId()
+		).flatMap(__ -> Flux.error(new ItemExistsException("Monitor Type with that name already exist."))
+		).switchIfEmpty(Flux.defer(() -> {
+			return createManyMonitorTypesPort.createMonitorTypes(createMonitorTypeCommand.monitorTypeDTOs()
+							.stream()
+							.map(monitorTypeDTO -> {
+								return monitorTypeMapper.mapToPersistence(monitorTypeDTO).setAsNew();
+							}).toList())
+					.doOnError(error -> {
+						log.error("Failed to save many monitor types", error);
+						throw new MonitorTypeException("Failed to save monitor types", error);
+					})
+					.doOnComplete(() -> log.info("Done saving monitor types")
+			);
+		})).cast(com.queen.infrastructure.persitence.MonitorType.class);
 
 		final var fieldsFlux = createFieldsPort.createFields(createMonitorTypeCommand.monitorTypeDTOs().stream().flatMap(monitorTypeDTO -> {
 			return monitorTypeDTO.fieldDTOs().stream();
@@ -82,6 +88,9 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 					throw new MonitorTypeException("Failed to save fields", error);
 				})
 				.doOnComplete(() -> log.info("Done saving field types"));
-		return monitorTypesFlux.thenMany(fieldsFlux);
+
+		return fieldsFlux.thenMany(monitorTypesFlux).map(monitorTypePersistance -> {
+			return monitorTypeMapper.mapToDomain(monitorTypePersistance);
+		});
 	}
 }

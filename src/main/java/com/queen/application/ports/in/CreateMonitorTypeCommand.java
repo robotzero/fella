@@ -4,5 +4,5 @@ import com.queen.application.service.dto.MonitorTypeDTO;
 
 import java.util.List;
 
-public record CreateMonitorTypeCommand(List<MonitorTypeDTO> monitorTypeDTOs) {
+public record CreateMonitorTypeCommand(List<MonitorTypeDTO> monitorTypeDTOs, String userId) {
 }

@@ -16,9 +16,8 @@ import com.queen.adapters.web.dto.MonitorTypeToDTO;
 import com.queen.adapters.web.dto.UserToDTO;
 import com.queen.application.ports.out.CreateFieldsPort;
 import com.queen.application.ports.out.CreateManyMonitorTypesPort;
-import com.queen.application.ports.out.CreateMonitorTypePort;
 import com.queen.application.ports.out.CreateUserPort;
-import com.queen.application.ports.out.LoadAllMonitorTypesPort;
+import com.queen.application.ports.out.LoadMonitorTypesPort;
 import com.queen.application.ports.out.LoadAllMonitorsPort;
 import com.queen.application.ports.out.LoadFieldTypesPort;
 import com.queen.application.ports.out.LoadUserPort;
@@ -66,8 +65,8 @@ public class FellaConfiguration {
 
 	// Monitor Types
 	@Bean
-	MonitorTypeService monitorTypeService(final MonitorTypeMapper monitorTypeMapper, final LoadAllMonitorTypesPort loadAllMonitorTypes, final CreateMonitorTypePort createMonitorTypePort, final CreateManyMonitorTypesPort createManyMonitorTypesPort, final CreateFieldsPort createFieldsPort, final LoadFieldTypesPort loadFieldTypesPort, final FieldsMapper fieldsMapper, final FieldTypeMapper fieldTypeMapper) {
-		return new MonitorTypeService(loadAllMonitorTypes, createMonitorTypePort, createManyMonitorTypesPort, createFieldsPort, loadFieldTypesPort, monitorTypeMapper, fieldsMapper, fieldTypeMapper);
+	MonitorTypeService monitorTypeService(final MonitorTypeMapper monitorTypeMapper, final LoadMonitorTypesPort loadAllMonitorTypes, final CreateManyMonitorTypesPort createManyMonitorTypesPort, final CreateFieldsPort createFieldsPort, final LoadFieldTypesPort loadFieldTypesPort, final FieldsMapper fieldsMapper, final FieldTypeMapper fieldTypeMapper) {
+		return new MonitorTypeService(loadAllMonitorTypes, createManyMonitorTypesPort, createFieldsPort, loadFieldTypesPort, monitorTypeMapper, fieldsMapper, fieldTypeMapper);
 	}
 
 	@Bean
@@ -76,12 +75,7 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	LoadAllMonitorTypesPort loadAllMonitorTypes(final MonitorTypeRepository monitorTypeRepository) {
-		return new MonitorTypePersistenceAdapter(monitorTypeRepository);
-	}
-
-	@Bean
-	CreateMonitorTypePort createMonitorTypePort(final MonitorTypeRepository monitorTypeRepository) {
+	LoadMonitorTypesPort loadAllMonitorTypes(final MonitorTypeRepository monitorTypeRepository) {
 		return new MonitorTypePersistenceAdapter(monitorTypeRepository);
 	}
 

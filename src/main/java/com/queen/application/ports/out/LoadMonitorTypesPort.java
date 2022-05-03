@@ -4,6 +4,9 @@ import com.queen.infrastructure.persitence.MonitorType;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 
-public interface LoadAllMonitorTypesPort {
+import java.util.List;
+
+public interface LoadMonitorTypesPort {
 	Flux<MonitorType> loadAllMonitorTypes(final String userId, Pageable pageable);
+	Flux<MonitorType> findByUserIdAndNames(final List<String> name, final String userId);
 }
