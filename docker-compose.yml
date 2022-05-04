@@ -4,7 +4,7 @@ services:
   fella:
     image: registry.local:5000/fella:latest
     environment:
-      JAVA_ARGS: -Xmx256m -Xms256m
+      JAVA_ARGS: -Xmx256m -Xms256m --enable-preview
       DB_SERVER: 192.168.0.64
       AUTH_SERVER: http://auth-server:9000
     links:
