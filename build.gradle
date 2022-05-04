@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.7'
+	id 'org.springframework.boot' version '3.0.0-M2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
@@ -50,16 +50,15 @@ configurations {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator:2.6.7'
-	implementation 'org.springframework.boot:spring-boot-starter-cache:2.6.7'
-	implementation 'org.springframework.boot:spring-boot-starter-hateoas:2.6.7'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.6.7'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.6.7'
-	implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.7'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux:2.6.7'
-	implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:2.6.7'
-	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc:2.6.7'
-	implementation 'org.springframework.boot:spring-boot-starter-security:2.6.7'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.0-M2'
+	implementation 'org.springframework.boot:spring-boot-starter-cache:3.0.0-M2'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.0.0-M2'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.0.0-M2'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.0.0-M2'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.0-M2'
+	implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:3.0.0-M2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc:3.0.0-M2'
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.0.0-M2'
 	implementation 'org.springframework.security:spring-security-oauth2-jose:5.6.3'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.2'
@@ -69,15 +68,13 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2'
 	implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.13.2'
 	implementation 'io.projectreactor.tools:blockhound:1.0.6.RELEASE'
+	implementation 'org.postgresql:postgresql:42.3.4'
+	implementation 'org.postgresql:r2dbc-postgresql:0.9.1.RELEASE'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2',
 			// Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
 			'org.bouncycastle:bcprov-jdk15on:1.70',
 			'io.jsonwebtoken:jjwt-jackson:0.11.2' // or 'io.jsonwebtoken:jjwt-gson:0.11.2' for gson
-	runtimeOnly 'org.postgresql:postgresql:42.3.4'
-	runtimeOnly 'com.h2database:h2:2.1.212'
-	runtimeOnly 'io.r2dbc:r2dbc-postgresql:0.8.12.RELEASE'
-	runtimeOnly 'io.r2dbc:r2dbc-h2:0.9.1.RELEASE'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.7'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.0-M2'
 	testImplementation 'io.projectreactor:reactor-test:3.4.17'
 	testImplementation 'org.springframework.security:spring-security-test:5.6.3'
 }
