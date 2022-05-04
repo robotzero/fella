@@ -24,18 +24,21 @@ allprojects {
 	tasks.withType(JavaCompile) {
 //        	options.compilerArgs.addAll(['--add-exports', 'java.base/java.lang.reflect=ALL-UNNAMED', '--enable-preview'])
 //	        options.compilerArgs.addAll(['--add-exports', 'jdk.unsupported/sun.misc=ALL-UNNAMED'])
-        	options.compilerArgs.addAll(['--enable-preview'])
-	        options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'] )
+			options.compilerArgs.add("--enable-preview")
+	        options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED', '--enable-preview'] )
 	        options.encoding = 'UTF-8'
 	        options.deprecation = true
+			options.release.set(18)
     }
 }
+
 
 compileJava {
   options.warnings = true
   options.deprecation = true
   options.debug = true
   options.compilerArgs += ["--add-modules=jdk.incubator.foreign"]
+  options.compilerArgs += ["--enable-preview"]
   options.incremental = false
 }
 

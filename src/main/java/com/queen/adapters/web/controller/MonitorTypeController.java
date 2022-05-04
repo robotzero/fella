@@ -33,15 +33,16 @@ public class MonitorTypeController {
 	}
 
 	@GetMapping(value = "/monitor-types", produces = MediaType.APPLICATION_JSON_VALUE)
-	//@TODO errors
 	Mono<ResponseEntity<List<MonitorTypeDTO>>> loadMonitorTypes(
 			@CurrentSecurityContext(expression = "authentication.userId") String userId,
 			@RequestParam(name = "page", defaultValue = PageSupportDTO.FIRST_PAGE_NUM) int page,
 			@RequestParam(name = "size", defaultValue = PageSupportDTO.DEFAULT_PAGE_SIZE) int size
 	) {
-		return allMonitorTypesQuery.load(userId, PageRequest.of(page, size)).map(monitorTypeToDTO::toDTO).collectList().map(monitoryTypeDTOs -> {
-			return ResponseEntity.ok(monitoryTypeDTOs);
-		}).defaultIfEmpty(ResponseEntity.notFound().build());
+		return allMonitorTypesQuery.load(userId, PageRequest.of(page, size))
+				.map(monitorTypeToDTO::toDTO)
+				.collectList()
+				.map(ResponseEntity::ok)
+				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping(value = "/monitor-types", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

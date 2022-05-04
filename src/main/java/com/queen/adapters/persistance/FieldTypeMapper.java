@@ -7,4 +7,12 @@ public class FieldTypeMapper {
 	public FieldType toDomain(final com.queen.infrastructure.persitence.FieldType fieldType) {
 		return new FieldType(fieldType.getId(), fieldType.getName(), FieldTypeValue.getByType(fieldType.getType()));
 	}
+
+	public FieldType toDomain(final com.queen.domain.fields.Fields fields) {
+		return new FieldType(
+				"",
+				FieldTypeValue.getByType(Integer.parseInt(fields.fieldTypeId())).name(),
+				FieldTypeValue.getByType(Integer.parseInt(fields.fieldTypeId()))
+		);
+	}
 }
