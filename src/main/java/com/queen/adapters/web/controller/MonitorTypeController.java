@@ -7,6 +7,7 @@ import com.queen.adapters.web.dto.PageSupportDTO;
 import com.queen.application.ports.in.AllMonitorTypesQuery;
 import com.queen.application.ports.in.CreateMonitorTypeCommand;
 import com.queen.application.ports.in.CreateMonitorTypeUseCase;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +28,16 @@ public class MonitorTypeController {
 	private final CreateMonitorTypeUseCase createMonitorTypeUseCase;
 
 	public MonitorTypeController(final AllMonitorTypesQuery allMonitorTypesQuery, final MonitorTypeToDTO monitorTypeToDTO, final CreateMonitorTypeUseCase createMonitorTypeUseCase) {
-		this.allMonitorTypesQuery 	  = allMonitorTypesQuery;
-		this.monitorTypeToDTO     	  = monitorTypeToDTO;
+		this.allMonitorTypesQuery = allMonitorTypesQuery;
+		this.monitorTypeToDTO = monitorTypeToDTO;
 		this.createMonitorTypeUseCase = createMonitorTypeUseCase;
 	}
 
 	@GetMapping(value = "/monitor-types", produces = MediaType.APPLICATION_JSON_VALUE)
 	Mono<ResponseEntity<List<MonitorTypeDTO>>> loadMonitorTypes(
 			@CurrentSecurityContext(expression = "authentication.userId") String userId,
-			@RequestParam(name = "page", defaultValue = PageSupportDTO.FIRST_PAGE_NUM) int page,
-			@RequestParam(name = "size", defaultValue = PageSupportDTO.DEFAULT_PAGE_SIZE) int size
+			@RequestParam(name = "page", defaultValue = PageSupportDTO.FIRST_PAGE_NUM) @Min(0) int page,
+			@RequestParam(name = "size", defaultValue = PageSupportDTO.DEFAULT_PAGE_SIZE) @Min(1) int size
 	) {
 		return allMonitorTypesQuery.load(userId, PageRequest.of(page, size))
 				.map(monitorTypeToDTO::toDTO)

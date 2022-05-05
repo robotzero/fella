@@ -18,7 +18,7 @@ import com.queen.application.ports.out.CreateFieldsPort;
 import com.queen.application.ports.out.CreateManyMonitorTypesPort;
 import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadMonitorTypesPort;
-import com.queen.application.ports.out.LoadAllMonitorsPort;
+import com.queen.application.ports.out.LoadMonitorsPort;
 import com.queen.application.ports.out.LoadFieldTypesPort;
 import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.AttachUserService;
@@ -93,7 +93,7 @@ public class FellaConfiguration {
 
 	// Monitors
 	@Bean
-	MonitorService monitorService(final MonitorMapper monitorMapper, final LoadAllMonitorsPort loadAllMonitors) {
+	MonitorService monitorService(final MonitorMapper monitorMapper, final LoadMonitorsPort loadAllMonitors) {
 		return new MonitorService(loadAllMonitors, monitorMapper);
 	}
 
@@ -103,7 +103,7 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	LoadAllMonitorsPort loadAllMonitors(final MonitorRepository monitorRepository) {
+  LoadMonitorsPort loadAllMonitors(final MonitorRepository monitorRepository) {
 		return new MonitorPersistenceAdapter(monitorRepository);
 	}
 
