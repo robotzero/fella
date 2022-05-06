@@ -19,8 +19,8 @@ services:
     environment:
       JAVA_ARGS: -Xmx256m -Xms256m
       ISSUER_URL: http://auth-server:9000
-      REDIRECT_URI_1: http://fellaclient:8080/login/oauth2/code/messaging-client-oidc
-      REDIRECT_URI_2: http://fellaclient:8080/authorized
+      REDIRECT_URI_1: http://fellaclient:8085/login/oauth2/code/messaging-client-oidc
+      REDIRECT_URI_2: http://fellaclient:8085/authorized
     expose:
       - 9000
     ports:
@@ -33,8 +33,8 @@ services:
       - fellaauth:auth-server
     environment:
       JAVA_ARGS: -Xmx256m -Xms256m
-      REDIRECT_URI_1: http://fellaclient:8080/login/oauth2/code/{registrationId}
-      REDIRECT_URI_2: http://fellaclient:8080/authorized
+      REDIRECT_URI_1: http://fellaclient:8085/login/oauth2/code/{registrationId}
+      REDIRECT_URI_2: http://fellaclient:8085/authorized
       ISSUER_URI: http://auth-server:9000
       BASE_URI: http://fella:8090/messages
     expose:
