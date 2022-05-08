@@ -58,3 +58,12 @@
 -- INSERT INTO field_type (id, name, type) VALUES ('3', 'Flow Level', 3);
 -- INSERT INTO field_type (id, name, type) VALUES ('4', 'Notes', 4);
 -- INSERT INTO field_type (id, name, type) VALUES ('5', 'Tags', 5);
+
+-- CREATE TABLE IF NOT EXISTS tablets (
+--     id varchar (255) NOT NULL,
+--     userId varchar (255) NOT NULL,
+--     created_at timestamp NOT NULL DEFAULT NOW(),
+--     PRIMARY KEY (id)
+--     FOREIGN KEY (userId),
+--         REFERENCES users (id)
+-- )

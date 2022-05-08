@@ -3,13 +3,14 @@ package com.queen.application.service;
 import com.queen.adapters.persistance.FieldTypeMapper;
 import com.queen.adapters.persistance.FieldsMapper;
 import com.queen.adapters.persistance.MonitorTypeMapper;
-import com.queen.application.ports.in.AllMonitorTypesQuery;
+import com.queen.application.ports.in.MonitorTypesQuery;
 import com.queen.application.ports.in.CreateMonitorTypeCommand;
 import com.queen.application.ports.in.CreateMonitorTypeUseCase;
 import com.queen.application.ports.out.CreateFieldsPort;
-import com.queen.application.ports.out.CreateManyMonitorTypesPort;
+import com.queen.application.ports.out.CreateMonitorTypesPort;
 import com.queen.application.ports.out.LoadFieldTypesPort;
 import com.queen.application.ports.out.LoadMonitorTypesPort;
+import com.queen.application.service.dto.FieldsDTO;
 import com.queen.application.service.exception.MonitorTypeException;
 import com.queen.domain.monitortype.MonitorType;
 import org.slf4j.Logger;
@@ -26,11 +27,11 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
 
-public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTypeUseCase {
+public class MonitorTypeService implements MonitorTypesQuery, CreateMonitorTypeUseCase {
 	private final LoadMonitorTypesPort loadMonitorTypesPort;
-	private final CreateManyMonitorTypesPort createManyMonitorTypesPort;
+	private final CreateMonitorTypesPort createManyMonitorTypesPort;
 	private final CreateFieldsPort createFieldsPort;
-	private final LoadFieldTypesPort loadAllFieldTypesPort;
+	private final LoadFieldTypesPort loadFieldTypesPort;
 	private final MonitorTypeMapper monitorTypeMapper;
 	private final FieldsMapper fieldsMapper;
 	private final FieldTypeMapper fieldTypeMapper;
@@ -38,9 +39,9 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 
 	public MonitorTypeService(
 			final LoadMonitorTypesPort loadMonitorTypes,
-			final CreateManyMonitorTypesPort createManyMonitorTypesPort,
+			final CreateMonitorTypesPort createManyMonitorTypesPort,
 			final CreateFieldsPort createFieldsPort,
-			final LoadFieldTypesPort loadAllFieldTypesPort,
+			final LoadFieldTypesPort loadFieldTypesPort,
 			final MonitorTypeMapper monitorTypeMapper,
 			final FieldsMapper fieldsMapper,
 			final FieldTypeMapper fieldTypeMapper
@@ -49,7 +50,7 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 		this.createManyMonitorTypesPort = createManyMonitorTypesPort;
 		this.createFieldsPort = createFieldsPort;
 		this.monitorTypeMapper = monitorTypeMapper;
-		this.loadAllFieldTypesPort = loadAllFieldTypesPort;
+		this.loadFieldTypesPort = loadFieldTypesPort;
 		this.fieldsMapper = fieldsMapper;
 		this.fieldTypeMapper = fieldTypeMapper;
 	}
@@ -59,10 +60,22 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 		final var allMonitorTypes = this.loadMonitorTypesPort.loadAllMonitorTypes(userId, pageable);
 		return allMonitorTypes.flatMap((monitorType -> {
 			final var monitorTypeDomain = monitorTypeMapper.mapToDomain(monitorType);
-			return loadAllFieldTypesPort.loadFieldTypesByMonitorType(monitorType.getId()).collectList().zipWith(Mono.just(monitorTypeDomain), (fieldTypes, monitorTypeD) -> {
+			return loadFieldTypesPort.loadFieldTypesByMonitorType(monitorType.getId()).collectList().zipWith(Mono.just(monitorTypeDomain), (fieldTypes, monitorTypeD) -> {
 				return new MonitorType(monitorTypeD.id(), monitorTypeD.name(), fieldTypes.stream().map(fieldTypeMapper::toDomain).toList());
 			});
 		}));
+	}
+
+	@Override
+	public Mono<MonitorType> load(final String monitorTypeId, final String userId) {
+		final var singleMonitorType = this.loadMonitorTypesPort.loadSingleMonitorType(monitorTypeId, userId)
+				.map(monitorTypeMapper::mapToDomain);
+		return loadFieldTypesPort.loadFieldTypesByMonitorType(monitorTypeId)
+				.collectList()
+				.zipWith(singleMonitorType, (fieldTypes, monitorTypeDomain) -> new MonitorType(
+						monitorTypeId, monitorTypeDomain.name(),
+						fieldTypes.stream().map(fieldTypeMapper::toDomain).toList()
+				));
 	}
 
 	@Override
@@ -70,9 +83,7 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 	public Flux<MonitorType> createManyMonitorTypes(CreateMonitorTypeCommand createMonitorTypeCommand) {
 		final var monitorTypesToCreate = createMonitorTypeCommand.monitorTypeDTOs()
 				.stream()
-				.map(monitorTypeDTO -> {
-					return monitorTypeMapper.mapToPersistence(monitorTypeDTO).setAsNew();
-				}).toList();
+				.map(monitorTypeDTO -> monitorTypeMapper.mapToPersistence(monitorTypeDTO).setAsNew()).toList();
 
 
 		final var monitorTypesFlux = createManyMonitorTypesPort.createMonitorTypes(monitorTypesToCreate)
@@ -91,15 +102,17 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 				.flatMap(monitorTypeDTO -> monitorTypeDTO.fieldDTOs().stream())
 				.collect(
 						groupingBy(
-								fieldDTO -> fieldDTO.monitorTypeId(),
+								FieldsDTO::monitorTypeId,
 								HashMap::new,
 								mapping(fieldDTO -> fieldTypeMapper.toDomain(fieldsMapper.mapToDomain(fieldDTO)) , toList())
 						)
 				);
 
-		final var fieldsToCreate = createMonitorTypeCommand.monitorTypeDTOs().stream().flatMap(monitorTypeDTO -> {
-			return monitorTypeDTO.fieldDTOs().stream();
-		}).map(fieldsDTO -> fieldsMapper.mapToPersistence(fieldsDTO).setAsNew()).toList();
+		final var fieldsToCreate = createMonitorTypeCommand.monitorTypeDTOs()
+				.stream()
+				.flatMap(monitorTypeDTO -> monitorTypeDTO.fieldDTOs()
+						.stream())
+				.map(fieldsDTO -> fieldsMapper.mapToPersistence(fieldsDTO).setAsNew()).toList();
 
 		final var fieldsFlux = createFieldsPort.createFields(fieldsToCreate)
 				.doOnError(error -> {
@@ -108,8 +121,10 @@ public class MonitorTypeService implements AllMonitorTypesQuery, CreateMonitorTy
 				})
 				.doOnComplete(() -> log.info("Done saving field types"));
 
-		return fieldsFlux.thenMany(monitorTypesFlux).map(monitorTypePersistance -> {
-			return monitorTypeMapper.mapToDomain(monitorTypePersistance, fieldsByMonitorId.get(monitorTypePersistance.getId()));
-		});
+		return fieldsFlux.thenMany(monitorTypesFlux)
+				.map(monitorTypePersistence -> monitorTypeMapper.mapToDomain(
+						monitorTypePersistence,
+						fieldsByMonitorId.get(monitorTypePersistence.getId())
+				));
 	}
 }

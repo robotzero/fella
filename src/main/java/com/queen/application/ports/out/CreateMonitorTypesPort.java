@@ -5,6 +5,6 @@ import reactor.core.publisher.Flux;
 
 import java.util.List;
 
-public interface CreateManyMonitorTypesPort {
+public interface CreateMonitorTypesPort {
 	Flux<MonitorType> createMonitorTypes(final List<MonitorType> monitorType);
 }

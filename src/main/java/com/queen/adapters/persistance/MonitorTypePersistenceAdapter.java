@@ -1,15 +1,16 @@
 package com.queen.adapters.persistance;
 
-import com.queen.application.ports.out.CreateManyMonitorTypesPort;
+import com.queen.application.ports.out.CreateMonitorTypesPort;
 import com.queen.application.ports.out.LoadMonitorTypesPort;
 import com.queen.infrastructure.persitence.MonitorType;
 import com.queen.infrastructure.persitence.MonitorTypeRepository;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-public class MonitorTypePersistenceAdapter implements LoadMonitorTypesPort, CreateManyMonitorTypesPort {
+public class MonitorTypePersistenceAdapter implements LoadMonitorTypesPort, CreateMonitorTypesPort {
 	private final MonitorTypeRepository monitorTypeRepository;
 
 	public MonitorTypePersistenceAdapter(final MonitorTypeRepository monitorTypeRepository) {
@@ -24,6 +25,11 @@ public class MonitorTypePersistenceAdapter implements LoadMonitorTypesPort, Crea
 	@Override
 	public Flux<MonitorType> findByUserIdAndNames(List<String> names, String userId) {
 		return this.monitorTypeRepository.findByUserIdAndNames(names, userId);
+	}
+
+	@Override
+	public Mono<MonitorType> loadSingleMonitorType(String monitorTypeId, String userId) {
+		return this.monitorTypeRepository.findSingleByUserId(monitorTypeId, userId);
 	}
 
 	@Override

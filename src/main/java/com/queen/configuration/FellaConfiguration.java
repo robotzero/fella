@@ -15,7 +15,8 @@ import com.queen.adapters.web.dto.MonitorToDTO;
 import com.queen.adapters.web.dto.MonitorTypeToDTO;
 import com.queen.adapters.web.dto.UserToDTO;
 import com.queen.application.ports.out.CreateFieldsPort;
-import com.queen.application.ports.out.CreateManyMonitorTypesPort;
+import com.queen.application.ports.out.CreateMonitorPort;
+import com.queen.application.ports.out.CreateMonitorTypesPort;
 import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadMonitorTypesPort;
 import com.queen.application.ports.out.LoadMonitorsPort;
@@ -65,7 +66,7 @@ public class FellaConfiguration {
 
 	// Monitor Types
 	@Bean
-	MonitorTypeService monitorTypeService(final MonitorTypeMapper monitorTypeMapper, final LoadMonitorTypesPort loadAllMonitorTypes, final CreateManyMonitorTypesPort createManyMonitorTypesPort, final CreateFieldsPort createFieldsPort, final LoadFieldTypesPort loadFieldTypesPort, final FieldsMapper fieldsMapper, final FieldTypeMapper fieldTypeMapper) {
+	MonitorTypeService monitorTypeService(final MonitorTypeMapper monitorTypeMapper, final LoadMonitorTypesPort loadAllMonitorTypes, final CreateMonitorTypesPort createManyMonitorTypesPort, final CreateFieldsPort createFieldsPort, final LoadFieldTypesPort loadFieldTypesPort, final FieldsMapper fieldsMapper, final FieldTypeMapper fieldTypeMapper) {
 		return new MonitorTypeService(loadAllMonitorTypes, createManyMonitorTypesPort, createFieldsPort, loadFieldTypesPort, monitorTypeMapper, fieldsMapper, fieldTypeMapper);
 	}
 
@@ -80,7 +81,7 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	CreateManyMonitorTypesPort createManyMonitorTypesPort(final MonitorTypeRepository monitorTypeRepository) {
+	CreateMonitorTypesPort createManyMonitorTypesPort(final MonitorTypeRepository monitorTypeRepository) {
 		return new MonitorTypePersistenceAdapter(monitorTypeRepository);
 	}
 
@@ -93,8 +94,8 @@ public class FellaConfiguration {
 
 	// Monitors
 	@Bean
-	MonitorService monitorService(final MonitorMapper monitorMapper, final LoadMonitorsPort loadAllMonitors) {
-		return new MonitorService(loadAllMonitors, monitorMapper);
+	MonitorService monitorService(final MonitorMapper monitorMapper, final LoadMonitorsPort loadAllMonitors, final CreateMonitorPort createMonitorPort) {
+		return new MonitorService(loadAllMonitors, monitorMapper, createMonitorPort);
 	}
 
 	@Bean
@@ -103,7 +104,12 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-  LoadMonitorsPort loadAllMonitors(final MonitorRepository monitorRepository) {
+    LoadMonitorsPort loadMonitors(final MonitorRepository monitorRepository) {
+		return new MonitorPersistenceAdapter(monitorRepository);
+	}
+
+	@Bean
+	CreateMonitorPort createMonitorPort(final MonitorRepository monitorRepository) {
 		return new MonitorPersistenceAdapter(monitorRepository);
 	}
 
