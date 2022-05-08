@@ -28,12 +28,7 @@ public class Monitor implements Persistable<String> {
 	@Transient
 	private boolean newMonitor;
 
-	public Monitor(final String id, final String name) {
-		this.id = id;
-		this.name = name;
-	}
-
-	public Monitor(final String  id, final String name, final String userId) {
+	public Monitor(final String id, final String name, final String userId) {
 		this.id = id;
 		this.name = name;
 		this.userId = userId;

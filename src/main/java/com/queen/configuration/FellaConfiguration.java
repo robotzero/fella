@@ -94,8 +94,8 @@ public class FellaConfiguration {
 
 	// Monitors
 	@Bean
-	MonitorService monitorService(final MonitorMapper monitorMapper, final LoadMonitorsPort loadAllMonitors, final CreateMonitorPort createMonitorPort) {
-		return new MonitorService(loadAllMonitors, monitorMapper, createMonitorPort);
+	MonitorService monitorService(final MonitorMapper monitorMapper, final LoadMonitorsPort loadAllMonitors, final CreateMonitorPort createMonitorPort, final MonitorTypeService monitorTypeService) {
+		return new MonitorService(loadAllMonitors, monitorMapper, createMonitorPort, monitorTypeService);
 	}
 
 	@Bean
@@ -114,8 +114,8 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	MonitorToDTO monitorToDTO() {
-		return new MonitorToDTO();
+	MonitorToDTO monitorToDTO(final MonitorTypeToDTO monitorTypeToDTO) {
+		return new MonitorToDTO(monitorTypeToDTO);
 	}
 
 

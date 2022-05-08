@@ -1,4 +1,6 @@
 package com.queen.domain.monitor;
 
-public record Monitor(String id, String name) {
+import com.queen.domain.monitortype.MonitorType;
+
+public record Monitor(String id, String name, MonitorType monitorType) {
 }
