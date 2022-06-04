@@ -13,11 +13,11 @@ repositories {
 	maven { url 'https://repo.spring.io/snapshot' }
 }
 
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(18)
-  }
-}
+//java {
+//  toolchain {
+//    languageVersion = JavaLanguageVersion.of(18)
+//  }
+//}
 
 allprojects {
 
@@ -28,7 +28,7 @@ allprojects {
 	        options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED', '--enable-preview'] )
 	        options.encoding = 'UTF-8'
 	        options.deprecation = true
-			options.release.set(18)
+//			options.release.set(18)
     }
 }
 
