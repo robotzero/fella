@@ -1,4 +1,4 @@
-FROM openjdk:18
+FROM openjdk:19
 ARG JAVA_ARGS=
 ENV JAVA_ARGS ${JAVA_ARGS}
 #ARG JAR_FILE=target/*.jar

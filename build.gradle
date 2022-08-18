@@ -37,7 +37,7 @@ compileJava {
   options.warnings = true
   options.deprecation = true
   options.debug = true
-  options.compilerArgs += ["--add-modules=jdk.incubator.foreign"]
+  //options.compilerArgs += ["--add-modules=jdk.incubator.foreign"]
   options.compilerArgs += ["--enable-preview"]
   options.incremental = false
 }
