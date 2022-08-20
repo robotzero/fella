@@ -16,6 +16,6 @@ public class TestController {
   public Mono<String[]> test(Authentication authentication) {
 	  ReactiveSecurityContextHolder.withAuthentication(authentication);
 	  FellaJwtAuthenticationToken jwtAuthentication = (FellaJwtAuthenticationToken) authentication;
-	  return Mono.fromSupplier(() -> new String[] {"Message 1", "Message 2", "Message 4", jwtAuthentication.getToken().getTokenValue() });
+	  return Mono.fromSupplier(() -> new String[] {"Message 1", "Message 2", "Message 4", jwtAuthentication.getToken().getTokenValue()});
   }
 }
