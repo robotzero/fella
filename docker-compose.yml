@@ -38,7 +38,7 @@ services:
       REDIRECT_URI_1: http://fellaclient:8085/login/oauth2/code/{registrationId}
       REDIRECT_URI_2: http://fellaclient:8085/authorized
       ISSUER_URI: http://auth-server:9000
-      BASE_URI: http://192.168.0.18:8090/messages
+      BASE_URI: http://fellaapp:8090/messages
     expose:
       - 8085
     ports:
