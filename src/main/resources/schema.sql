@@ -33,7 +33,7 @@
 -- CREATE TABLE IF NOT EXISTS monitor (
 --                                 id varchar (255)  NOT NULL,
 --                                 userId varchar (255) NOT NULL,
---                                 name varchar (255) NOT NULL,
+--                                 description varchar (255) NOT NULL,
 --                                 created_at timestamp NOT NULL DEFAULT NOW(),
 --                                 PRIMARY KEY (id)
 -- );
@@ -44,8 +44,6 @@
 --                         created_at timestamp NOT NULL DEFAULT NOW(),
 --                         PRIMARY KEY (id)
 -- );
---
--- INSERT INTO monitor (id, userId, name) VALUES (1, 1, 'period');
 --
 -- INSERT INTO field_types (type) VALUES (1);
 -- INSERT INTO field_types (type) VALUES (2);
@@ -58,12 +56,64 @@
 -- INSERT INTO field_type (id, name, type) VALUES ('3', 'Flow Level', 3);
 -- INSERT INTO field_type (id, name, type) VALUES ('4', 'Notes', 4);
 -- INSERT INTO field_type (id, name, type) VALUES ('5', 'Tags', 5);
-
--- CREATE TABLE IF NOT EXISTS tablets (
+--
+-- CREATE TABLE IF NOT EXISTS users (
+--                         id varchar (255) NOT NULL,
+--                         userdescription varchar (255) NOT NULL,
+--                         created_at timestamp NOT NULL DEFAULT NOW(),
+--                         PRIMARY KEY (id)
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS tablets_monitor (
 --     id varchar (255) NOT NULL,
 --     userId varchar (255) NOT NULL,
+--     monitorTypeId varchar (255) NOT NULL,
+--     dateTaken timestamp NOT NULL DEFAULT NOW(),
+--     tabletName varchar(255) NOT NULL,
+--     notes varchar(255) NOT NULL,
 --     created_at timestamp NOT NULL DEFAULT NOW(),
 --     PRIMARY KEY (id)
 --     FOREIGN KEY (userId),
 --         REFERENCES users (id)
 -- )
+
+-- CREATE TABLE IF NOT EXISTS period_monitor (
+--     id varchar (255) NOT NULL,
+--     userId varchar (255) NOT NULL,
+--     monitorTypeId varchar (255) NOT NULL,
+--     startDate timestamp NOT NULL DEFAULT NOW(),
+--     painLevel smallint NOT NULL,
+--     notes varchar(255) NOT NULL,
+--     tags varchar(255) DEFAULT NULL,
+--     created_at timestamp NOT NULL DEFAULT NOW(),
+--     PRIMARY KEY (id)
+-- );
+--
+-- ALTER TABLE period_monitor ADD CONSTRAINT userId FOREIGN KEY (userId) REFERENCES users (id);
+-- ALTER TABLE period_monitor ADD CONSTRAINT painLevel FOREIGN KEY (painLevel) REFERENCES pain_level (painLevel);
+
+-- CREATE TABLE IF NOT EXISTS pain_level (
+--     painLevel smallint NOT NULL,
+--     description varchar (255) NOT NULL,
+--     created_at timestamp NOT NULL DEFAULT NOW(),
+--     PRIMARY KEY (painLevel)
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS period_flow_level (
+--     id varchar (255) NOT NULL,
+--     periodFlowLevel int NOT NULL,
+--     description varchar(255) NOT NULL,
+--     created_at timestamp NOT NULL DEFAULT NOW(),
+--     PRIMARY KEY (id)
+-- );
+
+-- INSERT INTO pain_level (painLevel, description) VALUES (1, 'Very mild');
+-- INSERT INTO pain_level (painLevel, description) VALUES (2, 'Discomforting');
+-- INSERT INTO pain_level (painLevel, description) VALUES (3, 'Tolerable');
+-- INSERT INTO pain_level (painLevel, description) VALUES (4, 'Distressing');
+-- INSERT INTO pain_level (painLevel, description) VALUES (5, 'Very distressing');
+-- INSERT INTO pain_level (painLevel, description) VALUES (6, 'Intense');
+-- INSERT INTO pain_level (painLevel, description) VALUES (7, 'Very intense');
+-- INSERT INTO pain_level (painLevel, description) VALUES (8, 'Utterly horrible');
+-- INSERT INTO pain_level (painLevel, description) VALUES (9, 'Excruciating, unbearable');
+-- INSERT INTO pain_level (painLevel, description) VALUES (10, 'Unimaginable, unspeakable');

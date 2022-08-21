@@ -67,9 +67,9 @@ dependencies {
 	implementation 'io.projectreactor.tools:blockhound:1.0.6.RELEASE'
 	implementation 'org.postgresql:postgresql:42.3.6'
 	implementation 'org.postgresql:r2dbc-postgresql:0.9.1.RELEASE'
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.0-M2'
-//	testImplementation 'io.projectreactor:reactor-test:3.4.21'
-//	testImplementation 'org.springframework.security:spring-security-test:5.7.2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.0-M4'
+	testImplementation 'io.projectreactor:reactor-test:3.4.21'
+	testImplementation 'org.springframework.security:spring-security-test:5.7.2'
 }
 
 test {
