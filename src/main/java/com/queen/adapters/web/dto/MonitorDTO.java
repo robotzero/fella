@@ -1,4 +1,5 @@
 package com.queen.adapters.web.dto;
 
-public record MonitorDTO(String id, String name, MonitorTypeDTO monitorType) {
+public sealed interface MonitorDTO {
+	record PeriodDTO(String id, MonitorTypeDTO monitorType) implements MonitorDTO {}
 }

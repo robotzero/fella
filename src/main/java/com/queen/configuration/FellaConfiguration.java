@@ -31,6 +31,7 @@ import com.queen.infrastructure.persitence.FieldsRepository;
 import com.queen.infrastructure.persitence.MonitorRepository;
 import com.queen.infrastructure.persitence.MonitorTypeRepository;
 import com.queen.infrastructure.persitence.UserRepository;
+import com.queen.infrastructure.persitence.monitor.PeriodRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -104,13 +105,13 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-    LoadMonitorsPort loadMonitors(final MonitorRepository monitorRepository) {
-		return new MonitorPersistenceAdapter(monitorRepository);
+    LoadMonitorsPort loadMonitors(final MonitorRepository monitorRepository, final PeriodRepository periodRepository) {
+		return new MonitorPersistenceAdapter(monitorRepository, periodRepository);
 	}
 
 	@Bean
-	CreateMonitorPort createMonitorPort(final MonitorRepository monitorRepository) {
-		return new MonitorPersistenceAdapter(monitorRepository);
+	CreateMonitorPort createMonitorPort(final MonitorRepository monitorRepository, final PeriodRepository periodRepository) {
+		return new MonitorPersistenceAdapter(monitorRepository, periodRepository);
 	}
 
 	@Bean

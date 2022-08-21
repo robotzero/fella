@@ -8,6 +8,7 @@ import com.queen.application.ports.out.CreateMonitorPort;
 import com.queen.application.ports.out.LoadMonitorsPort;
 import com.queen.application.service.exception.MonitorException;
 import com.queen.domain.monitor.Monitor;
+import com.queen.domain.monitor.MonitorResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +39,18 @@ public class MonitorService implements MonitorQuery, CreateMonitorUseCase {
 		final var monitors = loadMonitors.loadMonitors(monitorTypeId, userId, pageable).map(monitorMapper::mapToDomain);
 		final var singleMonitorType = monitorTypeService.load(monitorTypeId, userId);
 		return monitors.zipWith(singleMonitorType, (monitorDomain, monitorType) -> new Monitor(monitorDomain.id(), monitorDomain.name(), monitorType));
+	}
+
+	@Override
+	public Flux<MonitorResult> loadCustomMonitors(final String monitorTypeId, final String userId, final Pageable pageable) {
+		final var singleMonitorType = monitorTypeService.loadSingleMonitorType(monitorTypeId, userId);
+		return singleMonitorType.flatMapMany(monitorTypeResult -> {
+			return switch (monitorTypeResult) {
+				case com.queen.domain.monitortype.MonitorTypeResult.Period period -> loadMonitors.loadPeriodMonitors(monitorTypeId, userId, pageable).map(persistancePeriodMonitor -> monitorMapper.mapToPeriodMonitor(monitorTypeResult, persistancePeriodMonitor));
+				case com.queen.domain.monitortype.MonitorTypeResult.Stomach stomach -> throw new IllegalStateException("Not implemented yet");
+				case com.queen.domain.monitortype.MonitorTypeResult.TabletsTaken tabletsTaken -> throw new IllegalStateException("Not implemented yet");
+			};
+		});
 	}
 
 	@Transactional

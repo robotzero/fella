@@ -46,17 +46,17 @@ public class MonitorController {
 			final @RequestParam(name = "size", defaultValue = PageSupportDTO.DEFAULT_PAGE_SIZE) @Min(1) int size,
 			final @PathVariable String monitorTypeId
 	) {
-		return monitorService.loadMonitors(monitorTypeId, userId, PageRequest.of(page, size)).map(monitorToDTO::toDTO);
+		return monitorService.loadCustomMonitors(monitorTypeId, userId, PageRequest.of(page, size)).map(monitorToDTO::toDTO);
 	}
 
-	@PostMapping(value = "/monitor-types/{monitorTypeId}/monitors", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	Mono<ResponseEntity<MonitorDTO>> createMonitor(
-			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
-			final @PathVariable String monitorTypeId,
-			final @RequestBody MonitorRequest monitorRequest
-	) {
-		return createMonitorUseCase.createMonitor(
-				new CreateMonitorCommand(monitorToDTO.toServiceDTO(monitorRequest, monitorTypeId, userId))
-		).map(monitorPersistence -> ResponseEntity.ok(monitorToDTO.toDTO(monitorPersistence))).single();
-	}
+//	@PostMapping(value = "/monitor-types/{monitorTypeId}/monitors", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//	Mono<ResponseEntity<MonitorDTO>> createMonitor(
+//			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
+//			final @PathVariable String monitorTypeId,
+//			final @RequestBody MonitorRequest monitorRequest
+//	) {
+//		return createMonitorUseCase.createMonitor(
+//				new CreateMonitorCommand(monitorToDTO.toServiceDTO(monitorRequest, monitorTypeId, userId))
+//		).map(monitorPersistence -> ResponseEntity.ok(monitorToDTO.toDTO(monitorPersistence))).single();
+//	}
 }

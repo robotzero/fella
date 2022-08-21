@@ -1,6 +1,6 @@
 package com.queen.adapters.web.dto;
 
-import com.queen.domain.monitor.Monitor;
+import com.queen.domain.monitor.MonitorResult;
 
 public class MonitorToDTO {
 	final MonitorTypeToDTO monitorTypeToDTO;
@@ -8,8 +8,11 @@ public class MonitorToDTO {
 	public MonitorToDTO(final MonitorTypeToDTO monitorTypeToDTO) {
 		this.monitorTypeToDTO = monitorTypeToDTO;
 	}
-	public MonitorDTO toDTO(Monitor monitor) {
-		return new MonitorDTO(monitor.id(), monitor.name(), monitorTypeToDTO.toDTO(monitor.monitorType()));
+	public MonitorDTO toDTO(MonitorResult monitor) {
+		return switch (monitor) {
+			case MonitorResult.PeriodMonitor periodMonitor -> new MonitorDTO.PeriodDTO(periodMonitor.id(), null);
+			default -> throw new IllegalStateException("Unexpected value: " + monitor);
+		};
 	}
 
 	public com.queen.application.service.dto.MonitorDTO toServiceDTO(

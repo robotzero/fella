@@ -13,6 +13,7 @@ import com.queen.application.ports.out.LoadMonitorTypesPort;
 import com.queen.application.service.dto.FieldsDTO;
 import com.queen.application.service.exception.MonitorTypeException;
 import com.queen.domain.monitortype.MonitorType;
+import com.queen.domain.monitortype.MonitorTypeResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -76,6 +77,21 @@ public class MonitorTypeService implements MonitorTypesQuery, CreateMonitorTypeU
 						monitorTypeId, monitorTypeDomain.name(),
 						fieldTypes.stream().map(fieldTypeMapper::toDomain).toList()
 				));
+	}
+
+	@Override
+	public Mono<MonitorTypeResult> loadSingleMonitorType(final String monitorTypeId, final String userId) {
+		final var singleMonitorType = this.loadMonitorTypesPort.loadSingleMonitorType(monitorTypeId, userId)
+				.map(monitorTypeMapper::mapToConcreteMonitorType);
+		return loadFieldTypesPort.loadFieldTypesByMonitorType(monitorTypeId)
+				.collectList()
+				.zipWith(singleMonitorType, (fieldTypes, monitorTypeDomain) -> {
+					return switch (monitorTypeDomain) {
+						case MonitorTypeResult.Period period -> new MonitorTypeResult.Period(monitorTypeId, period.name(), fieldTypes.stream().map(fieldTypeMapper::toDomain).toList());
+						case MonitorTypeResult.Stomach stomach -> new MonitorTypeResult.Stomach(monitorTypeId, stomach.name(), fieldTypes.stream().map(fieldTypeMapper::toDomain).toList());
+						case MonitorTypeResult.TabletsTaken tabletsTaken -> new MonitorTypeResult.TabletsTaken(monitorTypeId, tabletsTaken.name(), fieldTypes.stream().map(fieldTypeMapper::toDomain).toList());
+					};
+				});
 	}
 
 	@Override
