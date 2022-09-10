@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @Validated
@@ -40,23 +41,26 @@ public class MonitorController {
 	}
 
 	@GetMapping(value = "/monitor-types/{monitorTypeId}/monitors", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Flux<MonitorDTO> getMonitors(
+	public Mono<ResponseEntity<List<MonitorDTO>>> getMonitors(
 			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
 			final @RequestParam(name = "page", defaultValue = PageSupportDTO.FIRST_PAGE_NUM) @Min(0) int page,
 			final @RequestParam(name = "size", defaultValue = PageSupportDTO.DEFAULT_PAGE_SIZE) @Min(1) int size,
 			final @PathVariable String monitorTypeId
 	) {
-		return monitorService.loadCustomMonitors(monitorTypeId, userId, PageRequest.of(page, size)).map(monitorToDTO::toDTO);
+		return monitorService.loadCustomMonitors(monitorTypeId, userId, PageRequest.of(page, size)).map(monitorToDTO::toDTO)
+				.collectList()
+				.map(ResponseEntity::ok)
+				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
 
-//	@PostMapping(value = "/monitor-types/{monitorTypeId}/monitors", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//	Mono<ResponseEntity<MonitorDTO>> createMonitor(
-//			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
-//			final @PathVariable String monitorTypeId,
-//			final @RequestBody MonitorRequest monitorRequest
-//	) {
-//		return createMonitorUseCase.createMonitor(
-//				new CreateMonitorCommand(monitorToDTO.toServiceDTO(monitorRequest, monitorTypeId, userId))
-//		).map(monitorPersistence -> ResponseEntity.ok(monitorToDTO.toDTO(monitorPersistence))).single();
-//	}
+	@PostMapping(value = "/monitor-types/{monitorTypeId}/monitors", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	Mono<ResponseEntity<MonitorDTO>> createMonitor(
+			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
+			final @PathVariable String monitorTypeId,
+			final @RequestBody MonitorRequest monitorRequest
+	) {
+		return createMonitorUseCase.createMonitor(
+				new CreateMonitorCommand(monitorToDTO.toServiceDTO(monitorRequest, monitorTypeId, userId))
+		).map(monitorPersistence -> ResponseEntity.ok(monitorToDTO.toDTO(monitorPersistence))).single();
+	}
 }

@@ -1,8 +1,8 @@
 package com.queen.application.ports.in;
 
-import com.queen.domain.monitor.Monitor;
+import com.queen.domain.monitor.MonitorResult;
 import reactor.core.publisher.Mono;
 
 public interface CreateMonitorUseCase {
-	Mono<Monitor> createMonitor(final CreateMonitorCommand createMonitorCommand);
+	Mono<MonitorResult> createMonitor(final CreateMonitorCommand createMonitorCommand);
 }

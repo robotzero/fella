@@ -17,6 +17,9 @@ public class PeriodMonitor implements Persistable<String> {
 	@Column("userId")
 	private String userId;
 
+	@Column("monitorTypeId")
+	private String monitorTypeId;
+
 	@Column("created_at")
 	@CreatedDate
 	private Instant createdDate = Instant.now();
@@ -24,20 +27,17 @@ public class PeriodMonitor implements Persistable<String> {
 	@Column("startdate")
 	private Instant startDate;
 
-	@Column("painlevel")
-	private final Integer painLevel;
-
 	@Column("notes")
 	private final String notes = "";
 
 	@Transient
 	private boolean newPeriodMonitor;
 
-	public PeriodMonitor(final String id, final String userId, final Instant startDate, final Integer painLevel) {
+	public PeriodMonitor(final String id, String monitorTypeId, final String userId, final Instant startDate) {
 		this.id = id;
+		this.monitorTypeId = monitorTypeId;
 		this.userId = userId;
 		this.startDate = startDate;
-		this.painLevel = painLevel;
 	}
 
 	@Override
@@ -61,10 +61,6 @@ public class PeriodMonitor implements Persistable<String> {
 
 	public Instant getStartDate() {
 		return startDate;
-	}
-
-	public Integer getPainLevel() {
-		return painLevel;
 	}
 
 	public String getNotes() {

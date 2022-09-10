@@ -6,6 +6,7 @@ import com.queen.application.ports.in.CreateMonitorUseCase;
 import com.queen.application.ports.in.MonitorQuery;
 import com.queen.application.ports.out.CreateMonitorPort;
 import com.queen.application.ports.out.LoadMonitorsPort;
+import com.queen.application.service.dto.MonitorDTO;
 import com.queen.application.service.exception.MonitorException;
 import com.queen.domain.monitor.Monitor;
 import com.queen.domain.monitor.MonitorResult;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 public class MonitorService implements MonitorQuery, CreateMonitorUseCase {
 	private final LoadMonitorsPort loadMonitors;
@@ -46,7 +49,9 @@ public class MonitorService implements MonitorQuery, CreateMonitorUseCase {
 		final var singleMonitorType = monitorTypeService.loadSingleMonitorType(monitorTypeId, userId);
 		return singleMonitorType.flatMapMany(monitorTypeResult -> {
 			return switch (monitorTypeResult) {
-				case com.queen.domain.monitortype.MonitorTypeResult.Period period -> loadMonitors.loadPeriodMonitors(monitorTypeId, userId, pageable).map(persistancePeriodMonitor -> monitorMapper.mapToPeriodMonitor(monitorTypeResult, persistancePeriodMonitor));
+				case com.queen.domain.monitortype.MonitorTypeResult.Period period -> {
+					yield loadMonitors.loadPeriodMonitors(monitorTypeId, userId, pageable).map(persistancePeriodMonitor -> monitorMapper.mapToPeriodMonitor(monitorTypeResult, persistancePeriodMonitor));
+				}
 				case com.queen.domain.monitortype.MonitorTypeResult.Stomach stomach -> throw new IllegalStateException("Not implemented yet");
 				case com.queen.domain.monitortype.MonitorTypeResult.TabletsTaken tabletsTaken -> throw new IllegalStateException("Not implemented yet");
 			};
@@ -55,14 +60,44 @@ public class MonitorService implements MonitorQuery, CreateMonitorUseCase {
 
 	@Transactional
 	@Override
-	public Mono<Monitor> createMonitor(final CreateMonitorCommand createMonitorCommand) {
-		return createMonitorPort.createMonitor(monitorMapper.mapToPersistence(createMonitorCommand.monitorDTO()).setAsNew())
-				.doOnError(error -> {
-					log.error("Failed to save monitor", error);
-					throw new MonitorException("failed to save monitor", error);
-				})
-				.doOnSuccess(monitor -> log.info("Done saving monitor"))
-				.map(monitorMapper::mapToDomain)
-				.cast(Monitor.class);
+	public Mono<MonitorResult> createMonitor(final CreateMonitorCommand createMonitorCommand) {
+		return switch (createMonitorCommand.monitorDTO()) {
+			case MonitorDTO.PeriodMonitorDTO periodMonitorDTO -> {
+				final var singleMonitorType = monitorTypeService.loadSingleMonitorType(periodMonitorDTO.monitorTypeId(), periodMonitorDTO.userId());
+				final var createdPeriodMonitor = createMonitorPort.createPeriodMonitor(
+						monitorMapper.mapToPersistence(periodMonitorDTO).setAsNew()
+				).doOnError(error -> {
+							log.error("Failed to save period monitor");
+							throw new MonitorException("Failed to save monitor", error);
+						}
+				).doOnSuccess(monitor -> log.info("Done saving period monitor"));
+
+				final var createdPeriod = createMonitorPort.createPeriod(
+						monitorMapper.mapToPersistence(periodMonitorDTO.periodDTO()).setAsNew()
+				).doOnError(error -> {
+							log.error("Failed to save period monitor");
+							throw new MonitorException("Failed to save monitor", error);
+						}
+				).doOnSuccess(monitor -> log.info("Done saving period monitor"));
+
+				yield singleMonitorType.zipWith(createdPeriodMonitor).map(tuple -> {
+					final var monitorTypeResult = tuple.getT1();
+					final var periodMonitor = tuple.getT2();
+					return monitorMapper.mapToPeriodMonitor(monitorTypeResult, periodMonitor);
+				}).zipWith(createdPeriod).map(tuple -> {
+					final var monitorResult = tuple.getT1();
+					final var period = tuple.getT2();
+					return monitorMapper.mapToPeriodMonitorWithPeriod(monitorResult, List.of(period));
+				});
+			}
+		};
+//		return createMonitorPort.createMonitor(monitorMapper.mapToPersistence(createMonitorCommand.monitorDTO()).setAsNew())
+//				.doOnError(error -> {
+//					log.error("Failed to save monitor", error);
+//					throw new MonitorException("failed to save monitor", error);
+//				})
+//				.doOnSuccess(monitor -> log.info("Done saving monitor"))
+//				.map(monitorMapper::mapToDomain)
+//				.cast(Monitor.class);
 	}
 }

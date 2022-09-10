@@ -3,8 +3,9 @@ package com.queen.adapters.persistance;
 import com.queen.application.ports.out.CreateMonitorPort;
 import com.queen.application.ports.out.LoadMonitorsPort;
 import com.queen.infrastructure.persitence.Monitor;
-import com.queen.infrastructure.persitence.MonitorRepository;
+import com.queen.infrastructure.persitence.monitor.Period;
 import com.queen.infrastructure.persitence.monitor.PeriodMonitor;
+import com.queen.infrastructure.persitence.monitor.PeriodMonitorRepository;
 import com.queen.infrastructure.persitence.monitor.PeriodRepository;
 import com.queen.infrastructure.persitence.monitor.StomachMonitor;
 import com.queen.infrastructure.persitence.monitor.TabletsTakenMonitor;
@@ -13,22 +14,27 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public class MonitorPersistenceAdapter implements LoadMonitorsPort, CreateMonitorPort {
-	private final MonitorRepository monitorRepository;
+	private final PeriodMonitorRepository periodMonitorRepository;
 	private final PeriodRepository periodRepository;
 
-	public MonitorPersistenceAdapter(final MonitorRepository monitorRepository, final PeriodRepository periodRepository) {
-		this.monitorRepository = monitorRepository;
+	public MonitorPersistenceAdapter(final PeriodMonitorRepository periodMonitorRepository, final PeriodRepository periodRepository) {
+		this.periodMonitorRepository = periodMonitorRepository;
 		this.periodRepository = periodRepository;
 	}
 
 	@Override
 	public Flux<Monitor> loadMonitors(final String monitorTypeId, final String userId, final Pageable pageable) {
-		return monitorRepository.findMonitorsByIdAndUserId(monitorTypeId, userId, pageable);
+		return Flux.never();
 	}
 
 	@Override
-	public Flux<PeriodMonitor> loadPeriodMonitors(String monitorTypeId, String userId, Pageable pageable) {
-		return periodRepository.findPeriodMonitorsByIdAndUserId(monitorTypeId, userId, pageable);
+	public Flux<PeriodMonitor> loadPeriodMonitors(final String monitorTypeId, final String userId, Pageable pageable) {
+		return periodMonitorRepository.findPeriodMonitorsByIdAndUserId(monitorTypeId, userId, pageable);
+	}
+
+	@Override
+	public Flux<Period> loadPeriods(final String periodMoniorId) {
+		return periodRepository.findPeriodsByPeriodMonitorId(periodMoniorId);
 	}
 
 	@Override
@@ -42,7 +48,12 @@ public class MonitorPersistenceAdapter implements LoadMonitorsPort, CreateMonito
 	}
 
 	@Override
-	public Mono<Monitor> createMonitor(final Monitor monitor) {
-		return monitorRepository.save(monitor);
+	public Mono<PeriodMonitor> createPeriodMonitor(final PeriodMonitor monitor) {
+		return periodMonitorRepository.save(monitor);
+	}
+
+	@Override
+	public Mono<Period> createPeriod(final Period period) {
+		return periodRepository.save(period);
 	}
 }

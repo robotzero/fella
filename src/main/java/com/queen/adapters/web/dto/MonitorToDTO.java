@@ -2,6 +2,9 @@ package com.queen.adapters.web.dto;
 
 import com.queen.domain.monitor.MonitorResult;
 
+import java.util.Date;
+import java.util.UUID;
+
 public class MonitorToDTO {
 	final MonitorTypeToDTO monitorTypeToDTO;
 
@@ -20,10 +23,25 @@ public class MonitorToDTO {
 			final String monitorTypeId,
 			final String userId
 	) {
-		return new com.queen.application.service.dto.MonitorDTO(
-				monitorTypeId,
-				monitorRequest.name(),
-				userId
-		);
+		final var periodMonitorId = UUID.randomUUID().toString();
+		return switch (monitorRequest) {
+			case MonitorRequest.PeriodMonitorRequest periodMonitorRequest -> new com.queen.application.service.dto.MonitorDTO.PeriodMonitorDTO(
+					periodMonitorId,
+					monitorTypeId,
+					userId,
+					new Date(),
+					periodMonitorRequest.notes(),
+					new com.queen.application.service.dto.MonitorDTO.PeriodDTO(
+							UUID.randomUUID().toString(),
+							periodMonitorId,
+							periodMonitorRequest.painLevel(),
+							new Date(),
+							""
+					)
+
+			);
+			case MonitorRequest.MigraneRequest migraneRequest -> throw new IllegalStateException("Not implemented yet");
+			case MonitorRequest.StomachRequest stomachRequest -> throw new IllegalStateException("Not implemented yet");
+		};
 	}
 }

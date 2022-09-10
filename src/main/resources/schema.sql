@@ -82,7 +82,7 @@
 --     userId varchar (255) NOT NULL,
 --     monitorTypeId varchar (255) NOT NULL,
 --     startDate timestamp NOT NULL DEFAULT NOW(),
---     painLevel smallint NOT NULL,
+--     endDate timestamp DEFAULT NULL,
 --     notes varchar(255) NOT NULL,
 --     tags varchar(255) DEFAULT NULL,
 --     created_at timestamp NOT NULL DEFAULT NOW(),
@@ -90,7 +90,18 @@
 -- );
 --
 -- ALTER TABLE period_monitor ADD CONSTRAINT userId FOREIGN KEY (userId) REFERENCES users (id);
--- ALTER TABLE period_monitor ADD CONSTRAINT painLevel FOREIGN KEY (painLevel) REFERENCES pain_level (painLevel);
+
+-- CREATE TABLE IF NOT EXISTS periods (
+--     id varchar (255) NOT NULL,
+--     periodMonitorId varchar (255) NOT NULL,
+--     painLevel smallint NOT NULL,
+--     notes varchar(255) NOT NULL,
+--     tags varchar(255) DEFAULT NULL,
+--     created_at timestamp NOT NULL DEFAULT NOW(),
+--     PRIMARY KEY (id)
+-- );
+--
+-- ALTER TABLE periods ADD CONSTRAINT painLevel FOREIGN KEY (painLevel) REFERENCES pain_level (painLevel);
 
 -- CREATE TABLE IF NOT EXISTS pain_level (
 --     painLevel smallint NOT NULL,

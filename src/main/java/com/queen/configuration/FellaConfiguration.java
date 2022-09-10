@@ -18,9 +18,9 @@ import com.queen.application.ports.out.CreateFieldsPort;
 import com.queen.application.ports.out.CreateMonitorPort;
 import com.queen.application.ports.out.CreateMonitorTypesPort;
 import com.queen.application.ports.out.CreateUserPort;
+import com.queen.application.ports.out.LoadFieldTypesPort;
 import com.queen.application.ports.out.LoadMonitorTypesPort;
 import com.queen.application.ports.out.LoadMonitorsPort;
-import com.queen.application.ports.out.LoadFieldTypesPort;
 import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.AttachUserService;
 import com.queen.application.service.MonitorService;
@@ -28,9 +28,9 @@ import com.queen.application.service.MonitorTypeService;
 import com.queen.application.service.UserService;
 import com.queen.infrastructure.persitence.FieldTypesRepository;
 import com.queen.infrastructure.persitence.FieldsRepository;
-import com.queen.infrastructure.persitence.MonitorRepository;
 import com.queen.infrastructure.persitence.MonitorTypeRepository;
 import com.queen.infrastructure.persitence.UserRepository;
+import com.queen.infrastructure.persitence.monitor.PeriodMonitorRepository;
 import com.queen.infrastructure.persitence.monitor.PeriodRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -105,13 +105,13 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-    LoadMonitorsPort loadMonitors(final MonitorRepository monitorRepository, final PeriodRepository periodRepository) {
-		return new MonitorPersistenceAdapter(monitorRepository, periodRepository);
+    LoadMonitorsPort loadMonitors(final PeriodMonitorRepository periodMonitorRepository, final PeriodRepository periodRepository) {
+		return new MonitorPersistenceAdapter(periodMonitorRepository, periodRepository);
 	}
 
 	@Bean
-	CreateMonitorPort createMonitorPort(final MonitorRepository monitorRepository, final PeriodRepository periodRepository) {
-		return new MonitorPersistenceAdapter(monitorRepository, periodRepository);
+	CreateMonitorPort createMonitorPort(final PeriodMonitorRepository periodMonitorRepository, final PeriodRepository periodRepository) {
+		return new MonitorPersistenceAdapter(periodMonitorRepository, periodRepository);
 	}
 
 	@Bean
