@@ -4,27 +4,27 @@ import com.queen.adapters.persistance.FieldTypeMapper;
 import com.queen.adapters.persistance.FieldTypePersistenceAdapter;
 import com.queen.adapters.persistance.FieldsMapper;
 import com.queen.adapters.persistance.FieldsPersistenceAdapter;
-import com.queen.adapters.persistance.MonitorMapper;
-import com.queen.adapters.persistance.MonitorPersistenceAdapter;
+import com.queen.adapters.persistance.PeriodMonitorMapper;
+import com.queen.adapters.persistance.PeriodMonitorPersistenceAdapter;
 import com.queen.adapters.persistance.MonitorTypeMapper;
 import com.queen.adapters.persistance.MonitorTypePersistenceAdapter;
 import com.queen.adapters.persistance.UserMapper;
 import com.queen.adapters.persistance.UserPersistenceAdapter;
 import com.queen.adapters.web.dto.FieldTypeToDTO;
-import com.queen.adapters.web.dto.MonitorToDTO;
+import com.queen.adapters.web.dto.PeriodMonitorToDTO;
 import com.queen.adapters.web.dto.MonitorTypeToDTO;
 import com.queen.adapters.web.dto.UserToDTO;
 import com.queen.application.ports.out.CreateFieldsPort;
-import com.queen.application.ports.out.CreateMonitorPort;
+import com.queen.application.ports.out.CreatePeriodMonitorPort;
 import com.queen.application.ports.out.CreateMonitorTypesPort;
 import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadFieldTypesPort;
 import com.queen.application.ports.out.LoadMonitorTypesPort;
-import com.queen.application.ports.out.LoadMonitorsPort;
+import com.queen.application.ports.out.LoadPeriodMonitorsPort;
 import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.AttachUserService;
-import com.queen.application.service.MonitorService;
 import com.queen.application.service.MonitorTypeService;
+import com.queen.application.service.PeriodMonitorService;
 import com.queen.application.service.UserService;
 import com.queen.infrastructure.persitence.FieldTypesRepository;
 import com.queen.infrastructure.persitence.FieldsRepository;
@@ -95,28 +95,28 @@ public class FellaConfiguration {
 
 	// Monitors
 	@Bean
-	MonitorService monitorService(final MonitorMapper monitorMapper, final LoadMonitorsPort loadAllMonitors, final CreateMonitorPort createMonitorPort, final MonitorTypeService monitorTypeService) {
-		return new MonitorService(loadAllMonitors, monitorMapper, createMonitorPort, monitorTypeService);
+	PeriodMonitorService periodMonitorService(final PeriodMonitorMapper monitorMapper, final LoadPeriodMonitorsPort loadAllMonitors, final CreatePeriodMonitorPort createMonitorPort, final MonitorTypeService monitorTypeService) {
+		return new PeriodMonitorService(loadAllMonitors, monitorMapper, createMonitorPort, monitorTypeService);
 	}
 
 	@Bean
-	MonitorMapper monitorMapper() {
-		return new MonitorMapper();
+	PeriodMonitorMapper monitorMapper() {
+		return new PeriodMonitorMapper();
 	}
 
 	@Bean
-    LoadMonitorsPort loadMonitors(final PeriodMonitorRepository periodMonitorRepository, final PeriodRepository periodRepository) {
-		return new MonitorPersistenceAdapter(periodMonitorRepository, periodRepository);
+	LoadPeriodMonitorsPort loadMonitors(final PeriodMonitorRepository periodMonitorRepository, final PeriodRepository periodRepository) {
+		return new PeriodMonitorPersistenceAdapter(periodMonitorRepository, periodRepository);
 	}
 
 	@Bean
-	CreateMonitorPort createMonitorPort(final PeriodMonitorRepository periodMonitorRepository, final PeriodRepository periodRepository) {
-		return new MonitorPersistenceAdapter(periodMonitorRepository, periodRepository);
+	CreatePeriodMonitorPort createMonitorPort(final PeriodMonitorRepository periodMonitorRepository, final PeriodRepository periodRepository) {
+		return new PeriodMonitorPersistenceAdapter(periodMonitorRepository, periodRepository);
 	}
 
 	@Bean
-	MonitorToDTO monitorToDTO(final MonitorTypeToDTO monitorTypeToDTO) {
-		return new MonitorToDTO(monitorTypeToDTO);
+  PeriodMonitorToDTO monitorToDTO(final MonitorTypeToDTO monitorTypeToDTO) {
+		return new PeriodMonitorToDTO(monitorTypeToDTO);
 	}
 
 

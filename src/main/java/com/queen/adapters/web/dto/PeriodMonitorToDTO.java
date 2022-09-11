@@ -1,31 +1,31 @@
 package com.queen.adapters.web.dto;
 
-import com.queen.domain.monitor.MonitorResult;
+import com.queen.domain.monitor.PeriodMonitorResult;
 
 import java.util.Date;
 import java.util.UUID;
 
-public class MonitorToDTO {
+public class PeriodMonitorToDTO {
 	final MonitorTypeToDTO monitorTypeToDTO;
 
-	public MonitorToDTO(final MonitorTypeToDTO monitorTypeToDTO) {
+	public PeriodMonitorToDTO(final MonitorTypeToDTO monitorTypeToDTO) {
 		this.monitorTypeToDTO = monitorTypeToDTO;
 	}
-	public MonitorDTO toDTO(MonitorResult monitor) {
+	public MonitorDTO toDTO(PeriodMonitorResult monitor) {
 		return switch (monitor) {
-			case MonitorResult.PeriodMonitor periodMonitor -> new MonitorDTO.PeriodDTO(periodMonitor.id(), null);
+			case PeriodMonitorResult.PeriodMonitor periodMonitor -> new MonitorDTO.PeriodDTO(periodMonitor.id(), null);
 			default -> throw new IllegalStateException("Unexpected value: " + monitor);
 		};
 	}
 
 	public com.queen.application.service.dto.MonitorDTO toServiceDTO(
-			final MonitorRequest monitorRequest,
+			final PeriodMonitorRequest monitorRequest,
 			final String monitorTypeId,
 			final String userId
 	) {
 		final var periodMonitorId = UUID.randomUUID().toString();
 		return switch (monitorRequest) {
-			case MonitorRequest.PeriodMonitorRequest periodMonitorRequest -> new com.queen.application.service.dto.MonitorDTO.PeriodMonitorDTO(
+			case PeriodMonitorRequest periodMonitorRequest -> new com.queen.application.service.dto.MonitorDTO.PeriodMonitorDTO(
 					periodMonitorId,
 					monitorTypeId,
 					userId,
@@ -40,8 +40,6 @@ public class MonitorToDTO {
 					)
 
 			);
-			case MonitorRequest.MigraneRequest migraneRequest -> throw new IllegalStateException("Not implemented yet");
-			case MonitorRequest.StomachRequest stomachRequest -> throw new IllegalStateException("Not implemented yet");
 		};
 	}
 }

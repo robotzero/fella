@@ -1,6 +1,5 @@
 package com.queen.infrastructure.persitence.monitor;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
@@ -21,23 +20,23 @@ public class PeriodMonitor implements Persistable<String> {
 	private String monitorTypeId;
 
 	@Column("created_at")
-	@CreatedDate
 	private Instant createdDate = Instant.now();
 
 	@Column("startdate")
 	private Instant startDate;
 
 	@Column("notes")
-	private final String notes = "";
+	private String notes = "";
 
 	@Transient
 	private boolean newPeriodMonitor;
 
-	public PeriodMonitor(final String id, String monitorTypeId, final String userId, final Instant startDate) {
+	public PeriodMonitor(final String id, String monitorTypeId, final String userId, final Instant startDate, final String notes) {
 		this.id = id;
 		this.monitorTypeId = monitorTypeId;
 		this.userId = userId;
 		this.startDate = startDate;
+		this.notes = notes;
 	}
 
 	@Override
