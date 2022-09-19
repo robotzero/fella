@@ -9,6 +9,7 @@ import com.queen.application.ports.out.LoadPeriodMonitorsPort;
 import com.queen.application.service.dto.MonitorDTO;
 import com.queen.application.service.exception.MonitorException;
 import com.queen.domain.monitor.PeriodMonitorResult;
+import com.queen.domain.monitortype.MonitorTypeResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class PeriodMonitorService implements PeriodMonitorQuery, CreatePeriodMon
 		this.loadPeriodMonitors       = loadPeriodMonitors;
 		this.periodMonitorMapper      = periodMonitorMapper;
 		this.createPeriodMonitorPort  = createPeriodMonitorPort;
-		this.monitorTypeService = monitorTypeService;
+		this.monitorTypeService 	  = monitorTypeService;
 	}
 
 	@Override
@@ -63,10 +64,10 @@ public class PeriodMonitorService implements PeriodMonitorQuery, CreatePeriodMon
 					final var monitorTypeResult = tuple.getT1();
 					final var periodMonitor = tuple.getT2();
 					return periodMonitorMapper.mapToPeriodMonitor(monitorTypeResult, periodMonitor);
-				}).zipWith(createdPeriod).map(tuple -> {
+				}).zipWith(createdPeriod).filter(newPeriod -> newPeriod.getT1() instanceof PeriodMonitorResult.PeriodMonitor).map(tuple -> {
 					final var monitorResult = tuple.getT1();
 					final var period = tuple.getT2();
-					return periodMonitorMapper.mapToPeriodMonitorWithPeriod(monitorResult, List.of(period));
+					return periodMonitorMapper.mapToPeriodMonitorWithPeriod((PeriodMonitorResult.PeriodMonitor) monitorResult, List.of(period));
 				});
 			}
 		};
@@ -75,14 +76,9 @@ public class PeriodMonitorService implements PeriodMonitorQuery, CreatePeriodMon
 	@Override
 	public Flux<PeriodMonitorResult> loadPeriodMonitors(String monitorTypeId, String userId, Pageable pageable) {
 		final var singleMonitorType = monitorTypeService.loadSingleMonitorType(monitorTypeId, userId);
-		return singleMonitorType.flatMapMany(monitorTypeResult -> {
-			return switch (monitorTypeResult) {
-				case com.queen.domain.monitortype.MonitorTypeResult.Period period -> {
-					yield loadPeriodMonitors.loadPeriodMonitors(monitorTypeId, userId, pageable).map(persistancePeriodMonitor -> periodMonitorMapper.mapToPeriodMonitor(monitorTypeResult, persistancePeriodMonitor));
-				}
-				case com.queen.domain.monitortype.MonitorTypeResult.Stomach stomach -> throw new IllegalStateException("Not implemented yet");
-				case com.queen.domain.monitortype.MonitorTypeResult.TabletsTaken tabletsTaken -> throw new IllegalStateException("Not implemented yet");
-			};
+		return singleMonitorType.filter(monitorTypeResult -> monitorTypeResult instanceof MonitorTypeResult.Period).flatMapMany(monitorTypeResult -> {
+			return loadPeriodMonitors.loadPeriodMonitors(monitorTypeId, userId, pageable)
+					.map(persistancePeriodMonitor -> periodMonitorMapper.mapToPeriodMonitor(monitorTypeResult, persistancePeriodMonitor));
 		});
 	}
 }

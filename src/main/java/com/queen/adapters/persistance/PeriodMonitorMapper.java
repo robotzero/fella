@@ -15,19 +15,17 @@ public class PeriodMonitorMapper {
 	}
 
 	public PeriodMonitorResult mapToPeriodMonitor(final MonitorTypeResult monitorTypeResult, final com.queen.infrastructure.persitence.monitor.PeriodMonitor periodMonitor) {
-		return switch (monitorTypeResult) {
-			case MonitorTypeResult.Period period -> new PeriodMonitorResult.PeriodMonitor(periodMonitor.getId(), Date.from(periodMonitor.getStartDate()), Date.from(periodMonitor.getStartDate()), periodMonitor.getNotes(), period, List.of());
-			case MonitorTypeResult.Stomach stomach -> throw new RuntimeException("TODO");
-			case MonitorTypeResult.TabletsTaken tabletsTaken  -> throw new RuntimeException("TODO");
-		};
+		return new PeriodMonitorResult.PeriodMonitor(
+				periodMonitor.getId(),
+				Date.from(periodMonitor.getStartDate()),
+				periodMonitor.getNotes(),
+				monitorTypeResult,
+				List.of()
+		);
 	}
 
-	public PeriodMonitorResult mapToPeriodMonitorWithPeriod(final PeriodMonitorResult monitorResult, final List<Period> periods) {
-		return switch (monitorResult) {
-			case PeriodMonitorResult.PeriodMonitor periodMonitorResult -> new PeriodMonitorResult.PeriodMonitor(periodMonitorResult.id(), periodMonitorResult.startDate(), periodMonitorResult.endDate(), periodMonitorResult.notes(), periodMonitorResult.monitorTypeResult(), periods);
-			case PeriodMonitorResult.StomachMonitor stomachMonitor -> throw new RuntimeException("TODO");
-			case PeriodMonitorResult.TabletsTakenMonitor tabletsTakenMonitor -> throw new RuntimeException("TODO");
-		};
+	public PeriodMonitorResult mapToPeriodMonitorWithPeriod(final PeriodMonitorResult.PeriodMonitor periodMonitorResult, final List<Period> periods) {
+		return new PeriodMonitorResult.PeriodMonitor(periodMonitorResult.id(), periodMonitorResult.startDate(), periodMonitorResult.notes(), periodMonitorResult.monitorTypeResult(), periods);
 	}
 
 	public com.queen.infrastructure.persitence.monitor.PeriodMonitor mapToPersistence(final MonitorDTO.PeriodMonitorDTO monitor) {

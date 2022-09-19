@@ -28,16 +28,16 @@ import java.util.List;
 public class PeriodMonitorController {
 	private final PeriodMonitorService periodMonitorService;
 	private final PeriodMonitorToDTO periodMonitorToDTO;
-	private final CreatePeriodMonitorUseCase createMonitorUseCase;
+	private final CreatePeriodMonitorUseCase createPeriodMonitorUseCase;
 
 	public PeriodMonitorController(
 			final PeriodMonitorService periodMonitorService,
 			final PeriodMonitorToDTO periodMonitorToDTO,
-			final CreatePeriodMonitorUseCase createMonitorUserCase
+			final CreatePeriodMonitorUseCase createPeriodMonitorUseCase
 	) {
 		this.periodMonitorService  = periodMonitorService;
 		this.periodMonitorToDTO    = periodMonitorToDTO;
-		this.createMonitorUseCase  = createMonitorUserCase;
+		this.createPeriodMonitorUseCase  = createPeriodMonitorUseCase;
 	}
 
 	@GetMapping(value = "/period-monitors/{periodMonitorId}/periods", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,8 +72,8 @@ public class PeriodMonitorController {
 			final @PathVariable String monitorTypeId,
 			final @RequestBody PeriodMonitorRequest periodMonitorRequest
 	) {
-		return createMonitorUseCase.createPeriodMonitor(
+		return createPeriodMonitorUseCase.createPeriodMonitor(
 				new CreatePeriodMonitorCommand(periodMonitorToDTO.toServiceDTO(periodMonitorRequest, monitorTypeId, userId))
-		).map(monitorPersistence -> ResponseEntity.ok(periodMonitorToDTO.toDTO(monitorPersistence))).single();
+		).map(periodMonitorPersistance -> ResponseEntity.ok(periodMonitorToDTO.toDTO(periodMonitorPersistance))).single();
 	}
 }
