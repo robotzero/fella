@@ -1,8 +1,7 @@
 package com.queen.adapters.web.dto;
 
-import com.queen.domain.monitor.PeriodMonitorResult;
+import com.queen.domain.monitor.PeriodMonitor;
 
-import java.util.Date;
 import java.util.UUID;
 
 public class PeriodMonitorToDTO {
@@ -11,35 +10,24 @@ public class PeriodMonitorToDTO {
 	public PeriodMonitorToDTO(final MonitorTypeToDTO monitorTypeToDTO) {
 		this.monitorTypeToDTO = monitorTypeToDTO;
 	}
-	public MonitorDTO toDTO(PeriodMonitorResult monitor) {
-		return switch (monitor) {
-			case PeriodMonitorResult.PeriodMonitor periodMonitor -> new MonitorDTO.PeriodDTO(periodMonitor.id(), null);
-			default -> throw new IllegalStateException("Unexpected value: " + monitor);
-		};
+	public MonitorDTO toDTO(final PeriodMonitor periodMonitor) {
+		return new MonitorDTO.PeriodDTO(periodMonitor.id(), null);
 	}
 
-	public com.queen.application.service.dto.MonitorDTO toServiceDTO(
-			final PeriodMonitorRequest monitorRequest,
+	public com.queen.application.service.dto.PeriodMonitorDTO toServiceDTO(
+			final PeriodMonitorRequest periodMonitorRequest,
 			final String monitorTypeId,
 			final String userId
 	) {
 		final var periodMonitorId = UUID.randomUUID().toString();
-		return switch (monitorRequest) {
-			case PeriodMonitorRequest periodMonitorRequest -> new com.queen.application.service.dto.MonitorDTO.PeriodMonitorDTO(
-					periodMonitorId,
-					monitorTypeId,
-					userId,
-					new Date(),
-					periodMonitorRequest.notes(),
-					new com.queen.application.service.dto.MonitorDTO.PeriodDTO(
-							UUID.randomUUID().toString(),
-							periodMonitorId,
-							periodMonitorRequest.painLevel(),
-							new Date(),
-							""
-					)
-
-			);
-		};
+		return new com.queen.application.service.dto.PeriodMonitorDTO(
+				periodMonitorId,
+				monitorTypeId,
+				userId,
+				periodMonitorRequest.periodDate(),
+				periodMonitorRequest.painLevel(),
+				periodMonitorRequest.flowLevel(),
+				periodMonitorRequest.notes()
+		);
 	}
 }

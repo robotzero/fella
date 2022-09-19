@@ -13,17 +13,23 @@ public class PeriodMonitor implements Persistable<String> {
 	@Column("id")
 	private final String id;
 
-	@Column("userId")
+	@Column("user_id")
 	private String userId;
 
-	@Column("monitorTypeId")
+	@Column("monitor_type_id")
 	private String monitorTypeId;
 
 	@Column("created_at")
 	private Instant createdDate = Instant.now();
 
-	@Column("startdate")
-	private Instant startDate;
+	@Column("period_date")
+	private Instant periodDate;
+
+	@Column("pain_level")
+	private Integer painLevel;
+
+	@Column("flow_level")
+	private Integer flowLevel;
 
 	@Column("notes")
 	private String notes = "";
@@ -31,11 +37,13 @@ public class PeriodMonitor implements Persistable<String> {
 	@Transient
 	private boolean newPeriodMonitor;
 
-	public PeriodMonitor(final String id, String monitorTypeId, final String userId, final Instant startDate, final String notes) {
+	public PeriodMonitor(final String id, String monitorTypeId, final String userId, final Instant periodDate, final Integer painLevel, final Integer flowLevel, final String notes) {
 		this.id = id;
 		this.monitorTypeId = monitorTypeId;
 		this.userId = userId;
-		this.startDate = startDate;
+		this.periodDate = periodDate;
+		this.painLevel = painLevel;
+		this.flowLevel = flowLevel;
 		this.notes = notes;
 	}
 
@@ -58,11 +66,19 @@ public class PeriodMonitor implements Persistable<String> {
 		return this;
 	}
 
-	public Instant getStartDate() {
-		return startDate;
+	public Instant getPeriodDate() {
+		return periodDate;
 	}
 
 	public String getNotes() {
 		return notes;
+	}
+
+	public Integer getPainLevel() {
+		return painLevel;
+	}
+
+	public Integer getFlowLevel() {
+		return flowLevel;
 	}
 }

@@ -31,7 +31,6 @@ import com.queen.infrastructure.persitence.FieldsRepository;
 import com.queen.infrastructure.persitence.MonitorTypeRepository;
 import com.queen.infrastructure.persitence.UserRepository;
 import com.queen.infrastructure.persitence.monitor.PeriodMonitorRepository;
-import com.queen.infrastructure.persitence.monitor.PeriodRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -95,8 +94,8 @@ public class FellaConfiguration {
 
 	// Monitors
 	@Bean
-	PeriodMonitorService periodMonitorService(final PeriodMonitorMapper monitorMapper, final LoadPeriodMonitorsPort loadAllMonitors, final CreatePeriodMonitorPort createMonitorPort, final MonitorTypeService monitorTypeService) {
-		return new PeriodMonitorService(loadAllMonitors, monitorMapper, createMonitorPort, monitorTypeService);
+	PeriodMonitorService periodMonitorService(final PeriodMonitorMapper monitorMapper, final LoadPeriodMonitorsPort loadAllMonitors, final CreatePeriodMonitorPort createMonitorPort) {
+		return new PeriodMonitorService(loadAllMonitors, monitorMapper, createMonitorPort);
 	}
 
 	@Bean
@@ -105,13 +104,13 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	LoadPeriodMonitorsPort loadMonitors(final PeriodMonitorRepository periodMonitorRepository, final PeriodRepository periodRepository) {
-		return new PeriodMonitorPersistenceAdapter(periodMonitorRepository, periodRepository);
+	LoadPeriodMonitorsPort loadMonitors(final PeriodMonitorRepository periodMonitorRepository) {
+		return new PeriodMonitorPersistenceAdapter(periodMonitorRepository);
 	}
 
 	@Bean
-	CreatePeriodMonitorPort createMonitorPort(final PeriodMonitorRepository periodMonitorRepository, final PeriodRepository periodRepository) {
-		return new PeriodMonitorPersistenceAdapter(periodMonitorRepository, periodRepository);
+	CreatePeriodMonitorPort createMonitorPort(final PeriodMonitorRepository periodMonitorRepository) {
+		return new PeriodMonitorPersistenceAdapter(periodMonitorRepository);
 	}
 
 	@Bean

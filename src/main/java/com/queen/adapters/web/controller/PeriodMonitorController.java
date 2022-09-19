@@ -40,33 +40,20 @@ public class PeriodMonitorController {
 		this.createPeriodMonitorUseCase  = createPeriodMonitorUseCase;
 	}
 
-	@GetMapping(value = "/period-monitors/{periodMonitorId}/periods", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/monitor-type/{monitorTypeId}/period-monitors", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Mono<ResponseEntity<List<MonitorDTO>>> getPeriods(
 			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
 			final @RequestParam(name = "page", defaultValue = PageSupportDTO.FIRST_PAGE_NUM) @Min(0) int page,
 			final @RequestParam(name = "size", defaultValue = PageSupportDTO.DEFAULT_PAGE_SIZE) @Min(1) int size,
-			final @PathVariable String periodMonitorId
+			final @PathVariable String monitorTypeId
 	) {
-		return periodMonitorService.loadPeriodMonitors(periodMonitorId, userId, PageRequest.of(page, size)).map(periodMonitorToDTO::toDTO)
+		return periodMonitorService.loadPeriodMonitors(monitorTypeId, userId, PageRequest.of(page, size)).map(periodMonitorToDTO::toDTO)
 				.collectList()
 				.map(ResponseEntity::ok)
 				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
 
-	@GetMapping(value = "/period-monitors", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Mono<ResponseEntity<List<MonitorDTO>>> getPeriodMonitors(
-			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
-			final @RequestParam(name = "page", defaultValue = PageSupportDTO.FIRST_PAGE_NUM) @Min(0) int page,
-			final @RequestParam(name = "size", defaultValue = PageSupportDTO.DEFAULT_PAGE_SIZE) @Min(1) int size,
-			final @PathVariable String periodMonitorId
-	) {
-		return periodMonitorService.loadPeriodMonitors(periodMonitorId, userId, PageRequest.of(page, size)).map(periodMonitorToDTO::toDTO)
-				.collectList()
-				.map(ResponseEntity::ok)
-				.defaultIfEmpty(ResponseEntity.notFound().build());
-	}
-
-	@PostMapping(value = "/period-monitors", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/monitor-type/{monitorTypeId}/period-monitors", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	Mono<ResponseEntity<MonitorDTO>> createPeriodMonitor(
 			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
 			final @PathVariable String monitorTypeId,

@@ -79,52 +79,50 @@
 
 -- CREATE TABLE IF NOT EXISTS period_monitor (
 --     id varchar (255) NOT NULL,
---     userId varchar (255) NOT NULL,
---     monitorTypeId varchar (255) NOT NULL,
---     startDate timestamp NOT NULL DEFAULT NOW(),
---     endDate timestamp DEFAULT NULL,
+--     user_id varchar (255) NOT NULL,
+--     monitor_type_id varchar (255) NOT NULL,
+--     period_date timestamp NOT NULL DEFAULT NOW(),
+--     pain_level smallint NOT NULL,
+--     flow_level smallint NOT NULL,
 --     notes varchar(255) NOT NULL,
 --     tags varchar(255) DEFAULT NULL,
 --     created_at timestamp NOT NULL DEFAULT NOW(),
 --     PRIMARY KEY (id)
 -- );
 --
--- ALTER TABLE period_monitor ADD CONSTRAINT userId FOREIGN KEY (userId) REFERENCES users (id);
-
--- CREATE TABLE IF NOT EXISTS periods (
---     id varchar (255) NOT NULL,
---     periodMonitorId varchar (255) NOT NULL,
---     painLevel smallint NOT NULL,
---     notes varchar(255) NOT NULL,
---     tags varchar(255) DEFAULT NULL,
---     created_at timestamp NOT NULL DEFAULT NOW(),
---     PRIMARY KEY (id)
--- );
+-- ALTER TABLE period_monitor ADD CONSTRAINT user_id FOREIGN KEY (user_id) REFERENCES users (id);
+-- ALTER TABLE period_monitor ADD CONSTRAINT pain_level FOREIGN KEY (pain_level) REFERENCES pain_level (pain_level);
+-- ALTER TABLE period_monitor ADD CONSTRAINT flow_level FOREIGN KEY (flow_level) REFERENCES period_flow_level (period_flow_level);
 --
--- ALTER TABLE periods ADD CONSTRAINT painLevel FOREIGN KEY (painLevel) REFERENCES pain_level (painLevel);
-
 -- CREATE TABLE IF NOT EXISTS pain_level (
---     painLevel smallint NOT NULL,
+--     pain_level smallint NOT NULL,
 --     description varchar (255) NOT NULL,
 --     created_at timestamp NOT NULL DEFAULT NOW(),
---     PRIMARY KEY (painLevel)
+--     PRIMARY KEY (pain_level)
 -- );
 --
 -- CREATE TABLE IF NOT EXISTS period_flow_level (
---     id varchar (255) NOT NULL,
---     periodFlowLevel int NOT NULL,
+--     period_flow_level smallint NOT NULL,
 --     description varchar(255) NOT NULL,
 --     created_at timestamp NOT NULL DEFAULT NOW(),
---     PRIMARY KEY (id)
+--     PRIMARY KEY (period_flow_level)
 -- );
-
--- INSERT INTO pain_level (painLevel, description) VALUES (1, 'Very mild');
--- INSERT INTO pain_level (painLevel, description) VALUES (2, 'Discomforting');
--- INSERT INTO pain_level (painLevel, description) VALUES (3, 'Tolerable');
--- INSERT INTO pain_level (painLevel, description) VALUES (4, 'Distressing');
--- INSERT INTO pain_level (painLevel, description) VALUES (5, 'Very distressing');
--- INSERT INTO pain_level (painLevel, description) VALUES (6, 'Intense');
--- INSERT INTO pain_level (painLevel, description) VALUES (7, 'Very intense');
--- INSERT INTO pain_level (painLevel, description) VALUES (8, 'Utterly horrible');
--- INSERT INTO pain_level (painLevel, description) VALUES (9, 'Excruciating, unbearable');
--- INSERT INTO pain_level (painLevel, description) VALUES (10, 'Unimaginable, unspeakable');
+--
+-- INSERT INTO pain_level (pain_level, description) VALUES (1, 'Very mild');
+-- INSERT INTO pain_level (pain_level, description) VALUES (2, 'Discomforting');
+-- INSERT INTO pain_level (pain_level, description) VALUES (3, 'Tolerable');
+-- INSERT INTO pain_level (pain_level, description) VALUES (4, 'Distressing');
+-- INSERT INTO pain_level (pain_level, description) VALUES (5, 'Very distressing');
+-- INSERT INTO pain_level (pain_level, description) VALUES (6, 'Intense');
+-- INSERT INTO pain_level (pain_level, description) VALUES (7, 'Very intense');
+-- INSERT INTO pain_level (pain_level, description) VALUES (8, 'Utterly horrible');
+-- INSERT INTO pain_level (pain_level, description) VALUES (9, 'Excruciating, unbearable');
+-- INSERT INTO pain_level (pain_level, description) VALUES (10, 'Unimaginable, unspeakable');
+--
+-- INSERT INTO period_flow_level (period_flow_level, description) VALUES (1, 'Spotting');
+-- INSERT INTO period_flow_level (period_flow_level, description) VALUES (2, 'Very Light');
+-- INSERT INTO period_flow_level (period_flow_level, description) VALUES (3, 'Light');
+-- INSERT INTO period_flow_level (period_flow_level, description) VALUES (4, 'Medium');
+-- INSERT INTO period_flow_level (period_flow_level, description) VALUES (5, 'Heavy');
+-- INSERT INTO period_flow_level (period_flow_level, description) VALUES (6, 'Very Heavy');
+-- INSERT INTO period_flow_level (period_flow_level, description) VALUES (7, 'Extremely Heavy');

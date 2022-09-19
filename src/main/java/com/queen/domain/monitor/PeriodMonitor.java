@@ -1,6 +1,5 @@
 package com.queen.domain.monitor;
 
-import com.queen.domain.monitortype.MonitorType;
+import java.util.Date;
 
-public record PeriodMonitor(String id, String name, MonitorType monitorType) {
-}
+public record PeriodMonitor(String id, Date periodDate, Integer painLevel, Integer flowLevel, String notes) {}
