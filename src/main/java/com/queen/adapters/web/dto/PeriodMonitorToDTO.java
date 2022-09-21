@@ -10,8 +10,17 @@ public class PeriodMonitorToDTO {
 	public PeriodMonitorToDTO(final MonitorTypeToDTO monitorTypeToDTO) {
 		this.monitorTypeToDTO = monitorTypeToDTO;
 	}
-	public MonitorDTO toDTO(final PeriodMonitor periodMonitor) {
-		return new MonitorDTO.PeriodDTO(periodMonitor.id(), null);
+	public PeriodMonitorDTO toDTO(final PeriodMonitor periodMonitor) {
+		return new PeriodMonitorDTO(
+				periodMonitor.id(),
+				null,
+				periodMonitor.periodDate(),
+				periodMonitor.painLevel(),
+				periodMonitor.flowLevel(),
+				periodMonitor.notes(),
+				"",
+				periodMonitor.createdAt()
+		);
 	}
 
 	public com.queen.application.service.dto.PeriodMonitorDTO toServiceDTO(

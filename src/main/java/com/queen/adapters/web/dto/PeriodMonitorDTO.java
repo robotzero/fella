@@ -1,9 +1,10 @@
-package com.queen.domain.monitor;
+package com.queen.adapters.web.dto;
 
 import java.util.Date;
 
-public record PeriodMonitor(
+public record PeriodMonitorDTO(
 		String id,
+		MonitorTypeDTO monitorType,
 		Date periodDate,
 		Integer painLevel,
 		Integer flowLevel,

@@ -13,7 +13,10 @@ public class PeriodMonitorMapper {
 				Date.from(periodMonitor.getPeriodDate()),
 				periodMonitor.getPainLevel(),
 				periodMonitor.getFlowLevel(),
-				periodMonitor.getNotes()
+				periodMonitor.getNotes(),
+				"",
+				Date.from(periodMonitor.getCreatedDate())
+
 		);
 	}
 

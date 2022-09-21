@@ -15,6 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class PeriodMonitorService implements PeriodMonitorQuery, CreatePeriodMonitorUseCase {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final LoadPeriodMonitorsPort loadPeriodMonitors;
@@ -33,7 +37,7 @@ public class PeriodMonitorService implements PeriodMonitorQuery, CreatePeriodMon
 
 	@Override
 	@Transactional
-	public Mono<PeriodMonitor> createPeriodMonitor(CreatePeriodMonitorCommand createPeriodMonitorCommand) {
+	public Mono<PeriodMonitor> createPeriodMonitor(final CreatePeriodMonitorCommand createPeriodMonitorCommand) {
 		final var periodMonitorDTO = createPeriodMonitorCommand.periodMonitorDTO();
 		final var createdPeriodMonitor = createPeriodMonitorPort.createPeriodMonitor(
 				periodMonitorMapper.mapToPersistence(periodMonitorDTO).setAsNew()
@@ -47,8 +51,15 @@ public class PeriodMonitorService implements PeriodMonitorQuery, CreatePeriodMon
 	}
 
 	@Override
-	public Flux<PeriodMonitor> loadPeriodMonitors(String monitorTypeId, String userId, Pageable pageable) {
+	public Flux<PeriodMonitor> loadPeriodMonitors(final String monitorTypeId, final String userId, final Pageable pageable) {
 		return loadPeriodMonitors.loadPeriodMonitors(monitorTypeId, userId, pageable)
+				.map(periodMonitorMapper::mapToPeriodMonitor);
+	}
+
+	@Override
+	public Mono<PeriodMonitor> loadPeriodMonitorByDate(final String monitorTypeId, final String userId, final String dateToSearchBy) throws ParseException {
+		final var simpleDateFromat = new SimpleDateFormat("yyyy-MM-dd").parse(dateToSearchBy);
+		return loadPeriodMonitors.loadPeriodMonitorByDate(monitorTypeId, userId, simpleDateFromat)
 				.map(periodMonitorMapper::mapToPeriodMonitor);
 	}
 }

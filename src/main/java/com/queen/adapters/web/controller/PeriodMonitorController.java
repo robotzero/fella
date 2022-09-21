@@ -1,6 +1,6 @@
 package com.queen.adapters.web.controller;
 
-import com.queen.adapters.web.dto.MonitorDTO;
+import com.queen.adapters.web.dto.PeriodMonitorDTO;
 import com.queen.adapters.web.dto.PeriodMonitorRequest;
 import com.queen.adapters.web.dto.PeriodMonitorToDTO;
 import com.queen.adapters.web.dto.PageSupportDTO;
@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -41,7 +45,7 @@ public class PeriodMonitorController {
 	}
 
 	@GetMapping(value = "/monitor-type/{monitorTypeId}/period-monitors", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Mono<ResponseEntity<List<MonitorDTO>>> getPeriods(
+	public Mono<ResponseEntity<List<PeriodMonitorDTO>>> getPeriods(
 			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
 			final @RequestParam(name = "page", defaultValue = PageSupportDTO.FIRST_PAGE_NUM) @Min(0) int page,
 			final @RequestParam(name = "size", defaultValue = PageSupportDTO.DEFAULT_PAGE_SIZE) @Min(1) int size,
@@ -53,8 +57,20 @@ public class PeriodMonitorController {
 				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
 
+	@GetMapping(value = "/monitor-type/{monitorTypeId}/period-monitors/{dateToSearchBy}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Mono<ResponseEntity<PeriodMonitorDTO>> getPeriodByDate(
+			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
+			final @PathVariable String monitorTypeId,
+			final @PathVariable String dateToSearchBy
+	) throws ParseException {
+		return periodMonitorService.loadPeriodMonitorByDate(monitorTypeId, userId, dateToSearchBy)
+				.map(periodMonitorToDTO::toDTO)
+				.map(ResponseEntity::ok)
+				.defaultIfEmpty(ResponseEntity.notFound().build());
+	}
+
 	@PostMapping(value = "/monitor-type/{monitorTypeId}/period-monitors", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	Mono<ResponseEntity<MonitorDTO>> createPeriodMonitor(
+	Mono<ResponseEntity<PeriodMonitorDTO>> createPeriodMonitor(
 			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
 			final @PathVariable String monitorTypeId,
 			final @RequestBody PeriodMonitorRequest periodMonitorRequest

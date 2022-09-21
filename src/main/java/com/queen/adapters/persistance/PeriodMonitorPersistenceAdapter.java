@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Date;
+
 public class PeriodMonitorPersistenceAdapter implements LoadPeriodMonitorsPort, CreatePeriodMonitorPort {
 	private final PeriodMonitorRepository periodMonitorRepository;
 
@@ -18,6 +20,11 @@ public class PeriodMonitorPersistenceAdapter implements LoadPeriodMonitorsPort, 
 	@Override
 	public Flux<PeriodMonitor> loadPeriodMonitors(final String monitorTypeId, final String userId, Pageable pageable) {
 		return periodMonitorRepository.findPeriodMonitorsByIdAndUserId(monitorTypeId, userId, pageable);
+	}
+
+	@Override
+	public Mono<PeriodMonitor> loadPeriodMonitorByDate(final String monitorTypeId, final String userId, final Date dateToSearchBy) {
+		return periodMonitorRepository.findPeriodMonitorByDate(monitorTypeId, userId, dateToSearchBy);
 	}
 
 	@Override

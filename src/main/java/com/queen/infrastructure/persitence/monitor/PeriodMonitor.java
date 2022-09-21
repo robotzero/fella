@@ -81,4 +81,8 @@ public class PeriodMonitor implements Persistable<String> {
 	public Integer getFlowLevel() {
 		return flowLevel;
 	}
+
+	public Instant getCreatedDate() {
+		return createdDate;
+	}
 }
