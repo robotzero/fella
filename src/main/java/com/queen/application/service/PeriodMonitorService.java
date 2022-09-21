@@ -39,6 +39,7 @@ public class PeriodMonitorService implements PeriodMonitorQuery, CreatePeriodMon
 	@Transactional
 	public Mono<PeriodMonitor> createPeriodMonitor(final CreatePeriodMonitorCommand createPeriodMonitorCommand) {
 		final var periodMonitorDTO = createPeriodMonitorCommand.periodMonitorDTO();
+//		loadPeriodMonitors.loadPeriodMonitorByDate(periodMonitorDTO.monitorTypeId(), periodMonitorDTO.userId(), new Date());
 		final var createdPeriodMonitor = createPeriodMonitorPort.createPeriodMonitor(
 				periodMonitorMapper.mapToPersistence(periodMonitorDTO).setAsNew()
 				).doOnError(error -> {
