@@ -71,6 +71,7 @@ dependencies {
 	implementation 'org.postgresql:r2dbc-postgresql:1.0.0.RELEASE'
 	implementation 'io.r2dbc:r2dbc-h2'
 	implementation 'org.springframework.boot:spring-boot-devtools'
+	implementation "org.springframework.security:spring-security-oauth2-authorization-server:1.0.0"
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.2'
 	testImplementation 'io.projectreactor:reactor-test:3.5.2'
