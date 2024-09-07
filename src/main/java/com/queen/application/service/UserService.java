@@ -12,7 +12,7 @@ import com.queen.application.service.dto.FieldsDTO;
 import com.queen.application.service.dto.MonitorTypeDTO;
 import com.queen.application.service.exception.UserServiceException;
 import com.queen.domain.user.FellaUser;
-import com.queen.infrastructure.persitence.User;
+import com.queen.infrastructure.persistence.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;

@@ -1,8 +1,8 @@
 package com.queen.adapters.persistance;
 
 import com.queen.application.ports.out.CreateFieldsPort;
-import com.queen.infrastructure.persitence.Fields;
-import com.queen.infrastructure.persitence.FieldsRepository;
+import com.queen.infrastructure.persistence.Fields;
+import com.queen.infrastructure.persistence.FieldsRepository;
 import reactor.core.publisher.Flux;
 
 import java.util.List;

@@ -26,11 +26,11 @@ import com.queen.application.service.AttachUserService;
 import com.queen.application.service.MonitorTypeService;
 import com.queen.application.service.PeriodMonitorService;
 import com.queen.application.service.UserService;
-import com.queen.infrastructure.persitence.FieldTypesRepository;
-import com.queen.infrastructure.persitence.FieldsRepository;
-import com.queen.infrastructure.persitence.MonitorTypeRepository;
-import com.queen.infrastructure.persitence.UserRepository;
-import com.queen.infrastructure.persitence.monitor.PeriodMonitorRepository;
+import com.queen.infrastructure.persistence.FieldTypesRepository;
+import com.queen.infrastructure.persistence.FieldsRepository;
+import com.queen.infrastructure.persistence.MonitorTypeRepository;
+import com.queen.infrastructure.persistence.UserRepository;
+import com.queen.infrastructure.persistence.monitor.PeriodMonitorRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -114,7 +114,7 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-  PeriodMonitorToDTO monitorToDTO(final MonitorTypeToDTO monitorTypeToDTO) {
+  	PeriodMonitorToDTO monitorToDTO(final MonitorTypeToDTO monitorTypeToDTO) {
 		return new PeriodMonitorToDTO(monitorTypeToDTO);
 	}
 

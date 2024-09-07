@@ -1,4 +1,4 @@
-package com.queen.infrastructure.persitence.monitor;
+package com.queen.infrastructure.persistence.monitor;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;

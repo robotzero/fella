@@ -4,7 +4,7 @@ import com.queen.domain.fieldtype.FieldType;
 import com.queen.domain.fieldtype.FieldTypeValue;
 
 public class FieldTypeMapper {
-	public FieldType toDomain(final com.queen.infrastructure.persitence.FieldType fieldType) {
+	public FieldType toDomain(final com.queen.infrastructure.persistence.FieldType fieldType) {
 		return new FieldType(fieldType.getId(), fieldType.getName(), FieldTypeValue.getByType(fieldType.getType()));
 	}
 

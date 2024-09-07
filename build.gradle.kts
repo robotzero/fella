@@ -4,12 +4,27 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
 }
 
-group = "com.example"
+group = "com.queen"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_22
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://repo.spring.io/milestone")
+    }
+    maven {
+        url = uri("https://repo.spring.io/snapshot")
+    }
+}
+
+configurations {
+    implementation {
+        exclude(module = "spring-boot-starter-tomcat")
+        exclude(group = "org.springframework", module = "spring-webmvc")
+        exclude(module = "spring-boot-starter-websocket")
+//        exclude(module = "spring-web")
+    }
 }
 
 dependencies {
@@ -26,12 +41,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-reactor-netty")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.14.2")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.14.2")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.2")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.2")
+    implementation("com.fasterxml.jackson.core:jackson-core")
+    implementation("com.fasterxml.jackson.core:jackson-annotations")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    implementation("com.fasterxml.jackson.module:jackson-module-parameter-names")
     // implementation("io.projectreactor.tools:blockhound")
     implementation("org.postgresql:postgresql")
     implementation("org.postgresql:r2dbc-postgresql")
@@ -42,19 +57,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.security:spring-security-test")
-    // Database Driver (choose one based on your database)
-    // runtimeOnly("com.h2database:h2") // For in-memory H2 database
-    // runtimeOnly("org.postgresql:postgresql") // Uncomment if using PostgreSQL
-    // runtimeOnly("mysql:mysql-connector-java") // Uncomment if using MySQL
-
-    // Testing Dependencies
-    // testImplementation("org.springframework.boot:spring-boot-starter-test")
-
-    // Optional: Lombok for reducing boilerplate code
-    // compileOnly("org.projectlombok:lombok")
-    // annotationProcessor("org.projectlombok:lombok")
-    // testCompileOnly("org.projectlombok:lombok")
-    // testAnnotationProcessor("org.projectlombok:lombok")
 }
 
 tasks.test {

@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 public class MonitorTypeMapper {
-	public MonitorType mapToDomain(final com.queen.infrastructure.persitence.MonitorType monitorType) {
+	public MonitorType mapToDomain(final com.queen.infrastructure.persistence.MonitorType monitorType) {
 		return new MonitorType(monitorType.getId(), monitorType.getName(), null);
 	}
 
-	public MonitorTypeResult mapToConcreteMonitorType(final com.queen.infrastructure.persitence.MonitorType monitorType) {
+	public MonitorTypeResult mapToConcreteMonitorType(final com.queen.infrastructure.persistence.MonitorType monitorType) {
 		return switch (monitorType.getName().toLowerCase()) {
 			case "period" -> new MonitorTypeResult.Period(monitorType.getId(), monitorType.getName(), null);
 			case "stomach" -> new MonitorTypeResult.Stomach(monitorType.getId(), monitorType.getName(), null);
@@ -23,7 +23,7 @@ public class MonitorTypeMapper {
 		};
 	}
 
-	public MonitorType mapToDomainWithFieldTypes(final com.queen.infrastructure.persitence.MonitorType monitorType, final Map<String, List<FieldTypeValue>> fieldTypeValues) {
+	public MonitorType mapToDomainWithFieldTypes(final com.queen.infrastructure.persistence.MonitorType monitorType, final Map<String, List<FieldTypeValue>> fieldTypeValues) {
 		return new MonitorType(monitorType.getId(), monitorType.getName(), null);
 	}
 
@@ -31,11 +31,11 @@ public class MonitorTypeMapper {
 		return new MonitorType(monitorTypeDTO.id(), monitorTypeDTO.name(), null);
 	}
 
-	public com.queen.infrastructure.persitence.MonitorType mapToPersistence(final com.queen.application.service.dto.MonitorTypeDTO monitorTypeDTO) {
-		return new com.queen.infrastructure.persitence.MonitorType(monitorTypeDTO.id(), monitorTypeDTO.name(), monitorTypeDTO.userId());
+	public com.queen.infrastructure.persistence.MonitorType mapToPersistence(final com.queen.application.service.dto.MonitorTypeDTO monitorTypeDTO) {
+		return new com.queen.infrastructure.persistence.MonitorType(monitorTypeDTO.id(), monitorTypeDTO.name(), monitorTypeDTO.userId());
 	}
 
-	public MonitorType mapToDomain(com.queen.infrastructure.persitence.MonitorType monitorTypePersistance, List<FieldType> fieldTypes) {
+	public MonitorType mapToDomain(com.queen.infrastructure.persistence.MonitorType monitorTypePersistance, List<FieldType> fieldTypes) {
 		return new MonitorType(monitorTypePersistance.getId(), monitorTypePersistance.getName(), fieldTypes);
 	}
 }

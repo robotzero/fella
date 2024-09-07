@@ -1,6 +1,6 @@
 package com.queen.application.ports.out;
 
-import com.queen.infrastructure.persitence.Fields;
+import com.queen.infrastructure.persistence.Fields;
 import reactor.core.publisher.Flux;
 
 import java.util.List;

@@ -43,22 +43,22 @@ import java.util.UUID;
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
 
-	@Bean
-	@Order(Ordered.HIGHEST_PRECEDENCE)
-	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-				.oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
-
-		// @formatter:off
-		// http
-		// 		.exceptionHandling(exceptions ->
-		// 				exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-		// 		)
-		// 		.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-		// @formatter:on
-		return http.build();
-	}
+//	@Bean
+//	@Order(Ordered.HIGHEST_PRECEDENCE)
+//	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+//		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+//		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+//				.oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
+//
+//		// @formatter:off
+//		// http
+//		// 		.exceptionHandling(exceptions ->
+//		// 				exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+//		// 		)
+//		// 		.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+//		// @formatter:on
+//		return http.build();
+//	}
 
 	// @formatter:off
 	@Bean

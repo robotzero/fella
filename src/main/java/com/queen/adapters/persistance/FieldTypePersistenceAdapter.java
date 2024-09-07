@@ -1,8 +1,8 @@
 package com.queen.adapters.persistance;
 
 import com.queen.application.ports.out.LoadFieldTypesPort;
-import com.queen.infrastructure.persitence.FieldType;
-import com.queen.infrastructure.persitence.FieldTypesRepository;
+import com.queen.infrastructure.persistence.FieldType;
+import com.queen.infrastructure.persistence.FieldTypesRepository;
 import reactor.core.publisher.Flux;
 
 public class FieldTypePersistenceAdapter implements LoadFieldTypesPort {

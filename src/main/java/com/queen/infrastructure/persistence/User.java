@@ -1,4 +1,4 @@
-package com.queen.infrastructure.persitence;
+package com.queen.infrastructure.persistence;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;

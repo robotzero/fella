@@ -2,8 +2,8 @@ package com.queen.adapters.persistance;
 
 import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadUserPort;
-import com.queen.infrastructure.persitence.User;
-import com.queen.infrastructure.persitence.UserRepository;
+import com.queen.infrastructure.persistence.User;
+import com.queen.infrastructure.persistence.UserRepository;
 import reactor.core.publisher.Mono;
 
 public class UserPersistenceAdapter implements CreateUserPort, LoadUserPort {

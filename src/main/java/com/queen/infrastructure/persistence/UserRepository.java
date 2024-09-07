@@ -1,4 +1,4 @@
-package com.queen.infrastructure.persitence;
+package com.queen.infrastructure.persistence;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;

@@ -111,7 +111,7 @@ public class MonitorTypeService implements MonitorTypesQuery, CreateMonitorTypeU
 					}
 				})
 				.doOnComplete(() -> log.info("Done saving monitor types")
-		).cast(com.queen.infrastructure.persitence.MonitorType.class);
+		).cast(com.queen.infrastructure.persistence.MonitorType.class);
 
 		final var fieldsByMonitorId = createMonitorTypeCommand.monitorTypeDTOs()
 				.stream()

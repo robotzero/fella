@@ -1,4 +1,4 @@
-package com.queen.infrastructure.persitence;
+package com.queen.infrastructure.persistence;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.Query;

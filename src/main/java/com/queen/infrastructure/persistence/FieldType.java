@@ -1,10 +1,12 @@
-package com.queen.infrastructure.persitence;
+package com.queen.infrastructure.persistence;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
+@Table("field_types")
 public class FieldType implements Persistable<String> {
 	@Id
 	@Column("id")

@@ -1,5 +1,6 @@
-package com.queen.infrastructure.persitence;
+package com.queen.infrastructure.persistence;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
@@ -8,8 +9,8 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
 
-@Table("monitor_type")
-public class MonitorType implements Persistable<String> {
+@Table("monitor")
+public class Monitor implements Persistable<String> {
 	@Id
 	@Column("id")
 	private final String id;
@@ -21,12 +22,13 @@ public class MonitorType implements Persistable<String> {
 	private String userId;
 
 	@Column("created_at")
+	@CreatedDate
 	private Instant createdDate = Instant.now();
 
 	@Transient
-	private boolean newMonitorType;
+	private boolean newMonitor;
 
-	public MonitorType(final String id, final String name, final String userId) {
+	public Monitor(final String id, final String name, final String userId) {
 		this.id = id;
 		this.name = name;
 		this.userId = userId;
@@ -35,7 +37,7 @@ public class MonitorType implements Persistable<String> {
 	@Override
 	@Transient
 	public boolean isNew() {
-		return this.newMonitorType || id == null || id.isEmpty();
+		return this.newMonitor|| id == null || id.isEmpty();
 	}
 
 	public String getId() {
@@ -50,8 +52,8 @@ public class MonitorType implements Persistable<String> {
 		return userId;
 	}
 
-	public MonitorType setAsNew() {
-		this.newMonitorType = true;
+	public Monitor setAsNew() {
+		this.newMonitor = true;
 		return this;
 	}
 }

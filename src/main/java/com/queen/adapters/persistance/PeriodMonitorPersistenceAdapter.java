@@ -2,8 +2,8 @@ package com.queen.adapters.persistance;
 
 import com.queen.application.ports.out.CreatePeriodMonitorPort;
 import com.queen.application.ports.out.LoadPeriodMonitorsPort;
-import com.queen.infrastructure.persitence.monitor.PeriodMonitor;
-import com.queen.infrastructure.persitence.monitor.PeriodMonitorRepository;
+import com.queen.infrastructure.persistence.monitor.PeriodMonitor;
+import com.queen.infrastructure.persistence.monitor.PeriodMonitorRepository;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

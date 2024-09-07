@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class PeriodMonitorMapper {
 
-	public PeriodMonitor mapToPeriodMonitor(final com.queen.infrastructure.persitence.monitor.PeriodMonitor periodMonitor) {
+	public PeriodMonitor mapToPeriodMonitor(final com.queen.infrastructure.persistence.monitor.PeriodMonitor periodMonitor) {
 		return new PeriodMonitor(
 				periodMonitor.getId(),
 				Date.from(periodMonitor.getPeriodDate()),
@@ -20,8 +20,8 @@ public class PeriodMonitorMapper {
 		);
 	}
 
-	public com.queen.infrastructure.persitence.monitor.PeriodMonitor mapToPersistence(final PeriodMonitorDTO periodMonitorDTO) {
-		return new com.queen.infrastructure.persitence.monitor.PeriodMonitor(
+	public com.queen.infrastructure.persistence.monitor.PeriodMonitor mapToPersistence(final PeriodMonitorDTO periodMonitorDTO) {
+		return new com.queen.infrastructure.persistence.monitor.PeriodMonitor(
 				periodMonitorDTO.id(),
 				periodMonitorDTO.monitorTypeId(),
 				periodMonitorDTO.userId(),
