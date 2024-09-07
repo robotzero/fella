@@ -49,14 +49,10 @@ public class AuthorizationServerConfig {
 //		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 //		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
 //				.oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
-//
-//		// @formatter:off
-//		// http
-//		// 		.exceptionHandling(exceptions ->
-//		// 				exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-//		// 		)
-//		// 		.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-//		// @formatter:on
+////		 @formatter:off
+//		 http.exceptionHandling(exceptions ->exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
+//				 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer.jwt(Customizer.withDefaults()));
+////		 @formatter:on
 //		return http.build();
 //	}
 
