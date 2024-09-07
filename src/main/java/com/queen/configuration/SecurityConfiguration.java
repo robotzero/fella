@@ -13,18 +13,19 @@ import reactor.core.publisher.Mono;
 
 @EnableWebFluxSecurity
 public class SecurityConfiguration {
-	@Bean
-	public SecurityWebFilterChain securityWebFilterChain(
-			ServerHttpSecurity http, AttachNewUserUseCase attachNewUserUseCase) {
-		return http.
-				authorizeExchange().pathMatchers("/**").hasAuthority("SCOPE_message.read").anyExchange()
-				.authenticated()
-				.and()
-				.httpBasic().disable()
-				.oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec.jwt(jwtSpec -> {
-					jwtSpec.jwtAuthenticationConverter(userIdExtractor(attachNewUserUseCase));
-				})).build();
-	}
+	// @Bean
+	// public SecurityWebFilterChain securityWebFilterChain(
+	// 		ServerHttpSecurity http, AttachNewUserUseCase attachNewUserUseCase) {
+	// 	return http.
+	// 			authorizeExchange().pathMatchers("/**").hasAuthority("SCOPE_message.read").anyExchange()
+	// 			.authenticated();
+				// .and()
+				// .httpBasic().disable()
+				// .oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec.jwt(jwtSpec -> {
+					// jwtSpec.jwtAuthenticationConverter(userIdExtractor(attachNewUserUseCase));
+				// }))
+					// .build();
+	// }
 
 //	@Bean
 //	public CustomWebFilter CustomWebFilter(final AttachUserService attachUserService) {

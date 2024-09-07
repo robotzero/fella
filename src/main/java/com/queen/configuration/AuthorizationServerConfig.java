@@ -51,11 +51,11 @@ public class AuthorizationServerConfig {
 				.oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
 
 		// @formatter:off
-		http
-				.exceptionHandling(exceptions ->
-						exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-				)
-				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+		// http
+		// 		.exceptionHandling(exceptions ->
+		// 				exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+		// 		)
+		// 		.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 		// @formatter:on
 		return http.build();
 	}
