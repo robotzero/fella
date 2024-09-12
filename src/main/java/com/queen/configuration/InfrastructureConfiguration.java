@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContext;
 
 @Configuration
 @EnableR2dbcRepositories(basePackages = "com.queen.infrastructure.persistence")
-@EnableR2dbcAuditing(auditorAwareRef = "reactiveAuditorAware")
+//@EnableR2dbcAuditing(auditorAwareRef = "reactiveAuditorAware")
 public class InfrastructureConfiguration {
 	@Bean
 	ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
@@ -22,9 +22,9 @@ public class InfrastructureConfiguration {
 		return initializer;
 	}
 
-	@Bean
-	public ReactiveAuditorAware<String> reactiveAuditorAware() {
-		return () -> ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication)
-				.map(authentication -> ((FellaJwtAuthenticationToken) authentication).getUserId());
-	}
+//	@Bean
+//	public ReactiveAuditorAware<String> reactiveAuditorAware() {
+//		return () -> ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication)
+//				.map(authentication -> ((FellaJwtAuthenticationToken) authentication).getUserId());
+//	}
 }

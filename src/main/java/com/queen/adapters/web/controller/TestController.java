@@ -1,4 +1,18 @@
-//package com.queen.adapters.web.controller;
+package com.queen.adapters.web.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.reactive.config.EnableWebFlux;
+import reactor.core.publisher.Mono;
+
 //
 //import com.queen.adapters.web.dto.UserDTO;
 //import com.queen.adapters.web.dto.UserToDTO;
@@ -10,13 +24,31 @@
 //import org.springframework.security.core.annotation.CurrentSecurityContext;
 //import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 //import org.springframework.transaction.annotation.Transactional;
-//import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//import reactor.core.publisher.Mono;
-//
-//@RestController
-//public class UserController {
+import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
+
+@RestController
+public class TestController {
+
+	@GetMapping("/user")
+	Mono<String[]> getUser(Principal principal, @AuthenticationPrincipal Jwt jwt) {
+		return Mono.fromSupplier(() -> new String[] {jwt.getTokenValue()});
+	}
+
+	@GetMapping("/")
+	@ResponseStatus(HttpStatus.OK)
+	public Mono<String[]> test(Authentication authentication, Principal principal, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
+			@AuthenticationPrincipal OAuth2User oauth2User) {
+		ReactiveSecurityContextHolder.withAuthentication(authentication);
+		OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
+//	  FellaJwtAuthenticationToken jwtAuthentication = (FellaJwtAuthenticationToken) authentication;
+		return Mono.fromSupplier(() -> new String[] {"Message 1", "Message 2", "Message 4", accessToken.getTokenValue()});
+	}
+
+}
 //	private final UserEmailQuery userEmailQuery;
 //	private final UserToDTO userToDTO;
 //	private final CreateUserUseCase createUserUseCase;
