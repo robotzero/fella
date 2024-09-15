@@ -26,10 +26,10 @@ public class SecurityConfiguration {
 //			 jwtSpec.jwtAuthenticationConverter(userIdExtractor(attachNewUserUseCase));
 //		 })).build();
 //	 }
-	@Bean
-	public CustomWebFilter CustomWebFilter(final AttachUserService attachUserService) {
-		return new CustomWebFilter(attachUserService);
-	}
+//	@Bean
+//	public CustomWebFilter CustomWebFilter(final AttachUserService attachUserService) {
+//		return new CustomWebFilter(attachUserService);
+//	}
 
 	Converter<Jwt, Mono<AbstractAuthenticationToken>> userIdExtractor(final com.queen.application.ports.in.AttachNewUserUseCase attachUserService) {
 		return new JwtAuthenticationConverter().andThen(new FellaJwtAuthenticationConverter(attachUserService));
@@ -50,11 +50,15 @@ public class SecurityConfiguration {
 //				.build();
 //	}
 	@Bean
-	SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+	SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, AttachUserService attachUserService) {
 		http
-				.authorizeExchange((authorize) -> authorize.anyExchange().authenticated())
+				.authorizeExchange((authorize) -> {
+					authorize.pathMatchers("/actuator/**").permitAll();
+					//authorize.pathMatchers("/**").hasAuthority("SCOPE_message.read");
+					authorize.anyExchange().authenticated();
+				})
 				.csrf(ServerHttpSecurity.CsrfSpec::disable)
-				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(Customizer.withDefaults()))
+				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(userIdExtractor(attachUserService))))
 				.oauth2Login(Customizer.withDefaults())
 				.oauth2Client(Customizer.withDefaults());
 		return http.build();
