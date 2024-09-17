@@ -22,12 +22,8 @@
 //
 //	@Override
 //	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-////		logger.info("AAAAAAAAAAAAAAAA");
 //		return exchange.getPrincipal().flatMap(token -> {
-//			ReactiveSecurityContextHolder.getContext().hasElement().subscribe(hs -> {
-//				System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-//				System.out.println(hs);
-//			});
+//			System.out.println("SECOND!!!!");
 //			FellaJwtAuthenticationToken t = (FellaJwtAuthenticationToken) token;
 //			return ReactiveSecurityContextHolder.getContext().defaultIfEmpty(new SecurityContextImpl(t)).flatMap((securityContext) -> {
 //				logger.info(LogMessage.format("SecurityContext contains anonymous token: '%s'",

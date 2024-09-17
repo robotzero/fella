@@ -33,7 +33,7 @@ import java.security.Principal;
 @RestController
 public class TestController {
 
-	@GetMapping("/user")
+	@GetMapping("/principal")
 	Mono<String[]> getUser(Principal principal, @AuthenticationPrincipal Jwt jwt) {
 		return Mono.fromSupplier(() -> new String[] {jwt.getTokenValue()});
 	}

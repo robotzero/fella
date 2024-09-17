@@ -16,16 +16,6 @@ import reactor.core.publisher.Mono;
 @EnableWebFluxSecurity
 @Configuration
 public class SecurityConfiguration {
-	//	 @Bean
-//	 public SecurityWebFilterChain securityWebFilterChain(
-//			ServerHttpSecurity http, AttachNewUserUseCase attachNewUserUseCase) {
-//		 return http.authorizeExchange((authCustomizer) -> {
-//			 authCustomizer.pathMatchers("/actuator/**").permitAll();
-//			 authCustomizer.pathMatchers("/**").hasAuthority("SCOPE_message.read").anyExchange().authenticated();
-//		 }).oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec.jwt(jwtSpec -> {
-//			 jwtSpec.jwtAuthenticationConverter(userIdExtractor(attachNewUserUseCase));
-//		 })).build();
-//	 }
 //	@Bean
 //	public CustomWebFilter CustomWebFilter(final AttachUserService attachUserService) {
 //		return new CustomWebFilter(attachUserService);
@@ -34,21 +24,7 @@ public class SecurityConfiguration {
 	Converter<Jwt, Mono<AbstractAuthenticationToken>> userIdExtractor(final com.queen.application.ports.in.AttachNewUserUseCase attachUserService) {
 		return new JwtAuthenticationConverter().andThen(new FellaJwtAuthenticationConverter(attachUserService));
 	}
-//	@Bean
-//	public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-//		// Apply the default OAuth2 Authorization Server security configurations
-//		//OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-//
-//		return http
-//				.csrf(csrf -> csrf.disable()).authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec.anyExchange().authenticated())// Disable CSRF
-//					.ignoringRequestMatchers("/oauth2/token") // Disable CSRF for /oauth2/token
-//			)
-//			.authorizeExchange(exchanges -> exchanges
-//					.anyExchange().authenticated() // Ensure authentication is required for other requests
-//			)
-//			.oauth2ResourceServer(ServerHttpSecurity.OAuth2ResourceServerSpec::jwt) // If using JWT tokens
-//				.build();
-//	}
+
 	@Bean
 	SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, AttachUserService attachUserService) {
 		http
