@@ -36,11 +36,11 @@ public class UserService implements LoadSpringUserPort, CreateUserUseCase, UserQ
 		return loadUserPort.loadUser(createUserCommand.username())
 				.map(userMapper::mapToDomain)
 				.switchIfEmpty(
-						Mono.defer(() -> createUserPort.createUser(new User(null, createUserCommand.username(), true))
+						createUserPort.createUser(new User(null, createUserCommand.username(), true))
 								.map(userMapper::mapToDomain)
 								.doOnError(error -> {
 									throw new UserServiceException("Failed to create new user", error);
-								})));
+								}));
 	}
 
 	@Override
