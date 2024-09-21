@@ -1,43 +1,36 @@
 package com.queen.infrastructure.persistence;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("users")
-public class User implements Persistable<String> {
+public class User {
 	@Id
-	@Column("id")
+	@Column("user_id")
 	private final String id;
 
 	@Column("username")
 	private final String userName;
 
-	@Transient
-	private boolean newUser;
+	@Column("enabled")
+	private final boolean isEnabled;
 
-	public User(final String id, final String userName) {
+	public User(final String id, final String userName, final boolean isEnabled) {
 		this.id = id;
 		this.userName = userName;
-	}
-
-	@Override
-	@Transient
-	public boolean isNew() {
-		return this.newUser || id == null || id.isEmpty();
+		this.isEnabled = isEnabled;
 	}
 
 	public String getId() {
 		return id;
 	}
 
-	public void setAsNew() {
-		this.newUser = true;
-	}
-
 	public String getUserName() {
 		return userName;
+	}
+
+	public boolean isEnabled() {
+		return isEnabled;
 	}
 }

@@ -15,12 +15,11 @@ public class UserPersistenceAdapter implements CreateUserPort, LoadUserPort {
 
 	@Override
 	public Mono<User> createUser(final User user) {
-		user.setAsNew();
 		return this.userRepository.save(user);
 	}
 
 	@Override
-	public Mono<User> loadUser(final String email) {
-		return userRepository.findByUserName(email);
+	public Mono<User> loadUser(final String username) {
+		return userRepository.findByUserName(username);
 	}
 }

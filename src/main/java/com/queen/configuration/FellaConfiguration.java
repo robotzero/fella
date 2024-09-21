@@ -25,11 +25,7 @@ import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.AttachUserService;
 import com.queen.application.service.MonitorTypeService;
 import com.queen.application.service.PeriodMonitorService;
-//import com.queen.application.service.UserService;
 import com.queen.application.service.UserService;
-import org.springframework.cloud.gateway.route.RouteLocator;
-import org.springframework.cloud.gateway.route.builder.GatewayFilterSpec;
-import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import com.queen.infrastructure.persistence.FieldTypesRepository;
 import com.queen.infrastructure.persistence.FieldsRepository;
 import com.queen.infrastructure.persistence.MonitorTypeRepository;
@@ -38,32 +34,9 @@ import com.queen.infrastructure.persistence.monitor.PeriodMonitorRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 public class FellaConfiguration {
-//	@Bean
-//	RouteLocator gateway(RouteLocatorBuilder rlb) {
-//		var apiPrefix = "/";
-//		return rlb
-//				.routes()
-//				// <1>
-//				.route(rs -> rs
-//						.path(apiPrefix + "**")
-//						.filters(f -> f
-//								.tokenRelay()
-//								.rewritePath(apiPrefix + "(?<segment>.*)", "/$\\{segment}")
-//						)
-//						.uri("http://localhost:8080"))
-//				// <2>
-////				.route(rs -> rs
-////						.path("/**")
-////						.uri("http://localhost:8020")
-////				)
-//				.build();
-//	}
-
 	// Field
 	@Bean
 	FieldsMapper fieldsMapper() {
@@ -174,7 +147,7 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	UserService userService(final LoadUserPort loadUserPort, final UserMapper userMapper, final MonitorTypeService monitorTypeService, final CreateUserPort createUserPort) {
-		return new UserService(loadUserPort, userMapper, monitorTypeService, createUserPort);
+	UserService userService(final LoadUserPort loadUserPort, final UserMapper userMapper, final CreateUserPort createUserPort) {
+		return new UserService(loadUserPort, userMapper, createUserPort);
 	}
 }

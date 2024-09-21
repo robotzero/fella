@@ -174,3 +174,93 @@ ALTER TABLE period_monitor ADD CONSTRAINT flow_level FOREIGN KEY (flow_level) RE
 -- INSERT INTO period_flow_level (period_flow_level, description) VALUES (5, 'Heavy');
 -- INSERT INTO period_flow_level (period_flow_level, description) VALUES (6, 'Very Heavy');
 -- INSERT INTO period_flow_level (period_flow_level, description) VALUES (7, 'Extremely Heavy');
+
+
+CREATE TABLE users
+(
+    user_id      UUID   DEFAULT gen_random_uuid() PRIMARY     KEY,
+    username     VARCHAR (   255 ) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    enabled BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE periods
+(
+    period_id    UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id      INT REFERENCES users (user_id) ON DELETE CASCADE,
+    start_date   DATE NOT NULL,
+    end_date     DATE NOT NULL,
+    cycle_length INT, -- Optional: This can be calculated based on prior periods
+    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE pain_levels
+(
+    pain_level_id    UUID   DEFAULT gen_random_uuid() PRIMARY KEY,
+    pain_level_value INT CHECK (pain_level_value >= 0 AND pain_level_value <= 10), -- Pain level from 0 to 10
+    pain_description VARCHAR(255)                                                  -- Optional description of the pain
+);
+
+CREATE TABLE period_pain
+(
+    period_id     UUID REFERENCES periods (period_id) ON DELETE CASCADE,
+    pain_level_id UUID REFERENCES pain_levels (pain_level_id) ON DELETE CASCADE,
+    pain_date     DATE NOT NULL,
+    PRIMARY KEY (period_id, pain_date)
+);
+
+CREATE TABLE flow_levels
+(
+    flow_level_id    UUID   DEFAULT gen_random_uuid() PRIMARY KEY,
+    flow_level_value INT CHECK (flow_level_value >= 0 AND flow_level_value <= 5), -- Flow level from 0 to 5
+    flow_description VARCHAR(255)                                                 -- Optional description of the flow
+);
+
+CREATE TABLE period_flow
+(
+    period_id     UUID REFERENCES periods (period_id) ON DELETE CASCADE,
+    flow_level_id UUID REFERENCES flow_levels (flow_level_id) ON DELETE CASCADE,
+    flow_date     DATE NOT NULL,
+    PRIMARY KEY (period_id, flow_date)
+);
+
+CREATE TABLE moods
+(
+    mood_id          UUID   DEFAULT gen_random_uuid() PRIMARY KEY,
+    mood_name        VARCHAR(100) NOT NULL, -- Name of the mood (e.g., Happy, Sad, Anxious)
+    mood_description VARCHAR(255)           -- Optional description
+);
+
+CREATE TABLE period_mood
+(
+    period_id UUID REFERENCES periods (period_id) ON DELETE CASCADE,
+    mood_id   UUID REFERENCES moods (mood_id) ON DELETE CASCADE,
+    mood_date DATE NOT NULL,
+    PRIMARY KEY (period_id, mood_date)
+);
+
+CREATE TABLE migraines
+(
+    migraine_id          UUID   DEFAULT gen_random_uuid() PRIMARY KEY,
+    migraine_level       INT CHECK (migraine_level >= 0 AND migraine_level <= 10), -- Migraine severity from 0 to 10
+    migraine_description VARCHAR(255)                                              -- Optional description of the migraine
+);
+
+CREATE TABLE period_migraine
+(
+    period_id     UUID REFERENCES periods (period_id) ON DELETE CASCADE,
+    migraine_id   UUID REFERENCES migraines (migraine_id) ON DELETE CASCADE,
+    migraine_date DATE NOT NULL,
+    PRIMARY KEY (period_id, migraine_date)
+);
+
+CREATE TABLE symptom_details
+(
+    symptom_id          UUID   DEFAULT gen_random_uuid() PRIMARY KEY,
+    period_id           INT REFERENCES periods (period_id) ON DELETE CASCADE,
+    symptom_type        VARCHAR(100) NOT NULL,                                  -- E.g., pain, mood, migraine, etc.
+    symptom_value       INT CHECK (symptom_value >= 0 AND symptom_value <= 10), -- Generic value for tracking
+    symptom_description VARCHAR(255),
+    symptom_date        DATE         NOT NULL
+);
