@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class PeriodMonitorService implements PeriodMonitorQuery, CreatePeriodMonitorUseCase {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

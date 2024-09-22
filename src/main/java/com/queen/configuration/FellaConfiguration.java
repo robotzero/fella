@@ -13,6 +13,7 @@ import com.queen.adapters.persistance.UserPersistenceAdapter;
 import com.queen.adapters.web.dto.FieldTypeToDTO;
 import com.queen.adapters.web.dto.PeriodMonitorToDTO;
 import com.queen.adapters.web.dto.MonitorTypeToDTO;
+import com.queen.adapters.web.dto.PeriodToDTOMapper;
 import com.queen.adapters.web.dto.UserToDTO;
 import com.queen.application.ports.out.CreateFieldsPort;
 import com.queen.application.ports.out.CreatePeriodMonitorPort;
@@ -149,5 +150,10 @@ public class FellaConfiguration {
 	@Bean
 	UserService userService(final LoadUserPort loadUserPort, final UserMapper userMapper, final CreateUserPort createUserPort) {
 		return new UserService(loadUserPort, userMapper, createUserPort);
+	}
+
+	@Bean
+	PeriodToDTOMapper periodToDTOMapper() {
+		return new PeriodToDTOMapper();
 	}
 }
