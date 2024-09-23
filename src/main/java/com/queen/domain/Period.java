@@ -1,4 +1,8 @@
 package com.queen.domain;
 
-public record Period() {
+import java.time.LocalDate;
+import java.util.Optional;
+
+public record Period(LocalDate startDate,
+					 Optional<LocalDate> endDate) {
 }

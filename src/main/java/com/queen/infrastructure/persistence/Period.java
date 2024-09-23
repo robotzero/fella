@@ -12,10 +12,15 @@ public class Period implements Persistable<String> {
 	@Id
 	@Column("period_id")
 	private String id;
-	private Long userId;
-	private LocalDate startDate;
+	private final String userId;
+	private final LocalDate startDate;
 	private LocalDate endDate;
 	private Integer cycleLength;
+
+	public Period(String userId, LocalDate startDate) {
+		this.userId = userId;
+		this.startDate = startDate;
+	}
 
 	@Override
 	public boolean isNew() {
@@ -24,5 +29,17 @@ public class Period implements Persistable<String> {
 
 	public String getId() {
 		return id;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
 	}
 }

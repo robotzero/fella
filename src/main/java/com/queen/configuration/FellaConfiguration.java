@@ -8,12 +8,13 @@ import com.queen.adapters.persistance.PeriodMonitorMapper;
 import com.queen.adapters.persistance.PeriodMonitorPersistenceAdapter;
 import com.queen.adapters.persistance.MonitorTypeMapper;
 import com.queen.adapters.persistance.MonitorTypePersistenceAdapter;
+import com.queen.adapters.persistance.PeriodPersistenceAdapter;
 import com.queen.adapters.persistance.UserMapper;
 import com.queen.adapters.persistance.UserPersistenceAdapter;
 import com.queen.adapters.web.dto.FieldTypeToDTO;
 import com.queen.adapters.web.dto.PeriodMonitorToDTO;
 import com.queen.adapters.web.dto.MonitorTypeToDTO;
-import com.queen.adapters.web.dto.PeriodToDTOMapper;
+import com.queen.adapters.web.dto.PeriodMapper;
 import com.queen.adapters.web.dto.UserToDTO;
 import com.queen.application.ports.out.CreateFieldsPort;
 import com.queen.application.ports.out.CreatePeriodMonitorPort;
@@ -26,10 +27,13 @@ import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.AttachUserService;
 import com.queen.application.service.MonitorTypeService;
 import com.queen.application.service.PeriodMonitorService;
+import com.queen.application.service.PeriodService;
 import com.queen.application.service.UserService;
+import com.queen.domain.PeriodPersistencePort;
 import com.queen.infrastructure.persistence.FieldTypesRepository;
 import com.queen.infrastructure.persistence.FieldsRepository;
 import com.queen.infrastructure.persistence.MonitorTypeRepository;
+import com.queen.infrastructure.persistence.PeriodRepository;
 import com.queen.infrastructure.persistence.UserRepository;
 import com.queen.infrastructure.persistence.monitor.PeriodMonitorRepository;
 import org.springframework.context.annotation.Bean;
@@ -153,7 +157,17 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	PeriodToDTOMapper periodToDTOMapper() {
-		return new PeriodToDTOMapper();
+	PeriodMapper periodToDTOMapper() {
+		return new PeriodMapper();
+	}
+
+	@Bean
+	PeriodService periodService(final PeriodPersistencePort periodPersistencePort, final PeriodMapper periodMapper) {
+		return new PeriodService(periodPersistencePort, periodMapper);
+	}
+
+	@Bean
+	PeriodPersistencePort periodPersistencePort(final PeriodRepository periodMonitorRepository) {
+		return new PeriodPersistenceAdapter(periodMonitorRepository);
 	}
 }
