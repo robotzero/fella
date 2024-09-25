@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Transient
 @Validated
@@ -30,7 +31,7 @@ public class FellaJwtAuthenticationToken extends AbstractOAuth2TokenAuthenticati
 		return this.jwtAuthenticationToken.getToken().getClaims();
 	}
 
-	public String getUserId() {
+	public UUID getUserId() {
 		return fellaUser.getId();
 	}
 

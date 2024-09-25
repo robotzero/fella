@@ -6,18 +6,19 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Table("periods")
 public class Period implements Persistable<String> {
 	@Id
 	@Column("period_id")
 	private String id;
-	private final String userId;
+	private final UUID userId;
 	private final LocalDate startDate;
 	private LocalDate endDate;
 	private Integer cycleLength;
 
-	public Period(String userId, LocalDate startDate) {
+	public Period(final UUID userId, final LocalDate startDate) {
 		this.userId = userId;
 		this.startDate = startDate;
 	}
@@ -31,7 +32,7 @@ public class Period implements Persistable<String> {
 		return id;
 	}
 
-	public String getUserId() {
+	public UUID getUserId() {
 		return userId;
 	}
 

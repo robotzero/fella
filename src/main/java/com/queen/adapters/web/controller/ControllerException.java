@@ -1,6 +1,7 @@
 package com.queen.adapters.web.controller;
 
 import com.queen.adapters.web.dto.ExceptionDTO;
+import com.queen.application.service.exception.ActivePeriodExistsException;
 import com.queen.application.service.exception.InvalidUserException;
 import com.queen.application.service.exception.MonitorTypeException;
 import com.queen.application.service.exception.UserServiceException;
@@ -16,8 +17,10 @@ import reactor.core.publisher.Mono;
 @ControllerAdvice
 public class ControllerException {
 	final Log logger = LogFactory.getLog(this.getClass());
-	@ExceptionHandler({MonitorTypeException.class})
+	@ExceptionHandler({MonitorTypeException.class, ActivePeriodExistsException.class})
 	public Mono<ResponseEntity<ExceptionDTO>> handleMonitorTypeException(final Exception exception) {
+		logger.debug(exception);
+		logger.error(exception.getMessage());
 		return Mono.just(new ResponseEntity<>(
 				new ExceptionDTO(exception.getMessage(), HttpStatus.BAD_REQUEST.value()), new HttpHeaders(), HttpStatus.BAD_REQUEST)
 		);

@@ -1,3 +1,5 @@
 package com.queen.adapters.web.dto;
 
-public record UserDTO(String id, String username, String email) {}
+import java.util.UUID;
+
+public record UserDTO(UUID id, String username, String email) {}

@@ -4,11 +4,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.util.UUID;
+
 @Table("users")
 public class User {
 	@Id
 	@Column("user_id")
-	private final String id;
+	private final UUID id;
 
 	@Column("username")
 	private final String userName;
@@ -16,13 +18,13 @@ public class User {
 	@Column("enabled")
 	private final boolean isEnabled;
 
-	public User(final String id, final String userName, final boolean isEnabled) {
+	public User(final UUID id, final String userName, final boolean isEnabled) {
 		this.id = id;
 		this.userName = userName;
 		this.isEnabled = isEnabled;
 	}
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 

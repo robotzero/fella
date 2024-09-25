@@ -5,16 +5,17 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 public class FellaUser extends User {
-	private final String id;
+	private final UUID id;
 
-	public FellaUser(String id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+	public FellaUser(UUID id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
 		this.id = id;
 	}
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 

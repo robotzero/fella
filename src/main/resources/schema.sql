@@ -190,11 +190,15 @@ CREATE TABLE periods
     period_id    UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id      UUID REFERENCES users (user_id) ON DELETE CASCADE,
     start_date   DATE NOT NULL,
-    end_date     DATE NOT NULL,
+    end_date     DATE,
     cycle_length INT, -- Optional: This can be calculated based on prior periods
     active       BOOLEAN DEFAULT TRUE,
     created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX idx_unique_active_period_per_user
+    ON periods (user_id) WHERE active = TRUE;
+
 
 CREATE TABLE moods
 (

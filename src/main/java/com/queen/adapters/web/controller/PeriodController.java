@@ -24,13 +24,13 @@ public class PeriodController {
 		this.periodService = periodService;
 	}
 
+	//@TODO figure out why authentication.userId is not working
 	@PostMapping(value = "/api/period", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	Mono<PeriodDTO> createPeriod(
 			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
 			final FellaJwtAuthenticationToken token,
 			final @RequestBody PeriodRequest periodRequest
 	) {
-		// @TODO make sure that no new period can be created if there is already an active period
 		final var period = periodToDTOMapper.mapToDomain(token.getUserId(), periodRequest);
 		return periodService.createPeriod(period);
 	}
