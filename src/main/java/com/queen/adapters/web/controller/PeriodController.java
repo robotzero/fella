@@ -1,5 +1,6 @@
 package com.queen.adapters.web.controller;
 
+import com.queen.adapters.web.dto.MigraineMapper;
 import com.queen.adapters.web.dto.PeriodDTO;
 import com.queen.adapters.web.dto.PeriodRequest;
 import com.queen.adapters.web.dto.PeriodMapper;
@@ -13,15 +14,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 @RestController
 @Validated
 public class PeriodController {
-	private final PeriodMapper periodToDTOMapper;
+	private final PeriodMapper periodMapper;
 	private final PeriodService periodService;
+	private final MigraineMapper migraineMapper;
 
-	public PeriodController(final PeriodMapper periodToDTOMapper, final PeriodService periodService) {
-		this.periodToDTOMapper = periodToDTOMapper;
+	public PeriodController(final PeriodMapper periodMapper, final PeriodService periodService, final MigraineMapper migraineMapper) {
+		this.periodMapper = periodMapper;
 		this.periodService = periodService;
+		this.migraineMapper = migraineMapper;
 	}
 
 	//@TODO figure out why authentication.userId is not working
@@ -31,8 +36,9 @@ public class PeriodController {
 			final FellaJwtAuthenticationToken token,
 			final @RequestBody PeriodRequest periodRequest
 	) {
-		final var period = periodToDTOMapper.mapToDomain(token.getUserId(), periodRequest);
-		return periodService.createPeriod(period);
+		final var period = periodMapper.mapToDomain(token.getUserId(), periodRequest);
+		final var migraine = periodRequest.migraine().map(m -> migraineMapper.mapToDomain(token.getUserId(), m));
+		return periodService.createPeriod(period, migraine.orElse(null));
 	}
 
 	// @TODO End period endpoint and also implement cyclelength calculation in here, and andjust it

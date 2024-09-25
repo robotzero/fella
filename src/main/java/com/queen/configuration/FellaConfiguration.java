@@ -4,6 +4,7 @@ import com.queen.adapters.persistance.FieldTypeMapper;
 import com.queen.adapters.persistance.FieldTypePersistenceAdapter;
 import com.queen.adapters.persistance.FieldsMapper;
 import com.queen.adapters.persistance.FieldsPersistenceAdapter;
+import com.queen.adapters.persistance.MigrainePersistenceAdapter;
 import com.queen.adapters.persistance.PeriodMonitorMapper;
 import com.queen.adapters.persistance.PeriodMonitorPersistenceAdapter;
 import com.queen.adapters.persistance.MonitorTypeMapper;
@@ -12,6 +13,7 @@ import com.queen.adapters.persistance.PeriodPersistenceAdapter;
 import com.queen.adapters.persistance.UserMapper;
 import com.queen.adapters.persistance.UserPersistenceAdapter;
 import com.queen.adapters.web.dto.FieldTypeToDTO;
+import com.queen.adapters.web.dto.MigraineMapper;
 import com.queen.adapters.web.dto.PeriodMonitorToDTO;
 import com.queen.adapters.web.dto.MonitorTypeToDTO;
 import com.queen.adapters.web.dto.PeriodMapper;
@@ -29,9 +31,11 @@ import com.queen.application.service.MonitorTypeService;
 import com.queen.application.service.PeriodMonitorService;
 import com.queen.application.service.PeriodService;
 import com.queen.application.service.UserService;
+import com.queen.domain.MigrainePersistencePort;
 import com.queen.domain.PeriodPersistencePort;
 import com.queen.infrastructure.persistence.FieldTypesRepository;
 import com.queen.infrastructure.persistence.FieldsRepository;
+import com.queen.infrastructure.persistence.MigraineRepository;
 import com.queen.infrastructure.persistence.MonitorTypeRepository;
 import com.queen.infrastructure.persistence.PeriodRepository;
 import com.queen.infrastructure.persistence.UserRepository;
@@ -162,12 +166,22 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	PeriodService periodService(final PeriodPersistencePort periodPersistencePort, final PeriodMapper periodMapper) {
-		return new PeriodService(periodPersistencePort, periodMapper);
+	PeriodService periodService(final PeriodPersistencePort periodPersistencePort, final MigrainePersistencePort migrainePersistencePort, final PeriodMapper periodMapper, final MigraineMapper migraineMapper) {
+		return new PeriodService(periodPersistencePort, migrainePersistencePort, periodMapper, migraineMapper);
 	}
 
 	@Bean
 	PeriodPersistencePort periodPersistencePort(final PeriodRepository periodMonitorRepository) {
 		return new PeriodPersistenceAdapter(periodMonitorRepository);
+	}
+
+	@Bean
+	MigraineMapper migraineMapper() {
+		return new MigraineMapper();
+	}
+
+	@Bean
+	MigrainePersistencePort migrainePersistencePort(final MigraineRepository migraineRepository) {
+		return new MigrainePersistenceAdapter(migraineRepository);
 	}
 }

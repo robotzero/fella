@@ -9,24 +9,27 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Table("periods")
-public class Period implements Persistable<UUID> {
+@Table("migraines")
+public class Migraine implements Persistable<UUID> {
 	@Id
-	@Column("period_id")
+	@Column("migraine_id")
 	private UUID id;
 	private final UUID userId;
-	private final LocalDate startDate;
-	private LocalDate endDate;
-	private Integer cycleLength;
-	private Boolean active;
+	private final LocalDate migraineDate;
+	private UUID periodId;
 
 	@Transient
 	private final Boolean isNew;
 
-	public Period(final UUID userId, final LocalDate startDate, Boolean isNew) {
+	public Migraine(final UUID userId, final LocalDate migraineDate, Boolean isNew) {
 		this.userId = userId;
-		this.startDate = startDate;
+		this.migraineDate = migraineDate;
 		this.isNew = isNew;
+	}
+
+	@Override
+	public UUID getId() {
+		return id;
 	}
 
 	@Override
@@ -34,19 +37,8 @@ public class Period implements Persistable<UUID> {
 		return isNew;
 	}
 
-	public UUID getId() {
-		return id;
-	}
-
-	public UUID getUserId() {
-		return userId;
-	}
-
-	public LocalDate getStartDate() {
-		return startDate;
-	}
-
-	public LocalDate getEndDate() {
-		return endDate;
+	public Migraine setPeriodId(UUID periodId) {
+		this.periodId = periodId;
+		return this;
 	}
 }

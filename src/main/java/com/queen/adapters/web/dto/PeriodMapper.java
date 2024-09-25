@@ -25,6 +25,6 @@ public class PeriodMapper implements PeriodMapperPort {
 
 	@Override
 	public com.queen.infrastructure.persistence.Period mapToPersistence(final Period period) {
-		return new com.queen.infrastructure.persistence.Period(period.userId(), period.startDate());
+		return new com.queen.infrastructure.persistence.Period(period.userId(), period.startDate(), true);
 	}
 }
