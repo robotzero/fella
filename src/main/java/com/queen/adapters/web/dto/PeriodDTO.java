@@ -5,5 +5,6 @@ import java.util.Optional;
 
 public record PeriodDTO(
 	LocalDate startDate,
-	Optional<LocalDate> endDate
+	Optional<LocalDate> endDate,
+	Optional<MigraineDTO> migraine
 ) {}

@@ -1,5 +1,6 @@
 package com.queen.adapters.web.controller;
 
+import com.queen.adapters.web.dto.DailyTrackingMapper;
 import com.queen.adapters.web.dto.MigraineMapper;
 import com.queen.adapters.web.dto.PeriodDTO;
 import com.queen.adapters.web.dto.PeriodRequest;
@@ -22,11 +23,18 @@ public class PeriodController {
 	private final PeriodMapper periodMapper;
 	private final PeriodService periodService;
 	private final MigraineMapper migraineMapper;
+	private final DailyTrackingMapper dailyTrackingMapper;
 
-	public PeriodController(final PeriodMapper periodMapper, final PeriodService periodService, final MigraineMapper migraineMapper) {
+	public PeriodController(
+			final PeriodMapper periodMapper,
+			final PeriodService periodService,
+			final MigraineMapper migraineMapper,
+			final DailyTrackingMapper dailyTrackingMapper
+	) {
 		this.periodMapper = periodMapper;
 		this.periodService = periodService;
 		this.migraineMapper = migraineMapper;
+		this.dailyTrackingMapper = dailyTrackingMapper;
 	}
 
 	//@TODO figure out why authentication.userId is not working
@@ -38,7 +46,8 @@ public class PeriodController {
 	) {
 		final var period = periodMapper.mapToDomain(token.getUserId(), periodRequest);
 		final var migraine = periodRequest.migraine().map(m -> migraineMapper.mapToDomain(token.getUserId(), m));
-		return periodService.createPeriod(period, migraine.orElse(null));
+		final var dailyTracking = periodRequest.dailyTracking().map(dailyTrackingMapper::mapToDomain);
+		return periodService.createPeriod(period, migraine.orElse(null), dailyTracking.orElse(null));
 	}
 
 	// @TODO End period endpoint and also implement cyclelength calculation in here, and andjust it

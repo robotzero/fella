@@ -16,7 +16,10 @@ public class MigraineMapper implements MigraineMapperPort {
 	}
 
 	@Override
-	public com.queen.infrastructure.persistence.Migraine mapToPersistence(final Migraine migraine, final UUID periodId) {
-		return new com.queen.infrastructure.persistence.Migraine(migraine.userId(), migraine.migraineDate(), true).setPeriodId(periodId);
+	public com.queen.infrastructure.persistence.Migraine mapToPersistence(final Migraine migraine) {
+		if (migraine != null) {
+			return new com.queen.infrastructure.persistence.Migraine(migraine.userId(), migraine.migraineDate(), true);
+		}
+		return null;
 	}
 }

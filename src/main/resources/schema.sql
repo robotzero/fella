@@ -211,11 +211,11 @@ CREATE TABLE moods
 CREATE TABLE migraines
 (
     migraine_id       UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    user_id           UUID REFERENCES users (user_id) ON DELETE CASCADE,         -- User who experienced the migraine
-    migraine_date     DATE NOT NULL,                                            -- Date of the migraine (for stand-alone migraines)
-    severity_level    INT CHECK (severity_level >= 0 AND severity_level <= 10), -- Severity level from 0 to 10
-    description       TEXT,                                                     -- Optional description of the migraine
-    duration_in_hours INT,                                                      -- Duration of the migraine in hours
+    user_id           UUID REFERENCES users (user_id) ON DELETE CASCADE,                  -- User who experienced the migraine
+    migraine_date     DATE NOT NULL,                                                      -- Date of the migraine (for stand-alone migraines)
+    severity_level    INT CHECK (severity_level >= 0 AND severity_level <= 10) DEFAULT 0, -- Severity level from 0 to 10
+    description       TEXT,                                                               -- Optional description of the migraine
+    duration_in_hours INT,                                                                -- Duration of the migraine in hours
     created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

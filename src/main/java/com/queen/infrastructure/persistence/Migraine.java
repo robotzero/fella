@@ -16,7 +16,8 @@ public class Migraine implements Persistable<UUID> {
 	private UUID id;
 	private final UUID userId;
 	private final LocalDate migraineDate;
-	private UUID periodId;
+	private Integer severityLevel;
+	private String description;
 
 	@Transient
 	private final Boolean isNew;
@@ -37,8 +38,21 @@ public class Migraine implements Persistable<UUID> {
 		return isNew;
 	}
 
-	public Migraine setPeriodId(UUID periodId) {
-		this.periodId = periodId;
+	public Integer getSeverityLevel() {
+		return severityLevel;
+	}
+
+	public Migraine setSeverityLevel(Integer severityLevel) {
+		this.severityLevel = severityLevel;
+		return this;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Migraine setDescription(String description) {
+		this.description = description;
 		return this;
 	}
 }

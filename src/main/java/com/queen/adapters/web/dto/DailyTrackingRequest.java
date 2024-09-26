@@ -14,4 +14,10 @@ public record DailyTrackingRequest(Optional<UUID> periodId,
 	public LocalDate trackingDateOrNow() {
 		return trackingDate.orElse(LocalDate.now());
 	}
+	public Integer painLevelOrDefault() {
+		return painLevel.orElse(0);
+	}
+	public Integer flowLevelOrDefault() {
+		return flowLevel.orElse(0);
+	}
 }

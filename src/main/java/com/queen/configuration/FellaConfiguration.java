@@ -1,5 +1,6 @@
 package com.queen.configuration;
 
+import com.queen.adapters.persistance.DailyTrackingPersistenceAdapter;
 import com.queen.adapters.persistance.FieldTypeMapper;
 import com.queen.adapters.persistance.FieldTypePersistenceAdapter;
 import com.queen.adapters.persistance.FieldsMapper;
@@ -12,6 +13,7 @@ import com.queen.adapters.persistance.MonitorTypePersistenceAdapter;
 import com.queen.adapters.persistance.PeriodPersistenceAdapter;
 import com.queen.adapters.persistance.UserMapper;
 import com.queen.adapters.persistance.UserPersistenceAdapter;
+import com.queen.adapters.web.dto.DailyTrackingMapper;
 import com.queen.adapters.web.dto.FieldTypeToDTO;
 import com.queen.adapters.web.dto.MigraineMapper;
 import com.queen.adapters.web.dto.PeriodMonitorToDTO;
@@ -31,8 +33,10 @@ import com.queen.application.service.MonitorTypeService;
 import com.queen.application.service.PeriodMonitorService;
 import com.queen.application.service.PeriodService;
 import com.queen.application.service.UserService;
+import com.queen.domain.DailyTrackingPersistencePort;
 import com.queen.domain.MigrainePersistencePort;
 import com.queen.domain.PeriodPersistencePort;
+import com.queen.infrastructure.persistence.DailyTrackingRepository;
 import com.queen.infrastructure.persistence.FieldTypesRepository;
 import com.queen.infrastructure.persistence.FieldsRepository;
 import com.queen.infrastructure.persistence.MigraineRepository;
@@ -161,13 +165,20 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	PeriodMapper periodToDTOMapper() {
-		return new PeriodMapper();
+	PeriodMapper periodToDTOMapper(final MigraineMapper migraineMapper) {
+		return new PeriodMapper(migraineMapper);
 	}
 
 	@Bean
-	PeriodService periodService(final PeriodPersistencePort periodPersistencePort, final MigrainePersistencePort migrainePersistencePort, final PeriodMapper periodMapper, final MigraineMapper migraineMapper) {
-		return new PeriodService(periodPersistencePort, migrainePersistencePort, periodMapper, migraineMapper);
+	PeriodService periodService(
+			final PeriodPersistencePort periodPersistencePort,
+			final MigrainePersistencePort migrainePersistencePort,
+			final PeriodMapper periodMapper,
+			final MigraineMapper migraineMapper,
+			final DailyTrackingMapper dailyTrackingMapper,
+			final DailyTrackingPersistencePort dailyTrackingPersistencePort
+	) {
+		return new PeriodService(periodPersistencePort, migrainePersistencePort, periodMapper, migraineMapper, dailyTrackingMapper, dailyTrackingPersistencePort);
 	}
 
 	@Bean
@@ -183,5 +194,15 @@ public class FellaConfiguration {
 	@Bean
 	MigrainePersistencePort migrainePersistencePort(final MigraineRepository migraineRepository) {
 		return new MigrainePersistenceAdapter(migraineRepository);
+	}
+
+	@Bean
+	DailyTrackingMapper dailyTrackingMapper() {
+		return new DailyTrackingMapper();
+	}
+
+	@Bean
+	DailyTrackingPersistencePort dailyTrackingPersistencePort(final DailyTrackingRepository dailyTrackingRepository) {
+		return new DailyTrackingPersistenceAdapter(dailyTrackingRepository);
 	}
 }

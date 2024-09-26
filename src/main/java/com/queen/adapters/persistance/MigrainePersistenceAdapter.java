@@ -14,6 +14,9 @@ public class MigrainePersistenceAdapter implements MigrainePersistencePort {
 
 	@Override
 	public Mono<Migraine> createMigraine(final Migraine migraine) {
+		if (migraine == null) {
+			return Mono.empty();
+		}
 		return migraineRepository.save(migraine);
 	}
 }

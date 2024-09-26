@@ -5,6 +5,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public interface PeriodRepository extends ReactiveCrudRepository<Period, String> {
+public interface PeriodRepository extends ReactiveCrudRepository<Period, UUID> {
 	Mono<Period> findByUserId(UUID userId);
 }

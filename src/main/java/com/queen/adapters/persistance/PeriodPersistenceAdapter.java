@@ -17,9 +17,6 @@ public class PeriodPersistenceAdapter implements PeriodPersistencePort {
 	@Override
 	@Transactional
 	public Mono<Period> createPeriod(final Period period) {
-		return periodRepository.save(period).onErrorMap(e -> new ActivePeriodExistsException(
-				String.format("Active period for the user exists, userId: %s", period.getUserId()),
-				e)
-		);
+		return periodRepository.save(period);
 	}
 }
