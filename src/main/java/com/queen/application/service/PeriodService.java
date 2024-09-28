@@ -13,8 +13,6 @@ import com.queen.domain.PeriodPersistencePort;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
-
 public class PeriodService {
 	private final PeriodPersistencePort periodPersistencePort;
 	private final MigrainePersistencePort migrainePersistencePort;
@@ -42,16 +40,18 @@ public class PeriodService {
 	@Transactional
 	public Mono<PeriodDTO> createPeriod(final Period period, final Migraine migraine, final DailyTracking dailyTracking) {
 		return periodPersistencePort.createPeriod(periodMapper.mapToPersistence(period))
-				.zipWith(migrainePersistencePort.createMigraine(migraineMapper.mapToPersistence(migraine)))
-						.flatMap(tuple -> {
-							if (dailyTracking != null) {
-								return dailyTrackingPersistencePort.createDailyTracking(dailyTrackingMapper.mapToPersistence(dailyTracking)).map(dailyTracking1 -> {
-									return periodMapper.mapToDTO(tuple.getT1(), Optional.of(tuple.getT2()));
-								});
-							}
-							return Mono.just(periodMapper.mapToDTO(tuple.getT1(), Optional.of(tuple.getT2())));
-						}).onErrorResume(e -> {
-							return Mono.error(e);
-						});
+				.zipWith(
+						migrainePersistencePort.createMigraine(migraineMapper.mapToPersistence(migraine))
+							.switchIfEmpty(Mono.just(com.queen.infrastructure.persistence.Migraine.empty())))
+				.flatMap(tuple -> {
+					final var dt = dailyTrackingMapper.mapToPersistence(dailyTracking);
+					dt.setPeriodId(tuple.getT1().getId());
+					dt.setFlowLevel(dailyTracking.flowLevel());
+					dt.setPainLevel(dailyTracking.painLevel());
+					dt.setMigraineId(tuple.getT2().getId());
+					return dailyTrackingPersistencePort.createDailyTracking(dt).map(dailyTracking1 -> {
+						return periodMapper.mapToDTO(tuple.getT1(), tuple.getT2(), dailyTracking1);
+					});
+				});
 	}
 }

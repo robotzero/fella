@@ -165,8 +165,8 @@ public class FellaConfiguration {
 	}
 
 	@Bean
-	PeriodMapper periodToDTOMapper(final MigraineMapper migraineMapper) {
-		return new PeriodMapper(migraineMapper);
+	PeriodMapper periodToDTOMapper(final MigraineMapper migraineMapper, final DailyTrackingMapper dailyTrackingMapper) {
+		return new PeriodMapper(migraineMapper, dailyTrackingMapper);
 	}
 
 	@Bean

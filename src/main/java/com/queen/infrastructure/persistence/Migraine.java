@@ -28,6 +28,10 @@ public class Migraine implements Persistable<UUID> {
 		this.isNew = isNew;
 	}
 
+	public static Migraine empty() {
+		return new Migraine(null, null, false);
+	}
+
 	@Override
 	public UUID getId() {
 		return id;
@@ -54,5 +58,9 @@ public class Migraine implements Persistable<UUID> {
 	public Migraine setDescription(String description) {
 		this.description = description;
 		return this;
+	}
+
+	public LocalDate getMigraineDate() {
+		return migraineDate;
 	}
 }

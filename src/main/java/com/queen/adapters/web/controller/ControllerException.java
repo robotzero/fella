@@ -2,11 +2,13 @@ package com.queen.adapters.web.controller;
 
 import com.queen.adapters.web.dto.ExceptionDTO;
 import com.queen.application.service.exception.ActivePeriodExistsException;
+import com.queen.application.service.exception.DatabaseException;
 import com.queen.application.service.exception.InvalidUserException;
 import com.queen.application.service.exception.MonitorTypeException;
 import com.queen.application.service.exception.UserServiceException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,7 @@ public class ControllerException {
 		);
 	}
 
-	@ExceptionHandler({Exception.class, UserServiceException.class})
+	@ExceptionHandler({Exception.class, UserServiceException.class, DatabaseException.class})
 	public Mono<ResponseEntity<ExceptionDTO>> handleGenericException(final Exception exception) {
 		logger.error(exception);
 		return Mono.just(new ResponseEntity<>(
@@ -39,6 +41,14 @@ public class ControllerException {
 		logger.error(exception);
 		return Mono.just(new ResponseEntity<>(
 				new ExceptionDTO("Unauthorized", HttpStatus.UNAUTHORIZED.value()), new HttpHeaders(), HttpStatus.UNAUTHORIZED)
+		);
+	}
+
+	@ExceptionHandler({DuplicateKeyException.class})
+	public Mono<ResponseEntity<ExceptionDTO>> handleDuplicateKeyException(final Exception exception) {
+		logger.error(exception);
+		return Mono.just(new ResponseEntity<>(
+				new ExceptionDTO("Invalid operation", HttpStatus.BAD_REQUEST.value()), new HttpHeaders(), HttpStatus.BAD_REQUEST)
 		);
 	}
 }

@@ -12,13 +12,19 @@ public class MigraineMapper implements MigraineMapperPort {
 
 	@Override
 	public MigraineDTO mapToDTO(com.queen.infrastructure.persistence.Migraine migraine) {
-		return new MigraineDTO();
+		if (migraine == null) {
+			return null;
+		}
+		return new MigraineDTO(migraine.getMigraineDate(), migraine.getSeverityLevel(), migraine.getDescription());
 	}
 
 	@Override
 	public com.queen.infrastructure.persistence.Migraine mapToPersistence(final Migraine migraine) {
 		if (migraine != null) {
-			return new com.queen.infrastructure.persistence.Migraine(migraine.userId(), migraine.migraineDate(), true);
+			final var m = new com.queen.infrastructure.persistence.Migraine(migraine.userId(), migraine.migraineDate(), true);
+			m.setSeverityLevel(migraine.severityLevel());
+			m.setDescription(migraine.description());
+			return m;
 		}
 		return null;
 	}

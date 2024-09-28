@@ -14,16 +14,19 @@ public class DailyTracking implements Persistable<UUID> {
 	@Id
 	@Column("tracking_id")
 	private UUID id;
+	private UUID userId;
 	private final LocalDate trackingDate;
 	private UUID periodId;
 	private UUID moodId;
+	private UUID migraineId;
 	private Integer painLevel;
 	private Integer flowLevel;
 
 	@Transient
 	private final Boolean isNew;
 
-	public DailyTracking(LocalDate trackingDate, Boolean isNew) {
+	public DailyTracking(UUID userId, LocalDate trackingDate, Boolean isNew) {
+		this.userId = userId;
 		this.trackingDate = trackingDate;
 		this.isNew = isNew;
 	}
@@ -76,5 +79,13 @@ public class DailyTracking implements Persistable<UUID> {
 
 	public LocalDate getTrackingDate() {
 		return trackingDate;
+	}
+
+	public UUID getMigraineId() {
+		return migraineId;
+	}
+
+	public void setMigraineId(UUID migraineId) {
+		this.migraineId = migraineId;
 	}
 }

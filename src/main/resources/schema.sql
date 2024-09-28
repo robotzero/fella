@@ -188,7 +188,7 @@ CREATE TABLE users
 CREATE TABLE periods
 (
     period_id    UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    user_id      UUID REFERENCES users (user_id) ON DELETE CASCADE,
+    user_id      UUID REFERENCES users (user_id),
     start_date   DATE NOT NULL,
     end_date     DATE,
     cycle_length INT, -- Optional: This can be calculated based on prior periods
@@ -224,11 +224,12 @@ CREATE TABLE daily_tracking
 (
     tracking_id    UUID DEFAULT  gen_random_uuid() PRIMARY KEY,
     period_id      UUID REFERENCES periods (period_id) ON DELETE CASCADE,
+    user_id        UUID REFERENCES users (user_id) ON DELETE CASCADE,
     tracking_date  DATE NOT NULL,
     pain_level     INT CHECK (pain_level >= 0 AND pain_level <= 10),
     flow_level     INT CHECK (flow_level >= 0 AND flow_level <= 5),
     mood_id        UUID REFERENCES moods (mood_id),                           -- Optional mood tracking
     migraine_id    UUID REFERENCES migraines(migraine_id),                    -- Reference to migraine
-    UNIQUE (period_id, tracking_date, mood_id, migraine_id)                    -- Ensure only one entry per day
+    UNIQUE (tracking_date)                                                    -- Ensure only one entry per day
 );
 

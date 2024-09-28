@@ -6,16 +6,18 @@ import com.queen.adapters.web.dto.PeriodDTO;
 import com.queen.adapters.web.dto.PeriodRequest;
 import com.queen.adapters.web.dto.PeriodMapper;
 import com.queen.application.service.PeriodService;
+import com.queen.application.service.exception.DatabaseException;
 import com.queen.configuration.FellaJwtAuthenticationToken;
+import com.queen.domain.DailyTracking;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
+import java.time.LocalDate;
 
 @RestController
 @Validated
@@ -37,18 +39,23 @@ public class PeriodController {
 		this.dailyTrackingMapper = dailyTrackingMapper;
 	}
 
-	//@TODO figure out why authentication.userId is not working
 	@PostMapping(value = "/api/period", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	Mono<PeriodDTO> createPeriod(
-			final @CurrentSecurityContext(expression = "authentication.userId") String userId,
 			final FellaJwtAuthenticationToken token,
 			final @RequestBody PeriodRequest periodRequest
 	) {
 		final var period = periodMapper.mapToDomain(token.getUserId(), periodRequest);
 		final var migraine = periodRequest.migraine().map(m -> migraineMapper.mapToDomain(token.getUserId(), m));
-		final var dailyTracking = periodRequest.dailyTracking().map(dailyTrackingMapper::mapToDomain);
-		return periodService.createPeriod(period, migraine.orElse(null), dailyTracking.orElse(null));
+		final var dailyTracking = periodRequest.dailyTracking().map(d -> dailyTrackingMapper.mapToDomain(token.getUserId(), d));
+		return periodService.createPeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(token.getUserId(), LocalDate.now(), 0, 0))).onErrorMap(e -> {
+			return switch (e) {
+				case PessimisticLockingFailureException plf -> new DatabaseException("Database error", plf);
+				default -> e;
+			};
+		});
 	}
-
-	// @TODO End period endpoint and also implement cyclelength calculation in here, and andjust it
 }
+
+	// @TODO End period endpoint and also implement cyclelength calculation in here, and adjust it
+	// @TODO The is active method to check if currently period is active
+	// @TODO end migraine endpoint
