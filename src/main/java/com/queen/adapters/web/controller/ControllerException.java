@@ -3,6 +3,7 @@ package com.queen.adapters.web.controller;
 import com.queen.adapters.web.dto.ExceptionDTO;
 import com.queen.application.service.exception.ActivePeriodExistsException;
 import com.queen.application.service.exception.DatabaseException;
+import com.queen.application.service.exception.InvalidPeriodIdException;
 import com.queen.application.service.exception.InvalidUserException;
 import com.queen.application.service.exception.MonitorTypeException;
 import com.queen.application.service.exception.UserServiceException;
@@ -14,12 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.support.WebExchangeBindException;
+import org.springframework.web.server.MethodNotAllowedException;
 import reactor.core.publisher.Mono;
 
 @ControllerAdvice
 public class ControllerException {
 	final Log logger = LogFactory.getLog(this.getClass());
-	@ExceptionHandler({MonitorTypeException.class, ActivePeriodExistsException.class})
+	@ExceptionHandler({MonitorTypeException.class, ActivePeriodExistsException.class, MethodNotAllowedException.class, InvalidPeriodIdException.class})
 	public Mono<ResponseEntity<ExceptionDTO>> handleMonitorTypeException(final Exception exception) {
 		logger.debug(exception);
 		logger.error(exception.getMessage());
@@ -49,6 +52,15 @@ public class ControllerException {
 		logger.error(exception);
 		return Mono.just(new ResponseEntity<>(
 				new ExceptionDTO("Invalid operation", HttpStatus.BAD_REQUEST.value()), new HttpHeaders(), HttpStatus.BAD_REQUEST)
+		);
+	}
+
+	@ExceptionHandler({WebExchangeBindException.class})
+	public Mono<ResponseEntity<ExceptionDTO>> handleValidationException(final Exception exception) {
+		logger.debug(exception);
+		logger.error(exception.getMessage());
+		return Mono.just(new ResponseEntity<>(
+				new ExceptionDTO("Missing data in the request", HttpStatus.BAD_REQUEST.value()), new HttpHeaders(), HttpStatus.BAD_REQUEST)
 		);
 	}
 }

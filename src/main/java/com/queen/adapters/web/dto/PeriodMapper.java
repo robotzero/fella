@@ -5,6 +5,7 @@ import com.queen.domain.PeriodMapperPort;
 import com.queen.infrastructure.persistence.DailyTracking;
 import com.queen.infrastructure.persistence.Migraine;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class PeriodMapper implements PeriodMapperPort {
@@ -17,11 +18,23 @@ public class PeriodMapper implements PeriodMapperPort {
 	}
 
 	public Period mapToDomain(final UUID userId, final PeriodRequest periodRequest) {
-		return new Period(
-				userId,
-				periodRequest.startDateOrNow(),
-				periodRequest.endDate()
-		);
+		switch (periodRequest) {
+			case FullPeriodRequest fullPeriodRequest -> {
+				return new Period(
+						null,
+						userId,
+						fullPeriodRequest.startDateOrNow(),
+						fullPeriodRequest.endDate()
+				);
+			} case EndPeriodRequest endPeriodRequest -> {
+				return new Period(
+						endPeriodRequest.periodIdToUUID(),
+						userId,
+						null,
+						Optional.of(endPeriodRequest.endDateOrNow())
+				);
+			}
+		}
 	}
 
 	@Override
@@ -36,6 +49,12 @@ public class PeriodMapper implements PeriodMapperPort {
 
 	@Override
 	public com.queen.infrastructure.persistence.Period mapToPersistence(final Period period) {
-		return new com.queen.infrastructure.persistence.Period(period.userId(), period.startDate(), true);
+		if (period.periodId() == null) {
+			return new com.queen.infrastructure.persistence.Period(period.userId(), period.startDate(), true);
+		}
+		return new com.queen.infrastructure.persistence.Period(
+				period.userId(),
+				period.startDate(),
+				false).setId(period.periodId()).setActive(false);
 	}
 }

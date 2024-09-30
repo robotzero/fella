@@ -49,4 +49,14 @@ public class Period implements Persistable<UUID> {
 	public LocalDate getEndDate() {
 		return endDate;
 	}
+
+	public Period setId(UUID id) {
+		this.id = id;
+		return this;
+	}
+
+	public Period setActive(Boolean active) {
+		this.active = active;
+		return this;
+	}
 }

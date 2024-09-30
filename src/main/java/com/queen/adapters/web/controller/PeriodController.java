@@ -1,18 +1,21 @@
 package com.queen.adapters.web.controller;
 
 import com.queen.adapters.web.dto.DailyTrackingMapper;
+import com.queen.adapters.web.dto.EndPeriodRequest;
 import com.queen.adapters.web.dto.MigraineMapper;
 import com.queen.adapters.web.dto.PeriodDTO;
-import com.queen.adapters.web.dto.PeriodRequest;
+import com.queen.adapters.web.dto.FullPeriodRequest;
 import com.queen.adapters.web.dto.PeriodMapper;
 import com.queen.application.service.PeriodService;
 import com.queen.application.service.exception.DatabaseException;
 import com.queen.configuration.FellaJwtAuthenticationToken;
 import com.queen.domain.DailyTracking;
+import jakarta.validation.Valid;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -39,10 +42,10 @@ public class PeriodController {
 		this.dailyTrackingMapper = dailyTrackingMapper;
 	}
 
-	@PostMapping(value = "/api/period", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/api/period", produces = MediaType.TEXT_EVENT_STREAM_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	Mono<PeriodDTO> createPeriod(
 			final FellaJwtAuthenticationToken token,
-			final @RequestBody PeriodRequest periodRequest
+			final @Valid @RequestBody FullPeriodRequest periodRequest
 	) {
 		final var period = periodMapper.mapToDomain(token.getUserId(), periodRequest);
 		final var migraine = periodRequest.migraine().map(m -> migraineMapper.mapToDomain(token.getUserId(), m));
@@ -53,6 +56,15 @@ public class PeriodController {
 				default -> e;
 			};
 		});
+	}
+
+	@PutMapping(value = "/api/period/end", produces = MediaType.TEXT_EVENT_STREAM_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	Mono<PeriodDTO> endPeriod(
+			final FellaJwtAuthenticationToken token,
+			final @Valid @RequestBody EndPeriodRequest endPeriodRequest
+	) {
+		final var period = periodMapper.mapToDomain(token.getUserId(), endPeriodRequest);
+		return periodService.endPeriod(period);
 	}
 }
 

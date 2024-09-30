@@ -5,4 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface PeriodPersistencePort {
 	Mono<Period> createPeriod(Period period);
+	Mono<Period> updatePeriod(Period period);
 }

@@ -26,4 +26,9 @@ public class PeriodPersistenceAdapter implements PeriodPersistencePort {
 			};
 		});
 	}
+
+	@Override
+	public Mono<Period> updatePeriod(Period period) {
+		return this.periodRepository.save(period);
+	}
 }

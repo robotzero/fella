@@ -54,4 +54,12 @@ public class PeriodService {
 					});
 				});
 	}
+
+	@Transactional
+	public Mono<PeriodDTO> endPeriod(final Period period) {
+		return periodPersistencePort.updatePeriod(periodMapper.mapToPersistence(period))
+				.map(p -> {
+					return periodMapper.mapToDTO(p, com.queen.infrastructure.persistence.Migraine.empty(), com.queen.infrastructure.persistence.DailyTracking.empty());
+				});
+	}
 }
