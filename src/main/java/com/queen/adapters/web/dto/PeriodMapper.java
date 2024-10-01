@@ -5,6 +5,7 @@ import com.queen.domain.PeriodMapperPort;
 import com.queen.infrastructure.persistence.DailyTracking;
 import com.queen.infrastructure.persistence.Migraine;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,11 +51,10 @@ public class PeriodMapper implements PeriodMapperPort {
 	@Override
 	public com.queen.infrastructure.persistence.Period mapToPersistence(final Period period) {
 		if (period.periodId() == null) {
-			return new com.queen.infrastructure.persistence.Period(period.userId(), period.startDate(), true);
+			return new com.queen.infrastructure.persistence.Period(period.userId(), period.startDate()).setNew(true);
 		}
 		return new com.queen.infrastructure.persistence.Period(
 				period.userId(),
-				period.startDate(),
-				false).setId(period.periodId()).setActive(false);
+				period.startDate()).setId(period.periodId()).setEndDate(period.endDate().orElse(LocalDate.now())).setActive(false);
 	}
 }

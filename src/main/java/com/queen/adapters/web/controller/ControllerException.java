@@ -6,6 +6,7 @@ import com.queen.application.service.exception.DatabaseException;
 import com.queen.application.service.exception.InvalidPeriodIdException;
 import com.queen.application.service.exception.InvalidUserException;
 import com.queen.application.service.exception.MonitorTypeException;
+import com.queen.application.service.exception.PeriodUpdateException;
 import com.queen.application.service.exception.UserServiceException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,7 +23,7 @@ import reactor.core.publisher.Mono;
 @ControllerAdvice
 public class ControllerException {
 	final Log logger = LogFactory.getLog(this.getClass());
-	@ExceptionHandler({MonitorTypeException.class, ActivePeriodExistsException.class, MethodNotAllowedException.class, InvalidPeriodIdException.class})
+	@ExceptionHandler({MonitorTypeException.class, ActivePeriodExistsException.class, MethodNotAllowedException.class, InvalidPeriodIdException.class, PeriodUpdateException.class})
 	public Mono<ResponseEntity<ExceptionDTO>> handleMonitorTypeException(final Exception exception) {
 		logger.debug(exception);
 		logger.error(exception.getMessage());

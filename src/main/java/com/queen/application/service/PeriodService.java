@@ -11,7 +11,10 @@ import com.queen.domain.Period;
 import com.queen.domain.PeriodMapperPort;
 import com.queen.domain.PeriodPersistencePort;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 public class PeriodService {
 	private final PeriodPersistencePort periodPersistencePort;
@@ -58,6 +61,13 @@ public class PeriodService {
 	@Transactional
 	public Mono<PeriodDTO> endPeriod(final Period period) {
 		return periodPersistencePort.updatePeriod(periodMapper.mapToPersistence(period))
+				.map(p -> {
+					return periodMapper.mapToDTO(p, com.queen.infrastructure.persistence.Migraine.empty(), com.queen.infrastructure.persistence.DailyTracking.empty());
+				});
+	}
+
+	public Flux<PeriodDTO> getPeriods(final UUID userId) {
+		return periodPersistencePort.getPeriods(userId)
 				.map(p -> {
 					return periodMapper.mapToDTO(p, com.queen.infrastructure.persistence.Migraine.empty(), com.queen.infrastructure.persistence.DailyTracking.empty());
 				});

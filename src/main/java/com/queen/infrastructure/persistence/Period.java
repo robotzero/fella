@@ -21,12 +21,11 @@ public class Period implements Persistable<UUID> {
 	private Boolean active;
 
 	@Transient
-	private final Boolean isNew;
+	private Boolean isNew;
 
-	public Period(final UUID userId, final LocalDate startDate, Boolean isNew) {
+	public Period(final UUID userId, final LocalDate startDate) {
 		this.userId = userId;
 		this.startDate = startDate;
-		this.isNew = isNew;
 	}
 
 	@Override
@@ -57,6 +56,16 @@ public class Period implements Persistable<UUID> {
 
 	public Period setActive(Boolean active) {
 		this.active = active;
+		return this;
+	}
+
+	public Period setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+		return this;
+	}
+
+	public Period setNew(Boolean aNew) {
+		isNew = aNew;
 		return this;
 	}
 }

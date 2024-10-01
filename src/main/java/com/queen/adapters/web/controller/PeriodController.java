@@ -14,10 +14,12 @@ import jakarta.validation.Valid;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
@@ -66,8 +68,15 @@ public class PeriodController {
 		final var period = periodMapper.mapToDomain(token.getUserId(), endPeriodRequest);
 		return periodService.endPeriod(period);
 	}
+
+	@GetMapping(value = "/api/period/all", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	Flux<PeriodDTO> getPeriods(
+			final FellaJwtAuthenticationToken token
+	) {
+		return periodService.getPeriods(token.getUserId());
+	}
 }
 
-	// @TODO End period endpoint and also implement cyclelength calculation in here, and adjust it
+	// @TODO implement cyclelength calculation in here, and adjust it
 	// @TODO The is active method to check if currently period is active
 	// @TODO end migraine endpoint
