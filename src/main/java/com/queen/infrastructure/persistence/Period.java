@@ -21,6 +21,12 @@ public class Period implements Persistable<UUID> {
 	private Boolean active;
 
 	@Transient
+	private Migraine migraine;
+
+	@Transient
+	private DailyTracking dailyTracking;
+
+	@Transient
 	private Boolean isNew;
 
 	public Period(final UUID userId, final LocalDate startDate) {
@@ -49,23 +55,48 @@ public class Period implements Persistable<UUID> {
 		return endDate;
 	}
 
-	public Period setId(UUID id) {
+	public Period setId(final UUID id) {
 		this.id = id;
 		return this;
 	}
 
-	public Period setActive(Boolean active) {
+	public Period setActive(final Boolean active) {
 		this.active = active;
 		return this;
 	}
 
-	public Period setEndDate(LocalDate endDate) {
+	public Period setEndDate(final LocalDate endDate) {
 		this.endDate = endDate;
 		return this;
 	}
 
-	public Period setNew(Boolean aNew) {
+	public Period setNew(final Boolean aNew) {
 		isNew = aNew;
 		return this;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public Migraine getMigraine() {
+		return migraine;
+	}
+
+	public void setMigraine(final Migraine migraine) {
+		this.migraine = migraine;
+	}
+
+	public void setDailyTracking(final DailyTracking dailyTracking) {
+		this.dailyTracking = dailyTracking;
+	}
+
+	public Period setCycleLength(final Integer cycleLength) {
+		this.cycleLength = cycleLength;
+		return this;
+	}
+
+	public DailyTracking getDailyTracking() {
+		return dailyTracking;
 	}
 }

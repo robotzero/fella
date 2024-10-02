@@ -40,6 +40,10 @@ public class DailyTracking implements Persistable<UUID> {
 		return id;
 	}
 
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
 	@Override
 	public boolean isNew() {
 		return isNew;

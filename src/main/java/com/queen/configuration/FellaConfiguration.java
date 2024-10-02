@@ -47,6 +47,7 @@ import com.queen.infrastructure.persistence.monitor.PeriodMonitorRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class FellaConfiguration {
@@ -204,5 +205,10 @@ public class FellaConfiguration {
 	@Bean
 	DailyTrackingPersistencePort dailyTrackingPersistencePort(final DailyTrackingRepository dailyTrackingRepository) {
 		return new DailyTrackingPersistenceAdapter(dailyTrackingRepository);
+	}
+
+	@Bean
+	WebClient webClient() {
+		return WebClient.builder().baseUrl("http://localhost:8080").build();
 	}
 }

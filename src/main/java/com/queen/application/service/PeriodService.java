@@ -69,7 +69,12 @@ public class PeriodService {
 	public Flux<PeriodDTO> getPeriods(final UUID userId) {
 		return periodPersistencePort.getPeriods(userId)
 				.map(p -> {
-					return periodMapper.mapToDTO(p, com.queen.infrastructure.persistence.Migraine.empty(), com.queen.infrastructure.persistence.DailyTracking.empty());
+					return periodMapper.mapToDTO(p, p.getMigraine(), p.getDailyTracking());
 				});
+	}
+
+	public Mono<Boolean> isAnyPeriodActive(final UUID userId) {
+		return periodPersistencePort.getPeriods(userId)
+				.any(com.queen.infrastructure.persistence.Period::getActive);
 	}
 }

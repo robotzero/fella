@@ -63,4 +63,12 @@ public class Migraine implements Persistable<UUID> {
 	public LocalDate getMigraineDate() {
 		return migraineDate;
 	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public UUID getUserId() {
+		return userId;
+	}
 }

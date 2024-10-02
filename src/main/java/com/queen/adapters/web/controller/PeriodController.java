@@ -75,8 +75,12 @@ public class PeriodController {
 	) {
 		return periodService.getPeriods(token.getUserId());
 	}
-}
 
+	@GetMapping(value = "/api/period/any-active", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	Mono<Boolean> isAnyPeriodActive(
+			final FellaJwtAuthenticationToken token
+	) {
+		return periodService.isAnyPeriodActive(token.getUserId());
+	}
+}
 	// @TODO implement cyclelength calculation in here, and adjust it
-	// @TODO The is active method to check if currently period is active
-	// @TODO end migraine endpoint
