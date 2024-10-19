@@ -24,4 +24,9 @@ public class PeriodView {
 					return "fragments/periods-list";
 				});
 	}
+
+	@GetMapping("/view/login")
+	public Mono<String> viewLogin() {
+		return Mono.just("login");
+	}
 }

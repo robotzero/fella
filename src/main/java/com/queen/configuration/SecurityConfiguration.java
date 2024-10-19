@@ -30,6 +30,8 @@ public class SecurityConfiguration {
 		http
 				.authorizeExchange((authorize) -> {
 					authorize.pathMatchers("/actuator/**").permitAll();
+					authorize.pathMatchers("/view/login").permitAll();
+					authorize.pathMatchers("/view/login/**").permitAll();
 					//authorize.pathMatchers("/**").hasAuthority("SCOPE_message.read");
 					authorize.anyExchange().authenticated();
 				})
