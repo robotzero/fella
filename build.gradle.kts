@@ -20,22 +20,18 @@ repositories {
 
 configurations {
     implementation {
-        exclude(module = "spring-boot-starter-tomcat")
-        exclude(group = "org.springframework", module = "spring-webmvc")
+//        exclude(module = "spring-boot-starter-tomcat")
+        //exclude(group = "org.springframework", module = "spring-webmvc")
         exclude(module = "spring-boot-starter-websocket")
 //        exclude(module = "spring-web")
     }
 }
 
-extra["springCloudVersion"] = "2023.0.3"
-
 dependencies {
-    // Spring Boot Starter Dependencies
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
-//    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("org.springframework.cloud:spring-cloud-starter-gateway")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 //    implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
@@ -45,6 +41,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
     implementation("com.fasterxml.jackson.core:jackson-core")
     implementation("com.fasterxml.jackson.core:jackson-annotations")
     implementation("com.fasterxml.jackson.core:jackson-databind")
@@ -61,13 +58,6 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.security:spring-security-test")
 }
-
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-    }
-}
-
 
 tasks.test {
     useJUnitPlatform()

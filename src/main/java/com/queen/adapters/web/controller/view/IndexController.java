@@ -7,10 +7,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Controller
-public class PeriodView {
+public class IndexController {
 	private final WebClient webClient;
 
-	public PeriodView(final WebClient webClient) {
+	public IndexController(final WebClient webClient) {
 		this.webClient = webClient;
 	}
 
@@ -21,12 +21,12 @@ public class PeriodView {
 				.retrieve()
 				.bodyToFlux(String.class).collectList().map(periods -> {
 					model.addAttribute("periods", periods);
-					return "fragments/periods-list";
+					return "periods";
 				});
 	}
 
-	@GetMapping("/view/login")
-	public Mono<String> viewLogin() {
-		return Mono.just("login");
+	@GetMapping("/")
+	public String viewPeriod(Model model) {
+		return "index";
 	}
 }

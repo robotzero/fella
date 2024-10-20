@@ -38,7 +38,7 @@ public class TestController {
 		return Mono.fromSupplier(() -> new String[] {jwt.getTokenValue()});
 	}
 
-	@GetMapping("/")
+	@GetMapping("/token")
 	@ResponseStatus(HttpStatus.OK)
 	public Mono<String[]> test(Authentication authentication, Principal principal, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
 			@AuthenticationPrincipal OAuth2User oauth2User) {
