@@ -3,7 +3,6 @@ package com.queen.adapters.web.controller.view;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +36,6 @@ public class IndexController {
 
 	@GetMapping("/")
 	public String viewPeriod(Model model, Principal principal, Authentication authentication) {
-		System.out.println("Principal: " + principal.getName());
 		model.addAttribute("name", principal.getName());
 		return "index";
 	}
