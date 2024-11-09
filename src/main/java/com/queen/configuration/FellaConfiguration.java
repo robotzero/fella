@@ -24,6 +24,8 @@ import com.queen.infrastructure.persistence.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
@@ -106,6 +108,11 @@ public class FellaConfiguration {
 
 	@Bean
 	WebClient webClient() {
-		return WebClient.builder().baseUrl("http://localhost:8080").build();
+		return WebClient.builder().baseUrl("http://192.168.0.46:8080").build();
+	}
+
+	@Bean
+	JwtAuthenticationConverter jwtAuthenticationConverter() {
+		return new JwtAuthenticationConverter();
 	}
 }

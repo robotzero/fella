@@ -8,11 +8,17 @@ import com.queen.adapters.web.dto.FullPeriodRequest;
 import com.queen.adapters.web.dto.PeriodMapper;
 import com.queen.application.service.PeriodService;
 import com.queen.application.service.exception.DatabaseException;
+import com.queen.configuration.FellaConfiguration;
 import com.queen.configuration.FellaJwtAuthenticationToken;
 import com.queen.domain.DailyTracking;
+import io.micrometer.core.ipc.http.HttpSender;
 import jakarta.validation.Valid;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.security.Principal;
 import java.time.LocalDate;
 
 @RestController
@@ -71,8 +78,10 @@ public class PeriodController {
 
 	@GetMapping(value = "/api/period/all", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	Flux<PeriodDTO> getPeriods(
-			final FellaJwtAuthenticationToken token
+			Authentication authentication, Principal principal,
+			ServerHttpRequest request
 	) {
+		FellaJwtAuthenticationToken token = (FellaJwtAuthenticationToken) principal;
 		return periodService.getPeriods(token.getUserId());
 	}
 

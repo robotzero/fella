@@ -17,7 +17,7 @@ public class AttachUserService implements com.queen.application.ports.in.AttachN
 
 	@Override
 	public Mono<FellaUser> attachNewUserDetails(final AttachUserCommand attachNewUserCommand) {
-		return this.loadUser.loadUser(attachNewUserCommand.jwtAuthenticationToken().getName())
+		return this.loadUser.loadUser(attachNewUserCommand.jwt().getSubject())
 				.map(userMapper::mapToDomain);
 	}
 }
