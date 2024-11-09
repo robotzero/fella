@@ -41,6 +41,7 @@ public class PeriodMapper implements PeriodMapperPort {
 	@Override
 	public PeriodDTO mapToDTO(final com.queen.infrastructure.persistence.Period period, final Migraine migraine, final DailyTracking dailyTracking) {
 		return new PeriodDTO(
+				period.getId(),
 				period.getStartDate(),
 				period.getEndDate(),
 				migraineMapper.mapToDTO(migraine),
