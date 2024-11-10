@@ -36,6 +36,7 @@ public class SecurityConfiguration {
 					authorize.anyExchange().authenticated();
 				})
 				.csrf(ServerHttpSecurity.CsrfSpec::disable)
+				.cors(ServerHttpSecurity.CorsSpec::disable)
 				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(userIdExtractor(attachUserService, jwtAuthenticationConverter))))
 				.oauth2Login(Customizer.withDefaults())
 				.oauth2Client(Customizer.withDefaults());

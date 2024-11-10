@@ -3,32 +3,7 @@
     <div th:if="${periods != null && periods.size() > 0}">
         <ul style="list-style: none; padding: 0;">
             <li th:each="period : ${periods}"
-                th:attr="id='period-item-' + ${period.periodId()}"
-                style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);">
-                <article>
-                    <h3 style="margin-bottom: 0.5rem;">Period Information</h3>
-                    <p><strong>Start Date:</strong> <span th:text="${period.startDate}">N/A</span></p>
-                    <p><strong>End Date:</strong> <span th:text="${period.endDate != null ? period.endDate : 'Ongoing'}">N/A</span></p>
-                    <p><strong>Flow Level:</strong> <span th:text="${period.dailyTracking().flowLevel()}">N/A</span></p>
-                    <p><strong>Pain Level:</strong> <span th:text="${period.dailyTracking().painLevel()}">N/A</span></p>
-                    <p><strong>Tracking Date:</strong> <span th:text="${period.dailyTracking().trackingDate()}">N/A</span></p>
-                    <p><strong>Migraine:</strong> <span th:text="${period.migraine().migraineDate()}">N/A</span></p>
-                    <p><strong>Migraine severity:</strong> <span th:text="${period.migraine().severityLevel()}">N/A</span></p>
-
-                    <!-- Conditional "End Period" button -->
-                    <div th:if="${period.endDate == null}">
-                        <label for="endDate-${period.id}">Choose End Date:</label>
-                        <input type="date" id="endDate-${period.id}" name="endDate" style="margin-bottom: 0.5rem;">
-
-                        <button hx-get="/view/period/end"
-                                hx-include="[name=id], [name=endDate]"
-                                hx-target="#period-item-${period.id}"
-                                hx-swap="outerHTML"
-                                th:attr="name='id', value=${period.periodId()}">
-                            End Period
-                        </button>
-                    </div>
-                </article>
+                th:replace="~{fragments/period-item :: period-item(period=${period})}">
             </li>
         </ul>
     </div>
@@ -36,4 +11,3 @@
         <p>No periods available.</p>
     </div>
 </section>
-

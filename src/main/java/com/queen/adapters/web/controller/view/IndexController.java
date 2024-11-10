@@ -55,10 +55,11 @@ public class IndexController {
 				.body(Mono.just(request), EndPeriodRequest.class)
 				.header("Authorization", "Bearer " + token)
 				.retrieve()
+				.onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), response -> Mono.error(new RuntimeException(response.toString())))
 				.bodyToMono(PeriodDTO.class)
-				.map(period -> {
-					model.addAttribute("periods", List.of(period));
-					return "fragments/period-list";
+				.map(response -> {
+					model.addAttribute("period", response);
+					return "fragments/period-item";
 				});
 	}
 
