@@ -27,4 +27,12 @@ public interface PeriodRepository extends ReactiveCrudRepository<Period, UUID> {
 		WHERE p.user_id = :userId
 	""")
 	Flux<Period> findAllByUserId(UUID userId);
+	@Query("""
+		SELECT p.*, m.*, dt.*
+		FROM periods p
+		INNER JOIN daily_tracking dt ON p.period_id = dt.period_id
+		LEFT JOIN migraines m ON dt.migraine_id = m.migraine_id
+		WHERE p.period_id = :periodId
+	""")
+	Mono<Period> findByIdAndByUserId(UUID periodId);
 }

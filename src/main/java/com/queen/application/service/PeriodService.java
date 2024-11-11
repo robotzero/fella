@@ -62,7 +62,9 @@ public class PeriodService {
 	public Mono<PeriodDTO> endPeriod(final Period period) {
 		return periodPersistencePort.updatePeriod(periodMapper.mapToPersistence(period))
 				.map(p -> {
-					return periodMapper.mapToDTO(p, com.queen.infrastructure.persistence.Migraine.empty(), com.queen.infrastructure.persistence.DailyTracking.empty());
+					var migraine = p.getMigraine() != null ? p.getMigraine() : com.queen.infrastructure.persistence.Migraine.empty();
+					var dt = p.getDailyTracking() != null ? p.getDailyTracking() : com.queen.infrastructure.persistence.DailyTracking.empty();
+					return periodMapper.mapToDTO(p, migraine, dt);
 				});
 	}
 

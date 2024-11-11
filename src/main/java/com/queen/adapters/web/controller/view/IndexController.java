@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2Aut
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -56,9 +57,11 @@ public class IndexController {
 				.header("Authorization", "Bearer " + token)
 				.retrieve()
 				.onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), response -> Mono.error(new RuntimeException(response.toString())))
-				.bodyToMono(PeriodDTO.class)
-				.map(response -> {
-					model.addAttribute("period", response);
+				.bodyToFlux(PeriodDTO.class)
+				.collectList()
+				.filter(periods -> !periods.isEmpty())
+				.map(period -> {
+					model.addAttribute("period", period.getFirst());
 					return "fragments/period-item";
 				});
 	}

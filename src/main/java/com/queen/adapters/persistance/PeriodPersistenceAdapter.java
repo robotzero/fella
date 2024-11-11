@@ -32,13 +32,16 @@ public class PeriodPersistenceAdapter implements PeriodPersistencePort {
 	}
 
 	@Override
-	public Mono<Period> updatePeriod(Period period) {
+	public Mono<Period> updatePeriod(final Period period) {
+		//@TODO throw proper exception here
+		assert period.getId() != null;
 		final var updated = this.periodRepository.endActivePeriod(period.getId(), period.getEndDate());
 		return updated.flatMap(count -> {
 			if (count == 0) {
 				return Mono.error(new PeriodUpdateException("No active period found to update", null));
 			}
-			return Mono.just(period);
+			return this.periodRepository.findByIdAndByUserId(period.getId())
+					.switchIfEmpty(Mono.error(new PeriodUpdateException("Updated period not found", null)));
 		});
 	}
 

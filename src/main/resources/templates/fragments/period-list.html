@@ -3,7 +3,8 @@
     <div th:if="${periods != null && periods.size() > 0}">
         <ul style="list-style: none; padding: 0;">
             <li th:each="period : ${periods}"
-                th:replace="~{fragments/period-item :: period-item(period=${period})}">
+                th:insert="~{fragments/period-item :: period-item(period=${period})}"
+                th:remove="tag">
             </li>
         </ul>
     </div>
