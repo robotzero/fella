@@ -1,6 +1,7 @@
 package com.queen.adapters.web.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -11,6 +12,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.reactive.config.EnableWebFlux;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 //
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 public class TestController {
@@ -46,6 +49,11 @@ public class TestController {
 		OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
 //	  FellaJwtAuthenticationToken jwtAuthentication = (FellaJwtAuthenticationToken) authentication;
 		return Mono.fromSupplier(() -> new String[] {"Message 1", "Message 2", "Message 4", accessToken.getTokenValue()});
+	}
+
+	@GetMapping(value = "/test", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public Flux<Integer> test() {
+		return Flux.fromIterable(List.of(1, 2, 3, 4, 5)).delayElements(java.time.Duration.ofSeconds(1));
 	}
 
 }

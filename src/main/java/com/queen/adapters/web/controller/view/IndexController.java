@@ -2,6 +2,7 @@ package com.queen.adapters.web.controller.view;
 
 import com.queen.adapters.web.dto.EndPeriodRequest;
 import com.queen.adapters.web.dto.PeriodDTO;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -11,9 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -27,19 +31,20 @@ public class IndexController {
 		this.webClient = webClient;
 	}
 
+	//@TODO: alternatively use exchangeToFlux instead of retrieve (resources freeing)
 	@GetMapping("/view/period/all")
-	public Mono<String> viewAllPeriods(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
+	public String viewAllPeriods(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
+		var fluxBufferSize = 1;
 		String token = authorizedClient.getAccessToken().getTokenValue();
-		return webClient.get()
+		var periods = webClient.get()
 				.uri("/api/period/all")
 				.header("Authorization", "Bearer " + token)
-				.retrieve()
-				.bodyToFlux(PeriodDTO.class)
-				.collectList()
-				.map(periods -> {
-					model.addAttribute("periods", periods);
-					return "fragments/period-list";
+				.accept(MediaType.TEXT_EVENT_STREAM)
+				.exchangeToFlux(response -> {
+					return response.bodyToFlux(PeriodDTO.class);
 				});
+		model.addAttribute("periods", new ReactiveDataDriverContextVariable(periods, fluxBufferSize));
+		return "fragments/period-list";
 	}
 
 	@GetMapping("/view/period/end")

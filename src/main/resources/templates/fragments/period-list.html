@@ -1,6 +1,6 @@
 <section>
     <h2>Period Details</h2>
-    <div th:if="${periods != null && periods.size() > 0}">
+    <div th:if="${periods != null}">
         <ul style="list-style: none; padding: 0;">
             <li th:each="period : ${periods}"
                 th:insert="~{fragments/period-item :: period-item(period=${period})}"
@@ -8,7 +8,7 @@
             </li>
         </ul>
     </div>
-    <div th:if="${periods == null || periods.size() == 0}">
+    <div th:if="${periods == null}">
         <p>No periods available.</p>
     </div>
 </section>
