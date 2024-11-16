@@ -1,10 +1,30 @@
-<section>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Hello Security!</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+</head>
+<body>
+
+<div id="period-list-container">
+
+
+<section th:fragment="period=list">
     <h2>Period Details</h2>
     <div th:if="${periods != null}">
         <ul style="list-style: none; padding: 0;">
-            <li th:each="period : ${periods}"
-                th:insert="~{fragments/period-item :: period-item(period=${period})}"
-                th:remove="tag">
+            <li th:each="period : ${periods}" th:id="'period-item-' + ${period.periodId()}"
+                style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);">
+                <article id>
+                    <h3 style="margin-bottom: 0.5rem;">Period Information</h3>
+                    <p><strong>Start Date:</strong> <span th:text="${period.startDate()}">N/A</span></p>
+                    <p><strong>End Date:</strong> <span th:text="${period.endDate() != null ? period.endDate() : 'Ongoing'}">N/A</span></p>
+                    <p><strong>Flow Level:</strong> <span th:text="${period.dailyTracking().flowLevel()}">N/A</span></p>
+                    <p><strong>Pain Level:</strong> <span th:text="${period.dailyTracking().painLevel()}">N/A</span></p>
+                    <p><strong>Tracking Date:</strong> <span th:text="${period.dailyTracking().trackingDate()}">N/A</span></p>
+                    <p><strong>Migraine:</strong> <span th:text="${period.migraine().migraineDate()}">N/A</span></p>
+                    <p><strong>Migraine severity:</strong> <span th:text="${period.migraine().severityLevel()}">N/A</span></p>
+                </article>
             </li>
         </ul>
     </div>
@@ -12,3 +32,4 @@
         <p>No periods available.</p>
     </div>
 </section>
+</div>

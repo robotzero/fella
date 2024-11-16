@@ -2,6 +2,7 @@ package com.queen.adapters.web.controller.view;
 
 import com.queen.adapters.web.dto.EndPeriodRequest;
 import com.queen.adapters.web.dto.PeriodDTO;
+import com.queen.application.service.PeriodService;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
@@ -26,13 +28,15 @@ import java.util.UUID;
 @Controller
 public class IndexController {
 	private final WebClient webClient;
+	private final PeriodService periodService;
 
-	public IndexController(final WebClient webClient) {
+	public IndexController(final WebClient webClient, final PeriodService periodService) {
 		this.webClient = webClient;
+		this.periodService = periodService;
 	}
 
 	//@TODO: alternatively use exchangeToFlux instead of retrieve (resources freeing)
-	@GetMapping("/view/period/all")
+	@RequestMapping("/view/period/all")
 	public String viewAllPeriods(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
 		var fluxBufferSize = 1;
 		String token = authorizedClient.getAccessToken().getTokenValue();
@@ -41,10 +45,19 @@ public class IndexController {
 				.header("Authorization", "Bearer " + token)
 				.accept(MediaType.TEXT_EVENT_STREAM)
 				.exchangeToFlux(response -> {
+					if (response.statusCode().is4xxClientError() || response.statusCode().is5xxServerError()) {
+						return Flux.error(new RuntimeException(response.toString()));
+					}
 					return response.bodyToFlux(PeriodDTO.class);
 				});
-		model.addAttribute("periods", new ReactiveDataDriverContextVariable(periods, fluxBufferSize));
-		return "fragments/period-list";
+		model.addAttribute(
+				"periods",
+				new ReactiveDataDriverContextVariable(
+						periods.delayElements(Duration.ofSeconds(1)),
+						fluxBufferSize
+				)
+		);
+		return "index";
 	}
 
 	@GetMapping("/view/period/end")
@@ -72,8 +85,12 @@ public class IndexController {
 	}
 
 	@GetMapping("/")
-	public String viewPeriod(Model model, Principal principal, Authentication authentication) {
+	public Mono<String> viewPeriod(Model model, Principal principal, Authentication authentication, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
+		String token = authorizedClient.getAccessToken().getTokenValue();
+		System.out.println(token);
+		System.out.println(authentication.getPrincipal());
+		System.out.println(principal.getName());
 		model.addAttribute("name", principal.getName());
-		return "index";
+		return Mono.just("index");
 	}
 }
