@@ -1,12 +1,12 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.4.0-RC1" // Adjust Spring Boot version if needed
-    id("io.spring.dependency-management") version "1.1.6"
+    id("org.springframework.boot") version "3.5.0" // Adjust Spring Boot version if needed
+    id("io.spring.dependency-management") version "1.1.7"
 }
 
 group = "com.queen"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_23
+java.sourceCompatibility = JavaVersion.VERSION_24
 
 repositories {
     mavenCentral()

@@ -2,4 +2,4 @@
 
 exec 2>&1
 
-exec "$@"
+exec java -server $JAVA_ARGS -jar /app.jar

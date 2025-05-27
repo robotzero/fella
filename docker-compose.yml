@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   fella:
     image: registry.local:5000/fella:latest
