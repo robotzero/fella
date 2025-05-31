@@ -1,22 +1,19 @@
 package com.queen.infrastructure.persistence;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import org.springframework.data.annotation.Id;
-import jakarta.persistence.Transient;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Entity
-@Table(name = "daily_tracking")
+@Table("daily_tracking")
 public class DailyTracking implements Persistable<UUID> {
-	@jakarta.persistence.Id
 	@Id
-	@Column(name = "tracking_id")
+	@Column("tracking_id")
 	private UUID id;
 	private UUID userId;
 	private LocalDate trackingDate;

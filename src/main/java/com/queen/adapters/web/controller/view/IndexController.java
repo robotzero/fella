@@ -44,10 +44,7 @@ public class IndexController {
 				.retrieve()
 				.body(new ParameterizedTypeReference<List<PeriodDTO>>() {});
 
-		model.addAttribute(
-				"periods",
-						periods
-				);
+		model.addAttribute("periods", periods);
 		return "index";
 	}
 //

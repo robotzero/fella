@@ -1,7 +1,6 @@
 package com.queen.infrastructure.persistence;
 
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDate;
@@ -10,8 +9,7 @@ import java.util.UUID;
 
 // @TODO transactional
 public interface PeriodRepository extends CrudRepository<Period, UUID> {
-	@Modifying
-	@Query(nativeQuery = true, value = """
+	@Query("""
 		UPDATE periods
 		SET active = false, end_date = :endDate
 		WHERE period_id = :periodId
@@ -19,7 +17,7 @@ public interface PeriodRepository extends CrudRepository<Period, UUID> {
 	""")
 	int endActivePeriod(UUID periodId, LocalDate endDate);
 	//@TODO name the fields specifically as
-	@Query(nativeQuery = true, value = """
+	@Query("""
 		SELECT p.*, m.*, dt.*
 		FROM periods p
 		INNER JOIN daily_tracking dt ON p.period_id = dt.period_id
@@ -27,7 +25,7 @@ public interface PeriodRepository extends CrudRepository<Period, UUID> {
 		WHERE p.user_id = :userId
 	""")
 	List<Period> findAllByUserId(UUID userId);
-	@Query(nativeQuery = true, value = """
+	@Query("""
 		SELECT p.*, m.*, dt.*
 		FROM periods p
 		INNER JOIN daily_tracking dt ON p.period_id = dt.period_id

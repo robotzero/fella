@@ -1,20 +1,20 @@
 package com.queen.infrastructure.persistence;
 
-import jakarta.persistence.*;
-
 import java.util.UUID;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
 @Table(name = "users")
 public class User {
 	@Id
-	@Column(name = "user_id", nullable = false, updatable = false)
+	@Column("user_id")
 	private UUID id;
 
-	@Column(name = "username", nullable = false)
+	@Column("username")
 	private String userName;
 
-	@Column(name = "enabled", nullable = false)
+	@Column("enabled")
 	private boolean enabled;
 
 	protected User() {
