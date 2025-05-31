@@ -44,7 +44,7 @@ public class PeriodController {
 		this.dailyTrackingMapper = dailyTrackingMapper;
 	}
 
-	@PostMapping(value = "/api/period", produces = MediaType.TEXT_EVENT_STREAM_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/api/period", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	PeriodDTO createPeriod(
 			final FellaJwtAuthenticationToken token,
 			final @Valid @RequestBody FullPeriodRequest periodRequest
@@ -55,7 +55,7 @@ public class PeriodController {
 		return periodService.createPeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(token.getUserId(), LocalDate.now(), 0, 0)));
 	}
 
-	@PutMapping(value = "/api/period/end", produces = MediaType.TEXT_EVENT_STREAM_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/api/period/end", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	PeriodDTO endPeriod(
 			final FellaJwtAuthenticationToken token,
 			final @Valid @RequestBody EndPeriodRequest endPeriodRequest
@@ -64,7 +64,7 @@ public class PeriodController {
 		return periodService.endPeriod(period);
 	}
 
-	@GetMapping(value = "/api/period/all", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@GetMapping(value = "/api/period/all", produces = MediaType.APPLICATION_JSON_VALUE)
 	List<PeriodDTO> getPeriods(
 			FellaJwtAuthenticationToken token
 	) {

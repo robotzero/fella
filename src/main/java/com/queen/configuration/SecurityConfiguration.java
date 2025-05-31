@@ -25,40 +25,23 @@ public class SecurityConfiguration {
 		return new FellaJwtAuthenticationConverter(attachUserService, jwtAuthenticationConverter);
 	}
 
-//	@Bean
-//	SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, AttachUserService attachUserService, JwtAuthenticationConverter jwtAuthenticationConverter) {
-//		http
-//				.authorizeExchange((authorize) -> {
-//					authorize.pathMatchers("/actuator/**").permitAll();
-//					authorize.pathMatchers("/view/login").permitAll();
-//					authorize.pathMatchers("/view/login/**").permitAll();
-//					//authorize.pathMatchers("/**").hasAuthority("SCOPE_message.read");
-//					authorize.anyExchange().authenticated();
-//				})
-//				.csrf(ServerHttpSecurity.CsrfSpec::disable)
-//				.cors(ServerHttpSecurity.CorsSpec::disable)
-//				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(userIdExtractor(attachUserService, jwtAuthenticationConverter))))
-//				.oauth2Login(Customizer.withDefaults())
-//				.oauth2Client(Customizer.withDefaults());
-//		;
-//		return http.build();
-//	}
-
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, AttachUserService attachUserService, JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
 		// @formatter:off
 		http
-				.securityMatcher("/user/**")
+				.securityMatcher("/**")
 				.authorizeHttpRequests((authorize) -> authorize
 						.requestMatchers("/user/**").hasAuthority("SCOPE_user.read")
 						.requestMatchers("/actuator/**").permitAll()
 						.requestMatchers("/view/login").permitAll()
 						.requestMatchers("/view/login/**").permitAll()
+						.anyRequest().authenticated()
 				)
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(AbstractHttpConfigurer::disable)
 				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(userIdExtractor(attachUserService, jwtAuthenticationConverter))))
-				.oauth2Client(Customizer.withDefaults());
+				.oauth2Client(Customizer.withDefaults())
+				.oauth2Login(Customizer.withDefaults());
 		// @formatter:on
 
 		return http.build();

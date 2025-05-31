@@ -24,10 +24,12 @@ import com.queen.infrastructure.persistence.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.web.client.RestClient;
 
 @Configuration
-//@EnableWebFlux
+@EnableWebSecurity
 public class FellaConfiguration {
 
 	// User
@@ -107,5 +109,12 @@ public class FellaConfiguration {
 	@Bean
 	JwtAuthenticationConverter jwtAuthenticationConverter() {
 		return new JwtAuthenticationConverter();
+	}
+
+	@Bean
+	public RestClient restClient(RestClient.Builder builder) {
+		return builder
+				.baseUrl("http://192.168.0.33:8080")
+				.build();
 	}
 }

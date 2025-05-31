@@ -6,6 +6,6 @@ import java.util.List;
 
 public class UserMapper {
 	public FellaUser mapToDomain(com.queen.infrastructure.persistence.User user) {
-		return new FellaUser(user.id(), user.userName(), "", List.of());
+		return new FellaUser(user.getId(), user.getUserName(), "", List.of());
 	}
 }
