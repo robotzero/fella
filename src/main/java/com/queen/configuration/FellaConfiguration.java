@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 //@EnableWebFlux
@@ -103,11 +102,6 @@ public class FellaConfiguration {
 	@Bean
 	DailyTrackingPersistencePort dailyTrackingPersistencePort(final DailyTrackingRepository dailyTrackingRepository) {
 		return new DailyTrackingPersistenceAdapter(dailyTrackingRepository);
-	}
-
-	@Bean
-	WebClient webClient() {
-		return WebClient.builder().baseUrl("http://192.168.0.46:8080").build();
 	}
 
 	@Bean

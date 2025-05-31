@@ -4,7 +4,8 @@ import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadUserPort;
 import com.queen.infrastructure.persistence.User;
 import com.queen.infrastructure.persistence.UserRepository;
-import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 public class UserPersistenceAdapter implements CreateUserPort, LoadUserPort {
 	private final UserRepository userRepository;
@@ -14,12 +15,12 @@ public class UserPersistenceAdapter implements CreateUserPort, LoadUserPort {
 	}
 
 	@Override
-	public Mono<User> createUser(final User user) {
+	public User createUser(final User user) {
 		return this.userRepository.save(user);
 	}
 
 	@Override
-	public Mono<User> loadUser(final String username) {
+	public Optional<User> loadUser(final String username) {
 		return userRepository.findByUserName(username);
 	}
 }

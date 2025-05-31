@@ -7,12 +7,10 @@ import com.queen.application.ports.in.UserQuery;
 import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadSpringUserPort;
 import com.queen.application.ports.out.LoadUserPort;
-import com.queen.application.service.exception.UserServiceException;
 import com.queen.domain.user.FellaUser;
 import com.queen.infrastructure.persistence.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Mono;
 
 public class UserService implements LoadSpringUserPort, CreateUserUseCase, UserQuery {
 	private final LoadUserPort loadUserPort;
@@ -26,25 +24,22 @@ public class UserService implements LoadSpringUserPort, CreateUserUseCase, UserQ
 	}
 
 	@Override
-	public Mono<UserDetails> findByUsername(final String username) {
-		return loadUserPort.loadUser(username).map(userMapper::mapToDomain);
+	public UserDetails loadUserByUsername(final String username) {
+		//@TODO proper exception for user not found
+		return userMapper.mapToDomain(loadUserPort.loadUser(username).orElseThrow());
 	}
 
 	@Override
 	@Transactional
-	public Mono<FellaUser> createUser(final CreateUserCommand createUserCommand) {
+	public FellaUser createUser(final CreateUserCommand createUserCommand) {
 		return loadUserPort.loadUser(createUserCommand.username())
 				.map(userMapper::mapToDomain)
-				.switchIfEmpty(
-						createUserPort.createUser(new User(null, createUserCommand.username(), true))
-								.map(userMapper::mapToDomain)
-								.doOnError(error -> {
-									throw new UserServiceException("Failed to create new user", error);
-								}));
+				.orElseGet(() -> userMapper.mapToDomain(createUserPort.createUser(new User(null, createUserCommand.username(), true)))
+				);
 	}
 
 	@Override
-	public Mono<FellaUser> getUserByUsername(String username) {
-		return loadUserPort.loadUser(username).map(userMapper::mapToDomain);
+	public FellaUser getUserByUsername(String username) {
+		return loadUserPort.loadUser(username).map(userMapper::mapToDomain).orElseThrow();
 	}
 }

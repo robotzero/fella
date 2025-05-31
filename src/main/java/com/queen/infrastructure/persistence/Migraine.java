@@ -1,32 +1,37 @@
 package com.queen.infrastructure.persistence;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
+import jakarta.persistence.Transient;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Table("migraines")
+@Entity
+@Table(name = "migraines")
 public class Migraine implements Persistable<UUID> {
+	@jakarta.persistence.Id
 	@Id
-	@Column("migraine_id")
+	@Column(name = "migraine_id")
 	private UUID id;
-	private final UUID userId;
-	private final LocalDate migraineDate;
+	private UUID userId;
+	private LocalDate migraineDate;
 	private Integer severityLevel;
 	private String description;
 
 	@Transient
-	private final Boolean isNew;
+	private Boolean isNew;
 
 	public Migraine(final UUID userId, final LocalDate migraineDate, Boolean isNew) {
 		this.userId = userId;
 		this.migraineDate = migraineDate;
 		this.isNew = isNew;
 	}
+
+	protected Migraine() {}
 
 	public static Migraine empty() {
 		return new Migraine(null, null, false);

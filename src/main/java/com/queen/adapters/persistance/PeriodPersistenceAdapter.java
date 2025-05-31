@@ -7,9 +7,8 @@ import com.queen.infrastructure.persistence.Period;
 import com.queen.infrastructure.persistence.PeriodRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 public class PeriodPersistenceAdapter implements PeriodPersistencePort {
@@ -21,32 +20,20 @@ public class PeriodPersistenceAdapter implements PeriodPersistencePort {
 
 	@Override
 	@Transactional
-	public Mono<Period> createPeriod(final Period period) {
-		return periodRepository.save(period)
-				.onErrorMap(e -> {
-			return switch (e) {
-				case DuplicateKeyException dke -> new ActivePeriodExistsException("An active period already exists", dke);
-				default -> e;
-			};
-		});
+	public Period createPeriod(final Period period) {
+		return periodRepository.save(period);
 	}
 
 	@Override
-	public Mono<Period> updatePeriod(final Period period) {
+	public Period updatePeriod(final Period period) {
 		//@TODO throw proper exception here
 		assert period.getId() != null;
 		final var updated = this.periodRepository.endActivePeriod(period.getId(), period.getEndDate());
-		return updated.flatMap(count -> {
-			if (count == 0) {
-				return Mono.error(new PeriodUpdateException("No active period found to update", null));
-			}
-			return this.periodRepository.findByIdAndByUserId(period.getId())
-					.switchIfEmpty(Mono.error(new PeriodUpdateException("Updated period not found", null)));
-		});
+		return this.periodRepository.findByIdAndByUserId(period.getId());
 	}
 
 	@Override
-	public Flux<Period> getPeriods(UUID userID) {
+	public List<Period> getPeriods(UUID userID) {
 		return periodRepository.findAllByUserId(userID);
 	}
 }

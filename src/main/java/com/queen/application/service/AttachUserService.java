@@ -4,7 +4,6 @@ import com.queen.adapters.persistance.UserMapper;
 import com.queen.application.ports.in.AttachUserCommand;
 import com.queen.application.ports.out.LoadUserPort;
 import com.queen.domain.user.FellaUser;
-import reactor.core.publisher.Mono;
 
 public class AttachUserService implements com.queen.application.ports.in.AttachNewUserUseCase {
 	private final LoadUserPort loadUser;
@@ -16,8 +15,7 @@ public class AttachUserService implements com.queen.application.ports.in.AttachN
 	}
 
 	@Override
-	public Mono<FellaUser> attachNewUserDetails(final AttachUserCommand attachNewUserCommand) {
-		return this.loadUser.loadUser(attachNewUserCommand.jwt().getSubject())
-				.map(userMapper::mapToDomain);
+	public FellaUser attachNewUserDetails(final AttachUserCommand attachNewUserCommand) {
+		return userMapper.mapToDomain(this.loadUser.loadUser(attachNewUserCommand.jwt().getSubject()).orElseThrow());
 	}
 }

@@ -3,7 +3,6 @@ package com.queen.adapters.persistance;
 import com.queen.domain.DailyTrackingPersistencePort;
 import com.queen.infrastructure.persistence.DailyTracking;
 import com.queen.infrastructure.persistence.DailyTrackingRepository;
-import reactor.core.publisher.Mono;
 
 public class DailyTrackingPersistenceAdapter implements DailyTrackingPersistencePort {
 	private final DailyTrackingRepository dailyTrackingRepository;
@@ -13,7 +12,7 @@ public class DailyTrackingPersistenceAdapter implements DailyTrackingPersistence
 	}
 
 	@Override
-	public Mono<DailyTracking> createDailyTracking(final DailyTracking dailyTracking) {
+	public DailyTracking createDailyTracking(final DailyTracking dailyTracking) {
 		return dailyTrackingRepository.save(dailyTracking);
 	}
 }

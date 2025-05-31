@@ -1,8 +1,9 @@
 package com.queen.application.ports.out;
 
 import com.queen.infrastructure.persistence.User;
-import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 public interface LoadUserPort {
-	Mono<User> loadUser(final String email);
+	Optional<User> loadUser(final String email);
 }

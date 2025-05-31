@@ -1,21 +1,25 @@
 package com.queen.infrastructure.persistence;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.Transient;
+
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Table("periods")
+@Entity
+@Table(name = "periods")
 public class Period implements Persistable<UUID> {
+	@jakarta.persistence.Id
 	@Id
-	@Column("period_id")
+	@Column(name = "period_id")
 	private UUID id;
-	private final UUID userId;
-	private final LocalDate startDate;
+	private UUID userId;
+	private LocalDate startDate;
 	private LocalDate endDate;
 	private Integer cycleLength;
 	private Boolean active;
@@ -33,6 +37,8 @@ public class Period implements Persistable<UUID> {
 		this.userId = userId;
 		this.startDate = startDate;
 	}
+
+	protected Period() {}
 
 	@Override
 	public boolean isNew() {

@@ -19,11 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @Validated
@@ -46,23 +45,18 @@ public class PeriodController {
 	}
 
 	@PostMapping(value = "/api/period", produces = MediaType.TEXT_EVENT_STREAM_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	Mono<PeriodDTO> createPeriod(
+	PeriodDTO createPeriod(
 			final FellaJwtAuthenticationToken token,
 			final @Valid @RequestBody FullPeriodRequest periodRequest
 	) {
 		final var period = periodMapper.mapToDomain(token.getUserId(), periodRequest);
 		final var migraine = periodRequest.migraine().map(m -> migraineMapper.mapToDomain(token.getUserId(), m));
 		final var dailyTracking = periodRequest.dailyTracking().map(d -> dailyTrackingMapper.mapToDomain(token.getUserId(), d));
-		return periodService.createPeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(token.getUserId(), LocalDate.now(), 0, 0))).onErrorMap(e -> {
-			return switch (e) {
-				case PessimisticLockingFailureException plf -> new DatabaseException("Database error", plf);
-				default -> e;
-			};
-		});
+		return periodService.createPeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(token.getUserId(), LocalDate.now(), 0, 0)));
 	}
 
 	@PutMapping(value = "/api/period/end", produces = MediaType.TEXT_EVENT_STREAM_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	Mono<PeriodDTO> endPeriod(
+	PeriodDTO endPeriod(
 			final FellaJwtAuthenticationToken token,
 			final @Valid @RequestBody EndPeriodRequest endPeriodRequest
 	) {
@@ -71,17 +65,17 @@ public class PeriodController {
 	}
 
 	@GetMapping(value = "/api/period/all", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	Flux<PeriodDTO> getPeriods(
+	List<PeriodDTO> getPeriods(
 			FellaJwtAuthenticationToken token
 	) {
 		return periodService.getPeriods(token.getUserId());
 	}
 
-	@GetMapping(value = "/api/period/any-active", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	Mono<Boolean> isAnyPeriodActive(
-			final FellaJwtAuthenticationToken token
-	) {
-		return periodService.isAnyPeriodActive(token.getUserId());
-	}
+//	@GetMapping(value = "/api/period/any-active", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+//	Boolean isAnyPeriodActive(
+//			final FellaJwtAuthenticationToken token
+//	) {
+//		return periodService.isAnyPeriodActive(token.getUserId());
+//	}
 }
 	// @TODO implement cyclelength calculation in here, and adjust it

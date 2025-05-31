@@ -1,6 +1,6 @@
 package com.queen.application.ports.out;
 
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface LoadSpringUserPort extends ReactiveUserDetailsService {
+public interface LoadSpringUserPort extends UserDetailsService {
 }

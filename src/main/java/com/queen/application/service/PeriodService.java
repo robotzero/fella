@@ -11,10 +11,10 @@ import com.queen.domain.Period;
 import com.queen.domain.PeriodMapperPort;
 import com.queen.domain.PeriodPersistencePort;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import java.util.List;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class PeriodService {
 	private final PeriodPersistencePort periodPersistencePort;
@@ -41,42 +41,31 @@ public class PeriodService {
 	}
 
 	@Transactional
-	public Mono<PeriodDTO> createPeriod(final Period period, final Migraine migraine, final DailyTracking dailyTracking) {
-		return periodPersistencePort.createPeriod(periodMapper.mapToPersistence(period))
-				.zipWith(
-						migrainePersistencePort.createMigraine(migraineMapper.mapToPersistence(migraine))
-							.switchIfEmpty(Mono.just(com.queen.infrastructure.persistence.Migraine.empty())))
-				.flatMap(tuple -> {
-					final var dt = dailyTrackingMapper.mapToPersistence(dailyTracking);
-					dt.setPeriodId(tuple.getT1().getId());
-					dt.setFlowLevel(dailyTracking.flowLevel());
-					dt.setPainLevel(dailyTracking.painLevel());
-					dt.setMigraineId(tuple.getT2().getId());
-					return dailyTrackingPersistencePort.createDailyTracking(dt).map(dailyTracking1 -> {
-						return periodMapper.mapToDTO(tuple.getT1(), tuple.getT2(), dailyTracking1);
-					});
-				});
+	public PeriodDTO createPeriod(final Period period, final Migraine migraine, final DailyTracking dailyTracking) {
+		var p = periodPersistencePort.createPeriod(periodMapper.mapToPersistence(period));
+		var m = migrainePersistencePort.createMigraine(migraineMapper.mapToPersistence(migraine));
+		var dt = dailyTrackingMapper.mapToPersistence(dailyTracking);
+		dt.setPeriodId(p.getId());
+		dt.setFlowLevel(dailyTracking.flowLevel());
+		dt.setPainLevel(dailyTracking.painLevel());
+		dt.setMigraineId(m.getId());
+		var dt1 = dailyTrackingPersistencePort.createDailyTracking(dt);
+
+		return periodMapper.mapToDTO(p, m, dt1);
 	}
 
 	@Transactional
-	public Mono<PeriodDTO> endPeriod(final Period period) {
-		return periodPersistencePort.updatePeriod(periodMapper.mapToPersistence(period))
-				.map(p -> {
-					var migraine = p.getMigraine() != null ? p.getMigraine() : com.queen.infrastructure.persistence.Migraine.empty();
-					var dt = p.getDailyTracking() != null ? p.getDailyTracking() : com.queen.infrastructure.persistence.DailyTracking.empty();
-					return periodMapper.mapToDTO(p, migraine, dt);
-				});
+	public PeriodDTO endPeriod(final Period period) {
+		var p =  periodPersistencePort.updatePeriod(periodMapper.mapToPersistence(period));
+		var migraine = p.getMigraine() != null ? p.getMigraine() : com.queen.infrastructure.persistence.Migraine.empty();
+		var dt = p.getDailyTracking() != null ? p.getDailyTracking() : com.queen.infrastructure.persistence.DailyTracking.empty();
+
+		return periodMapper.mapToDTO(p, migraine, dt);
 	}
 
-	public Flux<PeriodDTO> getPeriods(final UUID userId) {
-		return periodPersistencePort.getPeriods(userId)
-				.map(p -> {
-					return periodMapper.mapToDTO(p, p.getMigraine(), p.getDailyTracking());
-				});
-	}
-
-	public Mono<Boolean> isAnyPeriodActive(final UUID userId) {
-		return periodPersistencePort.getPeriods(userId)
-				.any(com.queen.infrastructure.persistence.Period::getActive);
+	public List<PeriodDTO> getPeriods(final UUID userId) {
+		return periodPersistencePort.getPeriods(userId).stream().map(p -> {
+			return periodMapper.mapToDTO(p, p.getMigraine(), p.getDailyTracking());
+		}).collect(Collectors.toList());
 	}
 }

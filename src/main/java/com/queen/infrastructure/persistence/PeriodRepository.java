@@ -1,38 +1,38 @@
 package com.queen.infrastructure.persistence;
 
-import org.springframework.data.r2dbc.repository.Modifying;
-import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
-public interface PeriodRepository extends ReactiveCrudRepository<Period, UUID> {
+// @TODO transactional
+public interface PeriodRepository extends CrudRepository<Period, UUID> {
 	@Modifying
-	@Query("""
+	@Query(nativeQuery = true, value = """
 		UPDATE periods
 		SET active = false, end_date = :endDate
 		WHERE period_id = :periodId
 		AND active = true
 	""")
-	Mono<Long> endActivePeriod(UUID periodId, LocalDate endDate);
+	int endActivePeriod(UUID periodId, LocalDate endDate);
 	//@TODO name the fields specifically as
-	@Query("""
+	@Query(nativeQuery = true, value = """
 		SELECT p.*, m.*, dt.*
 		FROM periods p
 		INNER JOIN daily_tracking dt ON p.period_id = dt.period_id
 		LEFT JOIN migraines m ON dt.migraine_id = m.migraine_id
 		WHERE p.user_id = :userId
 	""")
-	Flux<Period> findAllByUserId(UUID userId);
-	@Query("""
+	List<Period> findAllByUserId(UUID userId);
+	@Query(nativeQuery = true, value = """
 		SELECT p.*, m.*, dt.*
 		FROM periods p
 		INNER JOIN daily_tracking dt ON p.period_id = dt.period_id
 		LEFT JOIN migraines m ON dt.migraine_id = m.migraine_id
 		WHERE p.period_id = :periodId
 	""")
-	Mono<Period> findByIdAndByUserId(UUID periodId);
+	Period findByIdAndByUserId(UUID periodId);
 }
