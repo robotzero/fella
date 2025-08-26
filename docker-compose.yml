@@ -1,6 +1,7 @@
 services:
   fella:
     image: registry.local:5000/fella:latest
+    build: .
     environment:
       JAVA_ARGS: -Xmx256m -Xms256m --enable-preview -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5080 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9020 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
       DB_SERVER: 192.168.0.64
