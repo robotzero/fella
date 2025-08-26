@@ -26,25 +26,17 @@ import java.util.UUID;
 
 @Controller
 public class IndexController {
-	private final RestClient webClient;
 	private final PeriodService periodService;
 
-	public IndexController(final RestClient webClient, final PeriodService periodService) {
-		this.webClient = webClient;
+	public IndexController(final PeriodService periodService) {
 		this.periodService = periodService;
 	}
 //
 	@RequestMapping("/view/period/all")
 	public String viewAllPeriods(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
 		String token = authorizedClient.getAccessToken().getTokenValue();
-		var periods = webClient.get()
-				.uri("/api/period/all")
-				.header("Authorization", "Bearer " + token)
-				.accept(MediaType.APPLICATION_JSON)
-				.retrieve()
-				.body(new ParameterizedTypeReference<List<PeriodDTO>>() {});
-
-		model.addAttribute("periods", periods);
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		System.out.println("token: " + token);
 		return "index";
 	}
 //

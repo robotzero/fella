@@ -33,4 +33,11 @@ public interface PeriodRepository extends CrudRepository<Period, UUID> {
 		WHERE p.period_id = :periodId
 	""")
 	Period findByIdAndByUserId(UUID periodId);
+
+	@Query("""
+		SELECT EXISTS(SELECT 1 FROM periods p
+		                       WHERE p.user_id = :userId AND
+		                             (active = true OR end_date IS NULL)
+	""")
+	boolean isPeriodActiveForUser(UUID userId);
 }

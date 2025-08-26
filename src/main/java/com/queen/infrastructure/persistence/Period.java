@@ -20,6 +20,7 @@ public class Period implements Persistable<UUID> {
 	private LocalDate endDate;
 	private Integer cycleLength;
 	private Boolean active;
+	private Integer flowLevel;
 
 	@Transient
 	private Migraine migraine;
@@ -101,5 +102,13 @@ public class Period implements Persistable<UUID> {
 
 	public DailyTracking getDailyTracking() {
 		return dailyTracking;
+	}
+
+	public Integer getFlowLevel() {
+		return flowLevel;
+	}
+
+	public void setFlowLevel(Integer flowLevel) {
+		this.flowLevel = flowLevel;
 	}
 }

@@ -1,6 +1,7 @@
 package com.queen.application.service;
 
 import com.queen.adapters.web.dto.PeriodDTO;
+import com.queen.application.service.exception.ActivePeriodExistsException;
 import com.queen.domain.DailyTracking;
 import com.queen.domain.DailyTrackingPersistencePort;
 import com.queen.domain.Migraine;
@@ -42,10 +43,17 @@ public class PeriodService {
 
 	@Transactional
 	public PeriodDTO createPeriod(final Period period, final Migraine migraine, final DailyTracking dailyTracking) {
-		var p = periodPersistencePort.createPeriod(periodMapper.mapToPersistence(period));
-		var m = migrainePersistencePort.createMigraine(migraineMapper.mapToPersistence(migraine));
 		var dt = dailyTrackingMapper.mapToPersistence(dailyTracking);
-		dt.setPeriodId(p.getId());
+		com.queen.infrastructure.persistence.Period p = new com.queen.infrastructure.persistence.Period(null, null);
+		if (dailyTracking.flowLevel() > 0 || dailyTracking.painLevel() > 0) {
+			var isAnyPeriodActive = periodPersistencePort.isPeriodActiveForUser(period.userId());
+			if (isAnyPeriodActive) {
+				throw new ActivePeriodExistsException("Active period is currently running.", null);
+			}
+			p = periodPersistencePort.createPeriod(periodMapper.mapToPersistence(period));
+			dt.setPeriodId(p.getId());
+		}
+		var m = migrainePersistencePort.createMigraine(migraineMapper.mapToPersistence(migraine));
 		dt.setFlowLevel(dailyTracking.flowLevel());
 		dt.setPainLevel(dailyTracking.painLevel());
 		dt.setMigraineId(m.getId());

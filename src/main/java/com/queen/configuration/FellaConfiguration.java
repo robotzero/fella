@@ -111,10 +111,10 @@ public class FellaConfiguration {
 		return new JwtAuthenticationConverter();
 	}
 
-	@Bean
-	public RestClient restClient(RestClient.Builder builder) {
-		return builder
-				.baseUrl("http://192.168.0.33:8080")
-				.build();
-	}
+//	@Bean
+//	public RestClient restClient(RestClient.Builder builder) {
+//		return builder
+//				.baseUrl("http://192.168.0.33:8080")
+//				.build();
+//	}
 }

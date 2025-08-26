@@ -1,11 +1,8 @@
 package com.queen.adapters.persistance;
 
-import com.queen.application.service.exception.ActivePeriodExistsException;
-import com.queen.application.service.exception.PeriodUpdateException;
 import com.queen.domain.PeriodPersistencePort;
 import com.queen.infrastructure.persistence.Period;
 import com.queen.infrastructure.persistence.PeriodRepository;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -35,5 +32,10 @@ public class PeriodPersistenceAdapter implements PeriodPersistencePort {
 	@Override
 	public List<Period> getPeriods(UUID userID) {
 		return periodRepository.findAllByUserId(userID);
+	}
+
+	@Override
+	public boolean isPeriodActiveForUser(UUID userId) {
+		return periodRepository.isPeriodActiveForUser(userId);
 	}
 }

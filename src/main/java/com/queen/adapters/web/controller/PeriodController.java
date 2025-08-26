@@ -70,12 +70,4 @@ public class PeriodController {
 	) {
 		return periodService.getPeriods(token.getUserId());
 	}
-
-//	@GetMapping(value = "/api/period/any-active", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-//	Boolean isAnyPeriodActive(
-//			final FellaJwtAuthenticationToken token
-//	) {
-//		return periodService.isAnyPeriodActive(token.getUserId());
-//	}
 }
-	// @TODO implement cyclelength calculation in here, and adjust it
