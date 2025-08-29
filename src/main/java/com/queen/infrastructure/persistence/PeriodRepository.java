@@ -1,5 +1,6 @@
 package com.queen.infrastructure.persistence;
 
+import com.queen.infrastructure.auth.repository.PeriodsWithDailyMigraineExtractor;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -16,17 +17,30 @@ public interface PeriodRepository extends CrudRepository<Period, UUID> {
 		AND active = true
 	""")
 	int endActivePeriod(UUID periodId, LocalDate endDate);
-	//@TODO name the fields specifically as
-	@Query("""
-		SELECT p.*, m.*, dt.*
+
+	@Query(value = """
+		SELECT
+			p.period_id   		 AS periodId,
+			p.user_id     		 AS userId,
+			p.start_date  		 AS startDate,
+			p.end_date    	     AS endDate,
+			p.cycle_length 		 AS cycleLength,
+			p.active      		 AS active,
+			dt.tracking_id 		 AS trackingId,
+			dt.tracking_date     AS trackingDate,
+			dt.pain_level	     AS painLevel,
+			dt.flow_level		 AS flowLevel,
+			m.migraine_id        AS migraineId,
+			m.severity_level     AS migraineSeverity,
+			m.migraine_date		 AS migraineDate
 		FROM periods p
-		INNER JOIN daily_tracking dt ON p.period_id = dt.period_id
+		JOIN daily_tracking dt ON p.period_id = dt.period_id
 		LEFT JOIN migraines m ON dt.migraine_id = m.migraine_id
 		WHERE p.user_id = :userId
-	""")
+	""", resultSetExtractorClass = PeriodsWithDailyMigraineExtractor.class)
 	List<Period> findAllByUserId(UUID userId);
 	@Query("""
-		SELECT p.*, m.*, dt.*
+		SELECT p.*, m.* AS migraine, dt.* AS dailyTracking
 		FROM periods p
 		INNER JOIN daily_tracking dt ON p.period_id = dt.period_id
 		LEFT JOIN migraines m ON dt.migraine_id = m.migraine_id
@@ -35,9 +49,9 @@ public interface PeriodRepository extends CrudRepository<Period, UUID> {
 	Period findByIdAndByUserId(UUID periodId);
 
 	@Query("""
-		SELECT EXISTS(SELECT 1 FROM periods p
-		                       WHERE p.user_id = :userId AND
-		                             (active = true OR end_date IS NULL)
+		SELECT p.*
+		FROM periods p
+		WHERE p.user_id = :userId AND active = true
 	""")
-	boolean isPeriodActiveForUser(UUID userId);
+	Period getActivePeriod(UUID userId);
 }

@@ -3,6 +3,7 @@ package com.queen.adapters.web.dto;
 import com.queen.domain.DailyTracking;
 import com.queen.domain.DailyTrackingMapperPort;
 
+import java.util.List;
 import java.util.UUID;
 
 public class DailyTrackingMapper implements DailyTrackingMapperPort {
@@ -11,11 +12,13 @@ public class DailyTrackingMapper implements DailyTrackingMapperPort {
 	}
 
 	@Override
-	public DailyTrackingDTO mapToDTO(final com.queen.infrastructure.persistence.DailyTracking dailyTracking) {
+	public List<DailyTrackingDTO> mapToDTO(final List<com.queen.infrastructure.persistence.DailyTracking> dailyTracking) {
 		if (dailyTracking == null) {
 			return null;
 		}
-		return new DailyTrackingDTO(dailyTracking.getPainLevel(), dailyTracking.getFlowLevel(), dailyTracking.getTrackingDate());
+		return dailyTracking.stream().map(d -> {
+			return new DailyTrackingDTO(d.getPainLevel(), d.getFlowLevel(), d.getTrackingDate());
+		}).toList();
 	}
 
 	@Override

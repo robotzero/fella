@@ -6,6 +6,7 @@ import com.queen.infrastructure.persistence.DailyTracking;
 import com.queen.infrastructure.persistence.Migraine;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,21 +26,23 @@ public class PeriodMapper implements PeriodMapperPort {
 						null,
 						userId,
 						fullPeriodRequest.startDateOrNow(),
-						fullPeriodRequest.endDate()
+						fullPeriodRequest.endDate(),
+						true
 				);
 			} case EndPeriodRequest endPeriodRequest -> {
 				return new Period(
 						endPeriodRequest.periodIdToUUID(),
 						userId,
 						null,
-						Optional.of(endPeriodRequest.endDateOrNow())
+						Optional.of(endPeriodRequest.endDateOrNow()),
+						false
 				);
 			}
 		}
 	}
 
 	@Override
-	public PeriodDTO mapToDTO(final com.queen.infrastructure.persistence.Period period, final Migraine migraine, final DailyTracking dailyTracking) {
+	public PeriodDTO mapToDTO(final com.queen.infrastructure.persistence.Period period, final List<Migraine> migraine, final List<DailyTracking> dailyTracking) {
 		if (period != null) {
 			return new PeriodDTO(
 					period.getId(),
@@ -55,10 +58,10 @@ public class PeriodMapper implements PeriodMapperPort {
 	@Override
 	public com.queen.infrastructure.persistence.Period mapToPersistence(final Period period) {
 		if (period.periodId() == null) {
-			return new com.queen.infrastructure.persistence.Period(period.userId(), period.startDate()).setNew(true);
+			return new com.queen.infrastructure.persistence.Period(period.userId(), period.startDate()).setActive(period.active()).setNew(true);
 		}
 		return new com.queen.infrastructure.persistence.Period(
 				period.userId(),
-				period.startDate()).setId(period.periodId()).setEndDate(period.endDate().orElse(LocalDate.now())).setActive(false);
+				period.startDate()).setActive(period.active()).setId(period.periodId()).setEndDate(period.endDate().orElse(LocalDate.now()));
 	}
 }

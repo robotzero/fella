@@ -35,7 +35,7 @@ public class PeriodPersistenceAdapter implements PeriodPersistencePort {
 	}
 
 	@Override
-	public boolean isPeriodActiveForUser(UUID userId) {
-		return periodRepository.isPeriodActiveForUser(userId);
+	public Period getActivePeriod(UUID userId) {
+		return periodRepository.getActivePeriod(userId);
 	}
 }

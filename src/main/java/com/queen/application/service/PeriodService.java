@@ -44,31 +44,35 @@ public class PeriodService {
 	@Transactional
 	public PeriodDTO createPeriod(final Period period, final Migraine migraine, final DailyTracking dailyTracking) {
 		var dt = dailyTrackingMapper.mapToPersistence(dailyTracking);
-		com.queen.infrastructure.persistence.Period p = new com.queen.infrastructure.persistence.Period(null, null);
-		if (dailyTracking.flowLevel() > 0 || dailyTracking.painLevel() > 0) {
-			var isAnyPeriodActive = periodPersistencePort.isPeriodActiveForUser(period.userId());
-			if (isAnyPeriodActive) {
+		var activePeriod = periodPersistencePort.getActivePeriod(period.userId());
+		com.queen.infrastructure.persistence.Period p;
+		if (activePeriod != null) {
+			if (dailyTracking.flowLevel() == 0 && dailyTracking.painLevel() == 0) {
 				throw new ActivePeriodExistsException("Active period is currently running.", null);
 			}
+			dt.setPeriodId(activePeriod.getId());
+			p = activePeriod;
+		} else {
 			p = periodPersistencePort.createPeriod(periodMapper.mapToPersistence(period));
 			dt.setPeriodId(p.getId());
 		}
-		var m = migrainePersistencePort.createMigraine(migraineMapper.mapToPersistence(migraine));
+		var m = migraineMapper.mapToPersistence(migraine).orElse(com.queen.infrastructure.persistence.Migraine.empty());
+		migrainePersistencePort.createMigraine(m);
 		dt.setFlowLevel(dailyTracking.flowLevel());
 		dt.setPainLevel(dailyTracking.painLevel());
 		dt.setMigraineId(m.getId());
 		var dt1 = dailyTrackingPersistencePort.createDailyTracking(dt);
 
-		return periodMapper.mapToDTO(p, m, dt1);
+		return periodMapper.mapToDTO(p, List.of(m), List.of(dt1));
 	}
 
 	@Transactional
 	public PeriodDTO endPeriod(final Period period) {
 		var p =  periodPersistencePort.updatePeriod(periodMapper.mapToPersistence(period));
-		var migraine = p.getMigraine() != null ? p.getMigraine() : com.queen.infrastructure.persistence.Migraine.empty();
-		var dt = p.getDailyTracking() != null ? p.getDailyTracking() : com.queen.infrastructure.persistence.DailyTracking.empty();
+		List<com.queen.infrastructure.persistence.Migraine> migraine = p.getMigraine() != null ? p.getMigraine() : List.of();
+		List<com.queen.infrastructure.persistence.DailyTracking> dts = p.getDailyTracking() != null ? p.getDailyTracking() : List.of();
 
-		return periodMapper.mapToDTO(p, migraine, dt);
+		return periodMapper.mapToDTO(p, migraine, dts);
 	}
 
 	public List<PeriodDTO> getPeriods(final UUID userId) {

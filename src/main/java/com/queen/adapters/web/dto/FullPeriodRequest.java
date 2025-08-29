@@ -1,7 +1,5 @@
 package com.queen.adapters.web.dto;
 
-import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDate;
 import java.util.Optional;
 

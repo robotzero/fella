@@ -8,6 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name = "periods")
@@ -20,13 +21,12 @@ public class Period implements Persistable<UUID> {
 	private LocalDate endDate;
 	private Integer cycleLength;
 	private Boolean active;
-	private Integer flowLevel;
 
 	@Transient
-	private Migraine migraine;
+	private List<Migraine> migraine;
 
 	@Transient
-	private DailyTracking dailyTracking;
+	private List<DailyTracking> dailyTracking;
 
 	@Transient
 	private Boolean isNew;
@@ -83,15 +83,15 @@ public class Period implements Persistable<UUID> {
 		return active;
 	}
 
-	public Migraine getMigraine() {
+	public List<Migraine> getMigraine() {
 		return migraine;
 	}
 
-	public void setMigraine(final Migraine migraine) {
+	public void setMigraine(final List<Migraine> migraine) {
 		this.migraine = migraine;
 	}
 
-	public void setDailyTracking(final DailyTracking dailyTracking) {
+	public void setDailyTracking(final List<DailyTracking> dailyTracking) {
 		this.dailyTracking = dailyTracking;
 	}
 
@@ -100,15 +100,7 @@ public class Period implements Persistable<UUID> {
 		return this;
 	}
 
-	public DailyTracking getDailyTracking() {
+	public List<DailyTracking> getDailyTracking() {
 		return dailyTracking;
-	}
-
-	public Integer getFlowLevel() {
-		return flowLevel;
-	}
-
-	public void setFlowLevel(Integer flowLevel) {
-		this.flowLevel = flowLevel;
 	}
 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 public record PeriodDTO(
@@ -19,7 +20,7 @@ public record PeriodDTO(
 		@JsonDeserialize(using = LocalDateDeserializer.class)
 		@JsonSerialize(using = LocalDateSerializer.class)
 		LocalDate endDate,
-		MigraineDTO migraine,
-		DailyTrackingDTO dailyTracking
+		List<MigraineDTO> migraine,
+		List<DailyTrackingDTO> dailyTracking
 ) {
 }
