@@ -7,11 +7,9 @@ import com.queen.adapters.web.dto.PeriodDTO;
 import com.queen.adapters.web.dto.FullPeriodRequest;
 import com.queen.adapters.web.dto.PeriodMapper;
 import com.queen.application.service.PeriodService;
-import com.queen.application.service.exception.DatabaseException;
 import com.queen.configuration.FellaJwtAuthenticationToken;
 import com.queen.domain.DailyTracking;
 import jakarta.validation.Valid;
-import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 

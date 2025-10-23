@@ -6,7 +6,6 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
