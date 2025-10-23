@@ -1,9 +1,15 @@
 package com.queen.adapters.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
-public record MigraineRequest(Optional<LocalDate> migraineDate, Optional<Integer> severityLevel, Optional<String> description) {
+public record MigraineRequest(
+		@JsonSetter(nulls = Nulls.AS_EMPTY) Optional<LocalDate> migraineDate,
+		@JsonSetter(nulls = Nulls.AS_EMPTY) Optional<Integer> severityLevel,
+		@JsonSetter(nulls = Nulls.AS_EMPTY) Optional<String> description) {
 	public LocalDate migraineDateOrNow() {
 		return migraineDate.orElse(LocalDate.now());
 	}
