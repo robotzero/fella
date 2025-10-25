@@ -1,0 +1,31 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Hello Security!</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script type="module" src="/js/lib/datastar.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+</head>
+<body>
+<h1>Welcome, <span th:text="${name}">User</span></h1>
+sdfsdfsdf
+<button hx-get="/view/period/all"
+        hx-trigger="click"
+        hx-target="#period-list-container"
+        hx-swap="innerHTML"
+        hx-indicator="#loading-indicator">
+    Load Periods
+</button>
+
+<!-- Loading indicator -->
+<div id="loading-indicator" style="display:none;">
+    Loading...
+</div>
+
+<!-- Container for displaying the periods -->
+<div id="period-list-container">
+    <!-- List of periods will be dynamically loaded here -->
+</div>
+
+<a th:href="@{/logout}">Log Out</a>
+</body>
+</html>

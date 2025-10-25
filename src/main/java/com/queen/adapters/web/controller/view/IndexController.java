@@ -1,28 +1,14 @@
 package com.queen.adapters.web.controller.view;
 
-import com.queen.adapters.web.dto.EndPeriodRequest;
-import com.queen.adapters.web.dto.PeriodDTO;
 import com.queen.application.service.PeriodService;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestClient;
-import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 
 import java.security.Principal;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 public class IndexController {
@@ -32,13 +18,13 @@ public class IndexController {
 		this.periodService = periodService;
 	}
 //
-	@RequestMapping("/view/period/all")
-	public String viewAllPeriods(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
-		String token = authorizedClient.getAccessToken().getTokenValue();
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("token: " + token);
-		return "index";
-	}
+//	@RequestMapping("/view/period/all")
+//	public String viewAllPeriods(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
+//		String token = authorizedClient.getAccessToken().getTokenValue();
+//		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//		System.out.println("token: " + token);
+//		return "index";
+//	}
 //
 //	@GetMapping("/view/period/end")
 //	public Mono<String> viewEndPeriod(

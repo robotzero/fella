@@ -1,12 +1,16 @@
+group = "com.queen"
+version = "0.0.1-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_25
+
 plugins {
     java
     id("org.springframework.boot") version "4.0.0-M3"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "com.queen"
-version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_25
+springBoot {
+    mainClass.set("com.queen.FellaApp")
+}
 
 repositories {
     mavenCentral()
@@ -67,9 +71,9 @@ tasks.withType<Test> {
 //     jvmArgs("--enable-preview")
 // }
 
-//java {
-//    toolchain {
-//        languageVersion.set(JavaLanguageVersion.of(23)) // Set Java 22 toolchain
-//    }
-//}
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
+}
 

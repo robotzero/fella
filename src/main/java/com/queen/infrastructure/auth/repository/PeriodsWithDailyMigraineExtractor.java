@@ -35,15 +35,13 @@ public class PeriodsWithDailyMigraineExtractor implements ResultSetExtractor<Lis
 			dailyTracking.setFlowLevel(flowLevel);
 			dailyTracking.setPeriodId(pid);
 
-			if (trackings.containsKey(pid)) {
-				trackings.computeIfPresent(pid, (id, list) -> {
-					var dts = new ArrayList<>(list);
-					dts.add(dailyTracking);
-					return dts;
-				});
-			} else {
-				trackings.put(pid, List.of(dailyTracking));
-			}
+			trackings.computeIfPresent(pid, (id, list) -> {
+				var dts = new ArrayList<>(list);
+				dts.add(dailyTracking);
+				return dts;
+			});
+
+			trackings.computeIfAbsent(pid, id -> List.of(dailyTracking));
 
 			var migraineId = rs.getObject("migraineId", UUID.class);
 			if (migraineId != null) {
@@ -53,15 +51,12 @@ public class PeriodsWithDailyMigraineExtractor implements ResultSetExtractor<Lis
 				migraine.setId(migraineId);
 				migraine.setSeverityLevel(migraineSeverity);
 
-				if (migraines.containsKey(pid)) {
-					migraines.computeIfPresent(pid, (id, list) -> {
+				migraines.computeIfPresent(pid, (id, list) -> {
 						var m = new ArrayList<>(list);
 						m.add(migraine);
 						return m;
-					});
-				} else {
-					migraines.put(pid, List.of(migraine));
-				}
+				});
+				migraines.computeIfAbsent(pid, id -> List.of(migraine));
 			}
 			periods.computeIfAbsent(pid, id -> {
 				try {

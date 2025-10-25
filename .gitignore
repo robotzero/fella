@@ -39,3 +39,6 @@ out/
 gradle/
 libs/
 .env
+
+# custom js libs
+src/main/resources/static/js/lib
