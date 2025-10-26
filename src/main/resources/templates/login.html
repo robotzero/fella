@@ -1,0 +1,38 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Sign in</title>
+<!--    <link rel="stylesheet" href="/css/app.css"/>-->
+</head>
+<body>
+<div class="login-card">
+    <h1>Sign in</h1>
+
+    <p th:if="${error}">Login failed. Please try again.</p>
+    <p th:if="${logout}">You have been logged out.</p>
+
+    <!-- OAuth2 providers -->
+    <div class="providers">
+        <ul>
+            <li th:each="c : ${clients}">
+                <!-- Link format: /oauth2/authorization/{registrationId} -->
+                <a th:href="@{'/oauth2/authorization/' + ${c.registrationId}}">
+                    Sign insdf with <span th:text="${c.clientName}">Provider</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- If you later add formLogin(), you can also render a username/password form here -->
+    <!--
+    <form method="post" action="/login">
+      <input name="username" placeholder="Email"/>
+      <input name="password" type="password" placeholder="Password"/>
+      <button type="submit">Sign in</button>
+    </form>
+    -->
+</div>
+</body>
+</html>

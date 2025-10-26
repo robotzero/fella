@@ -1,0 +1,52 @@
+<!— calendar fragment —>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<body>
+<!-- Fragment expects: year (int), months (List<MonthVM>) -->
+<section th:fragment="grid">
+    <div th:if="${error}"
+         class="fixed inset-x-0 top-0 z-50 flex items-center justify-center border-b border-red-800/60 bg-red-950/80 px-4 py-2 text-sm text-red-200 backdrop-blur-sm shadow-lg">
+        <span th:text="${error}">Something went wrong</span>
+    </div>
+    <!-- Keep current year in a hidden input so HTMX can read/modify it -->
+    <input type="hidden" id="yearHidden" th:value="${year}"/>
+    <div id="yearBadge"
+         class="mb-4 inline-block rounded-xl border border-indigo-800/60 bg-indigo-950/60 px-4 py-2 text-blue-100">
+        <span th:text="${year}">2025</span>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div th:each="m : ${months}"
+             class="rounded-2xl border border-blue-900/60 bg-slate-900/70 p-4">
+            <h2 class="mb-3 text-lg font-medium text-blue-100"
+                th:text="${m.name} + ' ' + ${year}">January 2025</h2>
+
+            <!-- Week header -->
+            <div class="grid grid-cols-7 gap-1 text-xs text-blue-300/80">
+                <div class="py-1 text-center">Mo</div>
+                <div class="py-1 text-center">Tu</div>
+                <div class="py-1 text-center">We</div>
+                <div class="py-1 text-center">Th</div>
+                <div class="py-1 text-center">Fr</div>
+                <div class="py-1 text-center">Sa</div>
+                <div class="py-1 text-center">Su</div>
+            </div>
+
+            <!-- Day cells (already includes leading/trailing blanks) -->
+            <div class="mt-2 grid grid-cols-7 gap-1 text-sm">
+                <div th:each="d : ${m.days}"
+                     th:onclick="'openModal(''' + year + '-' + #strings.padStart(mStat.index+1,2,'0') + '-' + #strings.padStart(d.dayOfMonth,2,'0') + ''')'"
+                     th:class="${d.blank} ? 'h-9 rounded-lg border border-blue-900/40 bg-slate-900/40'
+                                  : ('h-9 rounded-lg border px-0.5 flex items-center justify-center transition ' +
+                                      (${d.tracked} ? 'bg-purple-950/60 border-purple-700/60 text-blue-100 ring-1 ring-purple-700/40 ' :
+                                       (${d.weekend} ? 'bg-blue-900/40 border-blue-900/60 text-blue-200 ' :
+                                                    'bg-slate-900/60 border-blue-900/60 text-blue-100 ')) +
+                                      (${d.today} ? 'ring-2 ring-indigo-600/70 bg-indigo-800/70 text-white ' : '') +
+                                      'hover:border-indigo-700 hover:bg-indigo-950/40')"
+                     th:text="${d.blank} ? '' : ${d.dayOfMonth}">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

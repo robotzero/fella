@@ -35,13 +35,23 @@ public class SecurityConfiguration {
 						.requestMatchers("/actuator/**").permitAll()
 						.requestMatchers("/view/login").permitAll()
 						.requestMatchers("/view/login/**").permitAll()
+						.requestMatchers("/login").permitAll()
+						.requestMatchers("/login/**").permitAll()
+						.requestMatchers("/logout").permitAll()
+						.requestMatchers("/view/logout").permitAll()
+						.requestMatchers("/images/**").permitAll()
+						.requestMatchers("/css/**").permitAll()
+						.requestMatchers("/js/**").permitAll()
+						.requestMatchers("/webjars/**").permitAll()
+						.requestMatchers("/assets/**").permitAll()
+						.requestMatchers("/favicon.ico").permitAll()
 						.anyRequest().authenticated()
 				)
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(AbstractHttpConfigurer::disable)
 				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(userIdExtractor(attachUserService, jwtAuthenticationConverter))))
 				.oauth2Client(Customizer.withDefaults())
-				.oauth2Login(Customizer.withDefaults());
+				.oauth2Login(o -> o.loginPage("/login"));
 		// @formatter:on
 
 		return http.build();

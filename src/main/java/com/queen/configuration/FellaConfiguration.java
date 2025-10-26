@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableWebSecurity
@@ -111,10 +112,11 @@ public class FellaConfiguration {
 		return new JwtAuthenticationConverter();
 	}
 
-//	@Bean
-//	public RestClient restClient(RestClient.Builder builder) {
-//		return builder
-//				.baseUrl("http://192.168.0.33:8080")
-//				.build();
-//	}
+	@Bean
+	public RestClient restClient() {
+		RestClient.Builder builder = RestClient.builder();
+		return builder
+				.baseUrl("http://192.168.0.33:8080")
+				.build();
+	}
 }

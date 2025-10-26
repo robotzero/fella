@@ -1,237 +1,347 @@
-<html xmlns:th="https://www.thymeleaf.org" lang="en">
-<head>
-    <title>Hello Security!</title>
-    <script type="module" src="/js/lib/datastar.js"></script>
-    <!-- Tailwind Play CDN -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!--<html xmlns:th="https://www.thymeleaf.org" lang="en">-->
+<!--<head>-->
+<!--    <title>Hello Security!</title>-->
+<!--    <script type="module" src="/js/lib/datastar.js"></script>-->
+<!--    &lt;!&ndash; Tailwind Play CDN &ndash;&gt;-->
+<!--    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>-->
+<!--    <meta charset="UTF-8" />-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1" />-->
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50:  '#eef2ff',
-                            100: '#e0e7ff',
-                            200: '#c7d2fe',
-                            300: '#a5b4fc',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            800: '#3730a3',
-                            900: '#1e1b4b',
-                            950: '#0b1023',
-                        }
-                    },
-                    boxShadow: {
-                        glow: '0 0 0 1px rgba(99,102,241,0.35), 0 5px 25px rgba(99,102,241,0.15)'
-                    }
-                }
-            }
-        }
-    </script>
+<!--    <script>-->
+<!--        tailwind.config = {-->
+<!--            theme: {-->
+<!--                extend: {-->
+<!--                    colors: {-->
+<!--                        brand: {-->
+<!--                            50:  '#eef2ff',-->
+<!--                            100: '#e0e7ff',-->
+<!--                            200: '#c7d2fe',-->
+<!--                            300: '#a5b4fc',-->
+<!--                            400: '#818cf8',-->
+<!--                            500: '#6366f1',-->
+<!--                            600: '#4f46e5',-->
+<!--                            700: '#4338ca',-->
+<!--                            800: '#3730a3',-->
+<!--                            900: '#1e1b4b',-->
+<!--                            950: '#0b1023',-->
+<!--                        }-->
+<!--                    },-->
+<!--                    boxShadow: {-->
+<!--                        glow: '0 0 0 1px rgba(99,102,241,0.35), 0 5px 25px rgba(99,102,241,0.15)'-->
+<!--                    }-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+<!--    </script>-->
+<!--    <script src="https://unpkg.com/htmx.org@1.9.12"></script>-->
+<!--</head>-->
+<!--<body class="min-h-screen bg-slate-950 text-blue-100 antialiased selection:bg-indigo-600/30 selection:text-white">-->
+<!--<div class="mx-auto max-w-7xl p-6">-->
+<!--    &lt;!&ndash; Header &ndash;&gt;-->
+<!--    <header class="mb-6 flex items-center justify-between">-->
+<!--        <div>-->
+<!--            <h1 class="text-2xl font-semibold tracking-tight text-blue-100">Yearly Calendar</h1>-->
+<!--            <p class="text-sm text-blue-300/70">Dark navy / bluish palette</p>-->
+<!--        </div>-->
+<!--        <nav class="flex items-center gap-2">-->
+<!--            <button id="prev" class="rounded-xl border border-indigo-800/60 bg-indigo-950/40 px-3 py-2 text-sm text-blue-200 hover:bg-indigo-900/50 hover:border-indigo-700 transition">-->
+<!--                ← Prev-->
+<!--            </button>-->
+<!--            <div id="yearBadge" class="rounded-xl border border-indigo-800/60 bg-indigo-950/60 px-4 py-2 text-blue-100 shadow-glow">-->
+<!--                2025-->
+<!--            </div>-->
+<!--            <button id="next" class="rounded-xl border border-indigo-800/60 bg-indigo-950/40 px-3 py-2 text-sm text-blue-200 hover:bg-indigo-900/50 hover:border-indigo-700 transition">-->
+<!--                Next →-->
+<!--            </button>-->
+<!--        </nav>-->
+<!--    </header>-->
+
+<!--    &lt;!&ndash; Legend &ndash;&gt;-->
+<!--    <div class="mb-6 flex flex-wrap items-center gap-3 text-xs">-->
+<!--      <span class="inline-flex items-center gap-2 rounded-lg border border-blue-900/60 bg-slate-900 px-3 py-1 text-blue-300">-->
+<!--        <span class="h-3 w-3 rounded bg-indigo-700/60 border border-blue-300/20"></span> Today-->
+<!--      </span>-->
+<!--        <span class="inline-flex items-center gap-2 rounded-lg border border-blue-900/60 bg-slate-900 px-3 py-1 text-blue-300">-->
+<!--        <span class="h-3 w-3 rounded bg-blue-900/40 border border-blue-300/10"></span> Weekend-->
+<!--      </span>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Calendar grid of months &ndash;&gt;-->
+<!--    <section id="calendar"-->
+<!--             class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">-->
+<!--        &lt;!&ndash; months injected by JS &ndash;&gt;-->
+<!--    </section>-->
+<!--</div>-->
+
+<!--<template id="month-template">-->
+<!--    <div class="rounded-2xl border border-blue-900/60 bg-slate-900/70 p-4 backdrop-blur-sm shadow-glow">-->
+<!--        <h2 class="mb-3 text-lg font-medium text-blue-100"></h2>-->
+<!--        <div class="grid grid-cols-7 gap-1 text-xs text-blue-300/80">-->
+<!--            <div class="py-1 text-center">Mo</div>-->
+<!--            <div class="py-1 text-center">Tu</div>-->
+<!--            <div class="py-1 text-center">We</div>-->
+<!--            <div class="py-1 text-center">Th</div>-->
+<!--            <div class="py-1 text-center">Fr</div>-->
+<!--            <div class="py-1 text-center">Sa</div>-->
+<!--            <div class="py-1 text-center">Su</div>-->
+<!--        </div>-->
+<!--        <div class="mt-2 grid grid-cols-7 gap-1 text-sm" data-days></div>-->
+<!--    </div>-->
+<!--</template>-->
+
+<!--<script type="module">-->
+<!--    const pad = n => (n < 10 ? `0${n}` : `${n}`);-->
+<!--    // Parse "dd-MM-yyyy" -> "yyyy-MM-dd" (safe compare key)-->
+<!--    function toKeyFromDDMMYYYY(ddmmyyyy) {-->
+<!--        const [dd, mm, yyyy] = ddmmyyyy.split('-').map(Number);-->
+<!--        return `${yyyy}-${pad(mm)}-${pad(dd)}`;-->
+<!--    }-->
+
+<!--    // Build a Set of keys "yyyy-MM-dd" from dailyTracking[]-->
+<!--    function buildTrackingSet(periodDto) {-->
+<!--        const set = new Set();-->
+<!--        if (Array.isArray(periodDto?.dailyTracking)) {-->
+<!--            for (const t of periodDto.dailyTracking) {-->
+<!--                if (t?.trackingDate) set.add(toKeyFromDDMMYYYY(t.trackingDate));-->
+<!--            }-->
+<!--        }-->
+<!--        return set;-->
+<!--    }-->
+
+<!--    const elCalendar = document.getElementById('calendar');-->
+<!--    const monthTpl = document.getElementById('month-template');-->
+<!--    const btnPrev = document.getElementById('prev');-->
+<!--    const btnNext = document.getElementById('next');-->
+<!--    const yearBadge = document.getElementById('yearBadge');-->
+
+<!--    let year = new Date().getFullYear();-->
+<!--    let trackingSet = new Set();-->
+
+<!--    const monthNames = [-->
+<!--        'January','February','March','April','May','June',-->
+<!--        'July','August','September','October','November','December'-->
+<!--    ];-->
+
+<!--    function render() {-->
+<!--        elCalendar.innerHTML = '';-->
+<!--        yearBadge.textContent = year;-->
+
+<!--        const today = new Date();-->
+<!--        const isToday = (y, m, d) =>-->
+<!--            today.getFullYear() === y && today.getMonth() === m && today.getDate() === d;-->
+
+<!--        for (let m = 0; m < 12; m++) {-->
+<!--            const node = monthTpl.content.cloneNode(true);-->
+<!--            node.querySelector('h2').textContent = `${monthNames[m]} ${year}`;-->
+
+<!--            const daysGrid = node.querySelector('[data-days]');-->
+
+<!--            // Start on Monday (ISO): compute offset-->
+<!--            const first = new Date(year, m, 1);-->
+<!--            // JS: 0=Sun..6=Sat; convert to ISO Mon=1..Sun=7-->
+<!--            let iso = first.getDay(); // 0..6-->
+<!--            iso = iso === 0 ? 7 : iso; // 1..7 with 7=Sun-->
+<!--            const offset = iso - 1; // 0..6 number of blanks before day 1-->
+
+<!--            const daysInMonth = new Date(year, m + 1, 0).getDate();-->
+
+<!--            // Leading blanks-->
+<!--            for (let i = 0; i < offset; i++) {-->
+<!--                const blank = document.createElement('div');-->
+<!--                blank.className = "h-9 rounded-lg border border-blue-900/40 bg-slate-900/40";-->
+<!--                daysGrid.appendChild(blank);-->
+<!--            }-->
+
+<!--            // Days-->
+<!--            for (let d = 1; d <= daysInMonth; d++) {-->
+<!--                const cell = document.createElement('div');-->
+
+<!--                const date = new Date(year, m, d);-->
+<!--                const weekday = date.getDay(); // 0 Sun .. 6 Sat-->
+
+<!--                const base = "h-9 rounded-lg border px-0.5 flex items-center justify-center";-->
+<!--                const weekend = (weekday === 0 || weekday === 6);-->
+<!--                const key = `${year}-${pad(m + 1)}-${pad(d)}`;-->
+<!--                const isTracked = trackingSet.has(key);-->
+
+<!--                let classes = [-->
+<!--                    // base,-->
+<!--                    weekend ? "bg-blue-900/40 border-blue-900/60 text-blue-200" :-->
+<!--                        "bg-slate-900/60 border-blue-900/60 text-blue-100",-->
+<!--                    "hover:border-indigo-700 hover:bg-indigo-950/40 transition"-->
+<!--                ];-->
+<!--                // Highlight tracked days (navy/indigo accent)-->
+<!--                if (isTracked) {-->
+<!--                    classes = ["bg-indigo-950/60","border-indigo-700/60","text-blue-100","ring-1","ring-indigo-700/40"];-->
+<!--                }-->
+<!--                classes.push("hover:border-indigo-700","hover:bg-indigo-950/40");-->
+
+<!--                if (isToday(year, m, d)) {-->
+<!--                    classes.push("ring-2 ring-indigo-600/70 ring-offset-0 bg-indigo-700/60 text-white");-->
+<!--                }-->
+
+<!--                cell.className = `${base} ${classes.join(' ')}`;-->
+<!--                cell.textContent = d;-->
+<!--                daysGrid.appendChild(cell);-->
+<!--            }-->
+
+<!--            // Trailing blanks to fill 6 rows (optional aesthetic)-->
+<!--            const totalCells = offset + daysInMonth;-->
+<!--            const targetCells = Math.ceil(totalCells / 7) * 7;-->
+<!--            for (let i = totalCells; i < targetCells; i++) {-->
+<!--                const blank = document.createElement('div');-->
+<!--                blank.className = "h-9 rounded-lg border border-blue-900/40 bg-slate-900/40";-->
+<!--                daysGrid.appendChild(blank);-->
+<!--            }-->
+
+<!--            elCalendar.appendChild(node);-->
+<!--        }-->
+<!--    }-->
+
+<!--    btnPrev.addEventListener('click', () => { year&#45;&#45;; render(); });-->
+<!--    btnNext.addEventListener('click', () => { year++; render(); });-->
+
+<!--    async function fetchPeriodData() {-->
+<!--        // Example using fetch; replace with your DataStar call if you prefer.-->
+<!--        // const res = await fetch('/api/period'); return await res.json();-->
+
+<!--        // Demo stub using your sample payload:-->
+<!--        return {-->
+<!--            periodId: "24263de6-c04a-435b-88d8-18fc195cce8e",-->
+<!--            startDate: "28-08-2025",-->
+<!--            endDate: null,-->
+<!--            migraine: [{ migraineDate: "24-08-2025", severityLevel: 3, description: null }],-->
+<!--            dailyTracking: [-->
+<!--                { painLevel: 0, flowLevel: 5, trackingDate: "28-08-2025" },-->
+<!--                { painLevel: 0, flowLevel: 4, trackingDate: "29-08-2025" },-->
+<!--                { painLevel: 0, flowLevel: 3, trackingDate: "27-08-2025" },-->
+<!--                { painLevel: 0, flowLevel: 3, trackingDate: "26-08-2025" },-->
+<!--                { painLevel: 0, flowLevel: 3, trackingDate: "25-08-2025" },-->
+<!--                { painLevel: 0, flowLevel: 3, trackingDate: "24-08-2025" },-->
+<!--            ]-->
+<!--        };-->
+<!--    }-->
+
+<!--    async function init() {-->
+<!--        const dto = await fetchPeriodData();-->
+<!--        trackingSet = buildTrackingSet(dto);-->
+<!--        // If the selected year is different, jump to it so highlights are visible:-->
+<!--        const startY = Number(dto.startDate?.split('-')[2]) || year;-->
+<!--        year = startY;-->
+<!--        render();-->
+<!--    }-->
+
+<!--    init();-->
+<!--</script>-->
+<!--</body>-->
+
+<!--</html>-->
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>/* optional tailwind.config = {...} */</script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
-<body class="min-h-screen bg-slate-950 text-blue-100 antialiased selection:bg-indigo-600/30 selection:text-white">
+<body class="min-h-screen bg-slate-950 text-blue-100">
 <div class="mx-auto max-w-7xl p-6">
-    <!-- Header -->
     <header class="mb-6 flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-blue-100">Yearly Calendar</h1>
-            <p class="text-sm text-blue-300/70">Dark navy / bluish palette</p>
+            <h1 class="text-2xl font-semibold tracking-tight">Yearly Calendar</h1>
+            <p class="text-sm text-blue-300/70">Weekends + Daily Tracking (server rendered)</p>
         </div>
         <nav class="flex items-center gap-2">
-            <button id="prev" class="rounded-xl border border-indigo-800/60 bg-indigo-950/40 px-3 py-2 text-sm text-blue-200 hover:bg-indigo-900/50 hover:border-indigo-700 transition">
+            <!-- These buttons compute the new year on click and request server HTML -->
+            <button
+                    class="rounded-xl border border-indigo-800/60 bg-indigo-950/40 px-3 py-2 text-sm hover:bg-indigo-900/50 hover:border-indigo-700 transition"
+                    hx-get="/calendar"
+                    hx-target="#calendar"
+                    hx-swap="innerHTML"
+                    hx-vals='js:{year: Number(document.getElementById("yearHidden").value)-1}'>
                 ← Prev
             </button>
-            <div id="yearBadge" class="rounded-xl border border-indigo-800/60 bg-indigo-950/60 px-4 py-2 text-blue-100 shadow-glow">
-                2025
+
+            <!-- This badge is replaced by the fragment; we keep a hidden input with the year -->
+            <div id="yearBadge"
+                 class="rounded-xl border border-indigo-800/60 bg-indigo-950/60 px-4 py-2 text-blue-100">
+                <!-- populated by fragment -->
             </div>
-            <button id="next" class="rounded-xl border border-indigo-800/60 bg-indigo-950/40 px-3 py-2 text-sm text-blue-200 hover:bg-indigo-900/50 hover:border-indigo-700 transition">
+
+            <button
+                    class="rounded-xl border border-indigo-800/60 bg-indigo-950/40 px-3 py-2 text-sm hover:bg-indigo-900/50 hover:border-indigo-700 transition"
+                    hx-get="/calendar"
+                    hx-target="#calendar"
+                    hx-swap="innerHTML"
+                    hx-vals='js:{year: Number(document.getElementById("yearHidden").value)+1}'>
                 Next →
             </button>
         </nav>
     </header>
 
-    <!-- Legend -->
-    <div class="mb-6 flex flex-wrap items-center gap-3 text-xs">
-      <span class="inline-flex items-center gap-2 rounded-lg border border-blue-900/60 bg-slate-900 px-3 py-1 text-blue-300">
-        <span class="h-3 w-3 rounded bg-indigo-700/60 border border-blue-300/20"></span> Today
-      </span>
-        <span class="inline-flex items-center gap-2 rounded-lg border border-blue-900/60 bg-slate-900 px-3 py-1 text-blue-300">
-        <span class="h-3 w-3 rounded bg-blue-900/40 border border-blue-300/10"></span> Weekend
-      </span>
-    </div>
-
-    <!-- Calendar grid of months -->
+    <!-- The calendar grid is loaded here via HTMX on page load -->
     <section id="calendar"
-             class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <!-- months injected by JS -->
+             hx-get="/calendar"
+             hx-trigger="load"
+             hx-target="#calendar"
+             hx-swap="innerHTML">
+        <div class="text-blue-300/70">Loading…</div>
     </section>
-</div>
 
-<template id="month-template">
-    <div class="rounded-2xl border border-blue-900/60 bg-slate-900/70 p-4 backdrop-blur-sm shadow-glow">
-        <h2 class="mb-3 text-lg font-medium text-blue-100"></h2>
-        <div class="grid grid-cols-7 gap-1 text-xs text-blue-300/80">
-            <div class="py-1 text-center">Mo</div>
-            <div class="py-1 text-center">Tu</div>
-            <div class="py-1 text-center">We</div>
-            <div class="py-1 text-center">Th</div>
-            <div class="py-1 text-center">Fr</div>
-            <div class="py-1 text-center">Sa</div>
-            <div class="py-1 text-center">Su</div>
+    <!-- Modal overlay container (hidden by default) -->
+    <div id="modal"
+         class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+        <div class="w-full max-w-sm rounded-xl border border-indigo-800/60 bg-slate-900 p-6 shadow-2xl">
+            <h2 class="mb-4 text-lg font-semibold text-blue-100">Daily Tracking</h2>
+
+            <form id="trackingForm"
+                  hx-post="/tracking/save"
+                  hx-target="#modal"
+                  hx-swap="outerHTML"
+                  class="space-y-4">
+
+                <input type="hidden" name="trackingDate" id="trackingDate"/>
+
+                <div>
+                    <label for="painLevel" class="block text-sm text-blue-300">Pain Level</label>
+                    <input type="number" name="painLevel" id="painLevel" min="0" max="10"
+                           class="mt-1 w-full rounded-md border border-indigo-700/40 bg-slate-950 px-3 py-2 text-blue-100 focus:border-indigo-500 focus:ring-indigo-500"/>
+                </div>
+
+                <div>
+                    <label for="flowLevel" class="block text-sm text-blue-300">Flow Level</label>
+                    <input type="number" name="flowLevel" id="flowLevel" min="0" max="10"
+                           class="mt-1 w-full rounded-md border border-indigo-700/40 bg-slate-950 px-3 py-2 text-blue-100 focus:border-indigo-500 focus:ring-indigo-500"/>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal()"
+                            class="rounded-md border border-blue-900/50 bg-slate-950/60 px-4 py-2 text-blue-200 hover:bg-slate-900">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="rounded-md border border-indigo-700 bg-indigo-700 px-4 py-2 text-white hover:bg-indigo-600">
+                        Save
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class="mt-2 grid grid-cols-7 gap-1 text-sm" data-days></div>
     </div>
-</template>
 
-<script type="module">
-    const pad = n => (n < 10 ? `0${n}` : `${n}`);
-    // Parse "dd-MM-yyyy" -> "yyyy-MM-dd" (safe compare key)
-    function toKeyFromDDMMYYYY(ddmmyyyy) {
-        const [dd, mm, yyyy] = ddmmyyyy.split('-').map(Number);
-        return `${yyyy}-${pad(mm)}-${pad(dd)}`;
-    }
-
-    // Build a Set of keys "yyyy-MM-dd" from dailyTracking[]
-    function buildTrackingSet(periodDto) {
-        const set = new Set();
-        if (Array.isArray(periodDto?.dailyTracking)) {
-            for (const t of periodDto.dailyTracking) {
-                if (t?.trackingDate) set.add(toKeyFromDDMMYYYY(t.trackingDate));
-            }
+    <script>
+        function openModal(date) {
+            document.getElementById('trackingDate').value = date;
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modal').classList.add('flex');
         }
-        return set;
-    }
 
-    const elCalendar = document.getElementById('calendar');
-    const monthTpl = document.getElementById('month-template');
-    const btnPrev = document.getElementById('prev');
-    const btnNext = document.getElementById('next');
-    const yearBadge = document.getElementById('yearBadge');
-
-    let year = new Date().getFullYear();
-    let trackingSet = new Set();
-
-    const monthNames = [
-        'January','February','March','April','May','June',
-        'July','August','September','October','November','December'
-    ];
-
-    function render() {
-        elCalendar.innerHTML = '';
-        yearBadge.textContent = year;
-
-        const today = new Date();
-        const isToday = (y, m, d) =>
-            today.getFullYear() === y && today.getMonth() === m && today.getDate() === d;
-
-        for (let m = 0; m < 12; m++) {
-            const node = monthTpl.content.cloneNode(true);
-            node.querySelector('h2').textContent = `${monthNames[m]} ${year}`;
-
-            const daysGrid = node.querySelector('[data-days]');
-
-            // Start on Monday (ISO): compute offset
-            const first = new Date(year, m, 1);
-            // JS: 0=Sun..6=Sat; convert to ISO Mon=1..Sun=7
-            let iso = first.getDay(); // 0..6
-            iso = iso === 0 ? 7 : iso; // 1..7 with 7=Sun
-            const offset = iso - 1; // 0..6 number of blanks before day 1
-
-            const daysInMonth = new Date(year, m + 1, 0).getDate();
-
-            // Leading blanks
-            for (let i = 0; i < offset; i++) {
-                const blank = document.createElement('div');
-                blank.className = "h-9 rounded-lg border border-blue-900/40 bg-slate-900/40";
-                daysGrid.appendChild(blank);
-            }
-
-            // Days
-            for (let d = 1; d <= daysInMonth; d++) {
-                const cell = document.createElement('div');
-
-                const date = new Date(year, m, d);
-                const weekday = date.getDay(); // 0 Sun .. 6 Sat
-
-                const base = "h-9 rounded-lg border px-0.5 flex items-center justify-center";
-                const weekend = (weekday === 0 || weekday === 6);
-                const key = `${year}-${pad(m + 1)}-${pad(d)}`;
-                const isTracked = trackingSet.has(key);
-
-                let classes = [
-                    // base,
-                    weekend ? "bg-blue-900/40 border-blue-900/60 text-blue-200" :
-                        "bg-slate-900/60 border-blue-900/60 text-blue-100",
-                    "hover:border-indigo-700 hover:bg-indigo-950/40 transition"
-                ];
-                // Highlight tracked days (navy/indigo accent)
-                if (isTracked) {
-                    classes = ["bg-indigo-950/60","border-indigo-700/60","text-blue-100","ring-1","ring-indigo-700/40"];
-                }
-                classes.push("hover:border-indigo-700","hover:bg-indigo-950/40");
-
-                if (isToday(year, m, d)) {
-                    classes.push("ring-2 ring-indigo-600/70 ring-offset-0 bg-indigo-700/60 text-white");
-                }
-
-                cell.className = `${base} ${classes.join(' ')}`;
-                cell.textContent = d;
-                daysGrid.appendChild(cell);
-            }
-
-            // Trailing blanks to fill 6 rows (optional aesthetic)
-            const totalCells = offset + daysInMonth;
-            const targetCells = Math.ceil(totalCells / 7) * 7;
-            for (let i = totalCells; i < targetCells; i++) {
-                const blank = document.createElement('div');
-                blank.className = "h-9 rounded-lg border border-blue-900/40 bg-slate-900/40";
-                daysGrid.appendChild(blank);
-            }
-
-            elCalendar.appendChild(node);
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            document.getElementById('modal').classList.remove('flex');
         }
-    }
-
-    btnPrev.addEventListener('click', () => { year--; render(); });
-    btnNext.addEventListener('click', () => { year++; render(); });
-
-    async function fetchPeriodData() {
-        // Example using fetch; replace with your DataStar call if you prefer.
-        // const res = await fetch('/api/period'); return await res.json();
-
-        // Demo stub using your sample payload:
-        return {
-            periodId: "24263de6-c04a-435b-88d8-18fc195cce8e",
-            startDate: "28-08-2025",
-            endDate: null,
-            migraine: [{ migraineDate: "24-08-2025", severityLevel: 3, description: null }],
-            dailyTracking: [
-                { painLevel: 0, flowLevel: 5, trackingDate: "28-08-2025" },
-                { painLevel: 0, flowLevel: 4, trackingDate: "29-08-2025" },
-                { painLevel: 0, flowLevel: 3, trackingDate: "27-08-2025" },
-                { painLevel: 0, flowLevel: 3, trackingDate: "26-08-2025" },
-                { painLevel: 0, flowLevel: 3, trackingDate: "25-08-2025" },
-                { painLevel: 0, flowLevel: 3, trackingDate: "24-08-2025" },
-            ]
-        };
-    }
-
-    async function init() {
-        const dto = await fetchPeriodData();
-        trackingSet = buildTrackingSet(dto);
-        // If the selected year is different, jump to it so highlights are visible:
-        const startY = Number(dto.startDate?.split('-')[2]) || year;
-        year = startY;
-        render();
-    }
-
-    init();
-</script>
+    </script>
+</div>
 </body>
-
 </html>
