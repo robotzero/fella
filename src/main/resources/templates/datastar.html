@@ -1,0 +1,45 @@
+<html xmlns:th="https://www.thymeleaf.org" xmlns:data-bind="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <title>Hello Security!</title>
+    <script type="module" src="/js/lib/datastar.js"></script>
+    <!-- Tailwind Play CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50:  '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#1e1b4b',
+                            950: '#0b1023',
+                        }
+                    },
+                    boxShadow: {
+                        glow: '0 0 0 1px rgba(99,102,241,0.35), 0 5px 25px rgba(99,102,241,0.15)'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-blue-100 antialiased selection:bg-indigo-600/30 selection:text-white">
+
+<label>
+    <input type="text" placeholder="Search..." data-bind:search data-on:input__debounce.200ms="@get('/datastar')" />
+</label>
+
+</body>
+</html>

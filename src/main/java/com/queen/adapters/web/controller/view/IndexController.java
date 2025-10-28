@@ -72,9 +72,7 @@ public class IndexController {
 			@RequestParam int flowLevel,
 			Model model) {
 
-		// TODO: persist in DB or call your service
-		System.out.printf("Saving tracking for %s — pain=%d, flow=%d%n",
-				trackingDate, painLevel, flowLevel);
+//		restClient.post().uri("api/period").accept(MediaType.APPLICATION_JSON).body()
 
 		// Return a small snippet that replaces the modal with success feedback
 		model.addAttribute("message", "Saved successfully for " + trackingDate);
