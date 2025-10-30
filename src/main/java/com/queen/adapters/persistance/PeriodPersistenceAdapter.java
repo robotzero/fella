@@ -23,19 +23,14 @@ public class PeriodPersistenceAdapter implements PeriodPersistencePort {
 
 	@Override
 	public Period updatePeriod(final Period period) {
-		//@TODO throw proper exception here
-		assert period.getId() != null;
-		final var updated = this.periodRepository.endActivePeriod(period.getId(), period.getEndDate());
+//		//@TODO throw proper exception here
+//		assert period.getId() != null;
+//		final var updated = this.periodRepository.endActivePeriod(period.getId(), period.getEndDate());
 		return this.periodRepository.findByIdAndByUserId(period.getId());
 	}
 
 	@Override
 	public List<Period> getPeriods(UUID userID) {
 		return periodRepository.findAllByUserId(userID);
-	}
-
-	@Override
-	public Period getActivePeriod(UUID userId) {
-		return periodRepository.getActivePeriod(userId);
 	}
 }

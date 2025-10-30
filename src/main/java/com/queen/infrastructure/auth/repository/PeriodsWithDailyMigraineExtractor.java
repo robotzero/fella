@@ -60,12 +60,10 @@ public class PeriodsWithDailyMigraineExtractor implements ResultSetExtractor<Lis
 			}
 			periods.computeIfAbsent(pid, id -> {
 				try {
-					var startDate = rs.getObject("startDate", LocalDate.class);
-					Period np = new Period(userId, startDate);
+					var date = rs.getObject("date", LocalDate.class);
+					Period np = new Period(id, userId, date);
 					np.setId(id);
-					np.setEndDate(rs.getObject("endDate", LocalDate.class));
 					np.setCycleLength(rs.getInt("cycleLength"));
-					np.setActive(rs.getBoolean("active"));
 					return np;
 				} catch (Exception e) {
 					//@TODO proper exception

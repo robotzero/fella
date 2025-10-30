@@ -4,28 +4,17 @@ import com.queen.infrastructure.auth.repository.PeriodsWithDailyMigraineExtracto
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 // @TODO transactional
 public interface PeriodRepository extends CrudRepository<Period, UUID> {
-	@Query("""
-		UPDATE periods
-		SET active = false, end_date = :endDate
-		WHERE period_id = :periodId
-		AND active = true
-	""")
-	int endActivePeriod(UUID periodId, LocalDate endDate);
-
 	@Query(value = """
 		SELECT
 			p.period_id   		 AS periodId,
 			p.user_id     		 AS userId,
-			p.start_date  		 AS startDate,
-			p.end_date    	     AS endDate,
+			p.date  		 	 AS date,
 			p.cycle_length 		 AS cycleLength,
-			p.active      		 AS active,
 			dt.tracking_id 		 AS trackingId,
 			dt.tracking_date     AS trackingDate,
 			dt.pain_level	     AS painLevel,
@@ -47,11 +36,4 @@ public interface PeriodRepository extends CrudRepository<Period, UUID> {
 		WHERE p.period_id = :periodId
 	""")
 	Period findByIdAndByUserId(UUID periodId);
-
-	@Query("""
-		SELECT p.*
-		FROM periods p
-		WHERE p.user_id = :userId AND active = true
-	""")
-	Period getActivePeriod(UUID userId);
 }

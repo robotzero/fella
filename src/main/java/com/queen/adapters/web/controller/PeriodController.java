@@ -1,7 +1,6 @@
 package com.queen.adapters.web.controller;
 
 import com.queen.adapters.web.dto.DailyTrackingMapper;
-import com.queen.adapters.web.dto.EndPeriodRequest;
 import com.queen.adapters.web.dto.MigraineMapper;
 import com.queen.adapters.web.dto.PeriodDTO;
 import com.queen.adapters.web.dto.FullPeriodRequest;
@@ -14,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,15 +48,6 @@ public class PeriodController {
 		final var migraine = periodRequest.migraine().map(m -> migraineMapper.mapToDomain(token.getUserId(), m));
 		final var dailyTracking = periodRequest.dailyTracking().map(d -> dailyTrackingMapper.mapToDomain(token.getUserId(), d));
 		return periodService.createPeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(token.getUserId(), LocalDate.now(), 0, 0)));
-	}
-
-	@PutMapping(value = "/api/period/end", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	PeriodDTO endPeriod(
-			final FellaJwtAuthenticationToken token,
-			final @Valid @RequestBody EndPeriodRequest endPeriodRequest
-	) {
-		final var period = periodMapper.mapToDomain(token.getUserId(), endPeriodRequest);
-		return periodService.endPeriod(period);
 	}
 
 	@GetMapping(value = "/api/period/all", produces = MediaType.APPLICATION_JSON_VALUE)

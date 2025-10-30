@@ -9,5 +9,4 @@ public interface PeriodPersistencePort {
 	Period createPeriod(Period period);
 	Period updatePeriod(Period period);
 	List<Period> getPeriods(UUID userID);
-	Period getActivePeriod(UUID userId);
 }

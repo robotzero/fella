@@ -15,11 +15,7 @@ public record PeriodDTO(
 		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 		@JsonDeserialize(using = LocalDateDeserializer.class)
 		@JsonSerialize(using = LocalDateSerializer.class)
-		LocalDate startDate,
-		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-		@JsonDeserialize(using = LocalDateDeserializer.class)
-		@JsonSerialize(using = LocalDateSerializer.class)
-		LocalDate endDate,
+		LocalDate date,
 		List<MigraineDTO> migraine,
 		List<DailyTrackingDTO> dailyTracking
 ) {

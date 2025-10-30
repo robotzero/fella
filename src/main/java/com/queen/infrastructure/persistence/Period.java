@@ -16,10 +16,7 @@ public class Period implements Persistable<UUID> {
 	@Column("period_id")
 	private UUID id;
 	private UUID userId;
-	private LocalDate startDate;
-	private LocalDate endDate;
-	private Integer cycleLength;
-	private Boolean active;
+	private LocalDate date;
 
 	@Transient
 	private List<Migraine> migraine;
@@ -30,9 +27,10 @@ public class Period implements Persistable<UUID> {
 	@Transient
 	private Boolean isNew;
 
-	public Period(final UUID userId, final LocalDate startDate) {
+	public Period(final UUID id, final UUID userId, final LocalDate date) {
+		this.id = id;
 		this.userId = userId;
-		this.startDate = startDate;
+		this.date = date;
 	}
 
 	protected Period() {}
@@ -50,12 +48,8 @@ public class Period implements Persistable<UUID> {
 		return userId;
 	}
 
-	public LocalDate getStartDate() {
-		return startDate;
-	}
-
-	public LocalDate getEndDate() {
-		return endDate;
+	public LocalDate getDate() {
+		return date;
 	}
 
 	public Period setId(final UUID id) {
@@ -63,23 +57,9 @@ public class Period implements Persistable<UUID> {
 		return this;
 	}
 
-	public Period setActive(final Boolean active) {
-		this.active = active;
-		return this;
-	}
-
-	public Period setEndDate(final LocalDate endDate) {
-		this.endDate = endDate;
-		return this;
-	}
-
 	public Period setNew(final Boolean aNew) {
 		isNew = aNew;
 		return this;
-	}
-
-	public Boolean getActive() {
-		return active;
 	}
 
 	public List<Migraine> getMigraine() {
@@ -95,7 +75,7 @@ public class Period implements Persistable<UUID> {
 	}
 
 	public Period setCycleLength(final Integer cycleLength) {
-		this.cycleLength = cycleLength;
+//		this.cycleLength = cycleLength;
 		return this;
 	}
 
