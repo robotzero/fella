@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
-<div th:fragment="ok"
-     class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-    <div class="rounded-xl border border-green-700/60 bg-slate-900 p-6 text-green-300">
-        <p th:text="${message}">Saved successfully</p>
-        <div class="mt-4 text-center">
-            <button type="button" onclick="closeModal()"
-                    class="rounded-md border border-green-700 bg-green-700 px-4 py-2 text-white hover:bg-green-600">
-                OK
-            </button>
-        </div>
+<!-- modal-success.html -->
+<div th:fragment="ok" id="modal-body"
+     class="w-full max-w-sm rounded-xl border border-green-700/60 bg-slate-900 p-6 text-green-300 shadow-2xl">
+    <p th:text="${message}">Saved successfully</p>
+    <div class="mt-4 text-center">
+        <button type="button" onclick="closeModal()"
+                class="rounded-md border border-green-700 bg-green-700 px-4 py-2 text-white hover:bg-green-600">
+            OK
+        </button>
     </div>
 </div>
 </body>

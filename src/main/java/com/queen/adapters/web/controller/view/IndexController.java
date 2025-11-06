@@ -74,6 +74,8 @@ public class IndexController {
 
 //		restClient.post().uri("api/period").accept(MediaType.APPLICATION_JSON).body()
 
+		System.out.println(painLevel);
+		System.out.println(flowLevel);
 		// Return a small snippet that replaces the modal with success feedback
 		model.addAttribute("message", "Saved successfully for " + trackingDate);
 		return "fragments/modal-success";

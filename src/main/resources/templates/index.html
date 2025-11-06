@@ -291,14 +291,17 @@
     </section>
 
     <!-- Modal overlay container (hidden by default) -->
-    <div id="modal"
-         class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+        <div id="modal-body"></div>
+    </div>
+    <!-- Reusable form template -->
+    <template id="modal-form-template">
         <div class="w-full max-w-sm rounded-xl border border-indigo-800/60 bg-slate-900 p-6 shadow-2xl">
             <h2 class="mb-4 text-lg font-semibold text-blue-100">Daily Tracking</h2>
 
             <form id="trackingForm"
                   hx-post="/tracking/save"
-                  hx-target="#modal"
+                  hx-target="#modal-body"
                   hx-swap="outerHTML"
                   class="space-y-4">
 
@@ -328,19 +331,123 @@
                 </div>
             </form>
         </div>
-    </div>
+    </template>
+
 
     <script>
+        function ensureFormInModal() {
+            const body = document.getElementById('modal-body');
+            if (!body.querySelector('#trackingForm')) {
+                const tpl = document.getElementById('modal-form-template');
+                body.innerHTML = '';
+                body.appendChild(tpl.content.cloneNode(true));
+                // ⬇️ ensure htmx binds hx-post/hx-target on the new form
+                if (window.htmx) {
+                    htmx.process(body);
+                }
+                initPickers();
+            }
+        }
+
         function openModal(date) {
+            ensureFormInModal();
             document.getElementById('trackingDate').value = date;
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modal').classList.add('flex');
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         function closeModal() {
-            document.getElementById('modal').classList.add('hidden');
-            document.getElementById('modal').classList.remove('flex');
+            const modal = document.getElementById('modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
+    </script>
+
+    <script>
+        // Tailwind class presets (match your calendar)
+        const baseCell =
+            "h-9 rounded-lg border px-0.5 flex items-center justify-center text-sm transition select-none";
+        const inactive =
+            "bg-slate-900/60 border-blue-900/60 text-blue-100 hover:border-indigo-700 hover:bg-indigo-950/40";
+        // Active styles — purple, like tracked days
+        const active =
+            "bg-purple-950/60 border-purple-700/60 text-blue-100 ring-1 ring-purple-700/40";
+
+        // Build a 1..10 picker inside container, syncing to hidden input
+        function buildLevelPicker(containerId, inputId) {
+            const container = document.getElementById(containerId);
+            const input = document.getElementById(inputId);
+            if (!container || !input) return;
+
+            container.innerHTML = "";
+
+            // Helper to (de)activate a button
+            const setActive = (btn, on) => {
+                btn.className = `${baseCell} ${on ? active : inactive}`;
+                btn.setAttribute("aria-pressed", on ? "true" : "false");
+            };
+
+            // Preselect if input already has a value (e.g., editing)
+            const pre = parseInt(input.value, 10);
+
+            for (let n = 1; n <= 10; n++) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.textContent = n;
+                btn.dataset.value = String(n);
+                btn.className = `${baseCell} ${inactive}`;
+                btn.setAttribute("aria-pressed", "false");
+
+                if (!Number.isNaN(pre) && pre === n) {
+                    setActive(btn, true);
+                }
+
+                btn.addEventListener("click", () => {
+                    // Toggle behavior: click again to clear, or click a different number to switch
+                    const current = parseInt(input.value || "0", 10);
+                    const next = current === n ? 0 : n;
+                    input.value = next ? String(next) : ""; // empty means "not set"
+
+                    // Update visual state in this group
+                    [...container.querySelectorAll("button")].forEach(b => setActive(b, false));
+                    if (next) setActive(btn, true);
+                });
+
+                container.appendChild(btn);
+            }
+        }
+
+        // Rehydrate pickers whenever the form is (re)inserted
+        function initPickers() {
+            buildLevelPicker("painPicker", "painLevel");
+            buildLevelPicker("flowPicker", "flowLevel");
+        }
+
+        // If you’re using the template approach from earlier:
+        // call initPickers() right after you inject the form + htmx.process(body)
+        // Example patch to your ensureFormInModal():
+        //
+        // if (window.htmx) htmx.process(body);
+        // initPickers();
+
+        // If your form is present on first load, also initialize once:
+        document.addEventListener("DOMContentLoaded", () => {
+            if (document.getElementById("trackingForm")) {
+                initPickers();
+            }
+        });
+
+        // Optional: re-init after HTMX swaps that affect the modal body
+        document.body.addEventListener("htmx:afterSwap", (e) => {
+            const tgt = e.target;
+            if (tgt && (tgt.id === "modal-body" || tgt.closest && tgt.closest("#modal-body"))) {
+                // If the swap inserted the form again, rebuild pickers
+                if (document.getElementById("trackingForm")) {
+                    initPickers();
+                }
+            }
+        });
     </script>
 </div>
 </body>
