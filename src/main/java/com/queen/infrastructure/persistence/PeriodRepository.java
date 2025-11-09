@@ -1,14 +1,16 @@
 package com.queen.infrastructure.persistence;
 
 import com.queen.infrastructure.auth.repository.PeriodsWithDailyMigraineExtractor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 // @TODO transactional
-public interface PeriodRepository extends CrudRepository<Period, UUID> {
+public interface PeriodRepository extends CrudRepository<@NotNull Period, @NotNull UUID> {
 	@Query(value = """
 		SELECT
 			p.period_id   		 AS periodId,
@@ -27,7 +29,7 @@ public interface PeriodRepository extends CrudRepository<Period, UUID> {
 		LEFT JOIN migraines m ON dt.migraine_id = m.migraine_id
 		WHERE p.user_id = :userId
 	""", resultSetExtractorClass = PeriodsWithDailyMigraineExtractor.class)
-	List<Period> findAllByUserId(UUID userId);
+	List<Period> findAllByUserId(final UUID userId);
 	@Query("""
 		SELECT p.*, m.* AS migraine, dt.* AS dailyTracking
 		FROM periods p
@@ -35,5 +37,10 @@ public interface PeriodRepository extends CrudRepository<Period, UUID> {
 		LEFT JOIN migraines m ON dt.migraine_id = m.migraine_id
 		WHERE p.period_id = :periodId
 	""")
-	Period findByIdAndByUserId(UUID periodId);
+	Period findByIdAndByUserId(final UUID periodId);
+	@Query("""
+		DELETE FROM periods
+		WHERE period_id IN (:periodIds) AND user_id = :userId
+	""")
+	void deletePeriods(final Set<UUID> periodIds, final UUID userId);
 }

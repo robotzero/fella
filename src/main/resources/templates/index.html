@@ -307,16 +307,31 @@
 
                 <input type="hidden" name="trackingDate" id="trackingDate"/>
 
+                <!-- Pain -->
                 <div>
-                    <label for="painLevel" class="block text-sm text-blue-300">Pain Level</label>
-                    <input type="number" name="painLevel" id="painLevel" min="0" max="10"
-                           class="mt-1 w-full rounded-md border border-indigo-700/40 bg-slate-950 px-3 py-2 text-blue-100 focus:border-indigo-500 focus:ring-indigo-500"/>
+                    <label class="block text-sm text-blue-300 mb-2">Pain Level</label>
+                    <input type="hidden" name="painLevel" id="painLevel" />
+                    <div id="painPicker" class="grid grid-cols-10 gap-1">
+                        <!-- buttons injected by JS -->
+                    </div>
                 </div>
 
-                <div>
-                    <label for="flowLevel" class="block text-sm text-blue-300">Flow Level</label>
-                    <input type="number" name="flowLevel" id="flowLevel" min="0" max="10"
-                           class="mt-1 w-full rounded-md border border-indigo-700/40 bg-slate-950 px-3 py-2 text-blue-100 focus:border-indigo-500 focus:ring-indigo-500"/>
+                <!-- Flow -->
+                <div class="mt-3">
+                    <label class="block text-sm text-blue-300 mb-2">Flow Level</label>
+                    <input type="hidden" name="flowLevel" id="flowLevel" />
+                    <div id="flowPicker" class="grid grid-cols-10 gap-1">
+                        <!-- buttons injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Migraine -->
+                <div class="mt-3">
+                    <label class="block text-sm text-blue-300 mb-2">Migraine Pain Level</label>
+                    <input type="hidden" name="migraineLevel" id="migraineLevel" />
+                    <div id="migrainePicker" class="grid grid-cols-10 gap-1">
+                        <!-- buttons injected by JS -->
+                    </div>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-2">
@@ -330,6 +345,29 @@
                     </button>
                 </div>
             </form>
+        </div>
+
+        <div class="flex justify-between items-center pt-2">
+            <button id="deleteBtn"
+                    type="button"
+                    class="hidden rounded-md border border-red-700 bg-red-700 px-4 py-2 text-white hover:bg-red-600 text-sm"
+                    hx-post="/delete"
+                    hx-target="#calendar"
+                    hx-swap="innerHTML"
+                    hx-on::afterRequest="closeModal()">
+                Delete
+            </button>
+
+            <div class="flex gap-3">
+                <button type="button" onclick="closeModal()"
+                        class="rounded-md border border-blue-900/50 bg-slate-950/60 px-4 py-2 text-blue-200 hover:bg-slate-900">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="rounded-md border border-indigo-700 bg-indigo-700 px-4 py-2 text-white hover:bg-indigo-600">
+                    Save
+                </button>
+            </div>
         </div>
     </template>
 
@@ -349,16 +387,61 @@
             }
         }
 
-        function openModal(date) {
+        function openModal(cellOrDate) {
             ensureFormInModal();
-            document.getElementById('trackingDate').value = date;
+
             const modal = document.getElementById('modal');
+            const dateStr = typeof cellOrDate === 'string'
+                ? cellOrDate
+                : (cellOrDate.dataset.date || '');
+
+            const painVal = cellOrDate && cellOrDate.dataset
+                ? parseInt(cellOrDate.dataset.pain || '0', 10)
+                : 0;
+            const flowVal = cellOrDate && cellOrDate.dataset
+                ? parseInt(cellOrDate.dataset.flow || '0', 10)
+                : 0;
+            const isTracked = cellOrDate && cellOrDate.dataset
+                ? cellOrDate.dataset.tracked === 'true'
+                : false;
+
+            const dateInput = document.getElementById('trackingDate');
+            const painInput = document.getElementById('painLevel');
+            const flowInput = document.getElementById('flowLevel');
+
+            if (dateInput) dateInput.value = dateStr;
+            if (painInput) painInput.value = painVal > 0 ? String(painVal) : '';
+            if (flowInput) flowInput.value = flowVal > 0 ? String(flowVal) : '';
+
+            // Rebuild the 1..10 button pickers with these values
+            initPickers(); // from previous step
+
+            // Configure Delete button based on isTracked
+            const deleteBtn = document.getElementById('deleteBtn');
+            if (deleteBtn) {
+                if (isTracked) {
+                    deleteBtn.classList.remove('hidden');
+
+                    const yearHidden = document.getElementById('yearHidden');
+                    const vals = {};
+                    if (dateStr) vals.date = dateStr;
+                    if (yearHidden) vals.year = yearHidden.value;
+
+                    // htmx hx-vals expects JSON string
+                    deleteBtn.setAttribute('hx-vals', JSON.stringify(vals));
+                } else {
+                    deleteBtn.classList.add('hidden');
+                    deleteBtn.removeAttribute('hx-vals');
+                }
+            }
+
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
 
         function closeModal() {
             const modal = document.getElementById('modal');
+            if (!modal) return;
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
@@ -375,7 +458,7 @@
             "bg-purple-950/60 border-purple-700/60 text-blue-100 ring-1 ring-purple-700/40";
 
         // Build a 1..10 picker inside container, syncing to hidden input
-        function buildLevelPicker(containerId, inputId) {
+        function buildLevelPicker(containerId, inputId, cellCount = 10) {
             const container = document.getElementById(containerId);
             const input = document.getElementById(inputId);
             if (!container || !input) return;
@@ -389,9 +472,9 @@
             };
 
             // Preselect if input already has a value (e.g., editing)
-            const pre = parseInt(input.value, 10);
+            const pre = parseInt(input.value, cellCount);
 
-            for (let n = 1; n <= 10; n++) {
+            for (let n = 1; n <= cellCount; n++) {
                 const btn = document.createElement("button");
                 btn.type = "button";
                 btn.textContent = n;
@@ -405,7 +488,7 @@
 
                 btn.addEventListener("click", () => {
                     // Toggle behavior: click again to clear, or click a different number to switch
-                    const current = parseInt(input.value || "0", 10);
+                    const current = parseInt(input.value || "0", cellCount);
                     const next = current === n ? 0 : n;
                     input.value = next ? String(next) : ""; // empty means "not set"
 
@@ -421,7 +504,8 @@
         // Rehydrate pickers whenever the form is (re)inserted
         function initPickers() {
             buildLevelPicker("painPicker", "painLevel");
-            buildLevelPicker("flowPicker", "flowLevel");
+            buildLevelPicker("flowPicker", "flowLevel", 5);
+            buildLevelPicker("migrainePicker", "migraineLevel");
         }
 
         // If you’re using the template approach from earlier:

@@ -14,4 +14,24 @@ public record FullPeriodRequest(
 	public LocalDate startDateOrNow() {
 		return date.orElse(LocalDate.now());
 	}
+	public static FullPeriodRequest fromUI(LocalDate trackingDate, Integer painLevel, Integer flowLevel, Integer migraineLevel) {
+		var migraineRequest = Optional.of(migraineLevel).filter(m -> m > 0).map(m -> new MigraineRequest(
+				Optional.of(trackingDate),
+				Optional.of(migraineLevel),
+				Optional.empty()
+		));
+		Optional<DailyTrackingRequest> dailyTrackingRequest = Optional.of(new DailyTrackingRequest(
+				Optional.empty(),
+				Optional.of(trackingDate),
+				Optional.of(painLevel),
+				Optional.of(flowLevel),
+				Optional.empty(),
+				Optional.empty()
+		));
+		return new FullPeriodRequest(
+				Optional.of(trackingDate),
+				migraineRequest,
+				dailyTrackingRequest
+		);
+	}
 }

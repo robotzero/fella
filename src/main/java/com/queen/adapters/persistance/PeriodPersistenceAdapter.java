@@ -6,6 +6,7 @@ import com.queen.infrastructure.persistence.PeriodRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class PeriodPersistenceAdapter implements PeriodPersistencePort {
@@ -32,5 +33,10 @@ public class PeriodPersistenceAdapter implements PeriodPersistencePort {
 	@Override
 	public List<Period> getPeriods(UUID userID) {
 		return periodRepository.findAllByUserId(userID);
+	}
+
+	@Override
+	public void deletePeriods(Set<UUID> periodIds, UUID userId) {
+		periodRepository.deletePeriods(periodIds, userId);
 	}
 }

@@ -1,6 +1,7 @@
 package com.queen.adapters.web.controller;
 
 import com.queen.adapters.web.dto.DailyTrackingMapper;
+import com.queen.adapters.web.dto.DeletePeriodsRequest;
 import com.queen.adapters.web.dto.MigraineMapper;
 import com.queen.adapters.web.dto.PeriodDTO;
 import com.queen.adapters.web.dto.FullPeriodRequest;
@@ -11,6 +12,7 @@ import com.queen.domain.DailyTracking;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,5 +57,13 @@ public class PeriodController {
 			FellaJwtAuthenticationToken token
 	) {
 		return periodService.getPeriods(token.getUserId());
+	}
+
+	@DeleteMapping(value = "/api/periods", produces = MediaType.APPLICATION_JSON_VALUE)
+	void deletePeriod(
+			final FellaJwtAuthenticationToken token,
+			final @Valid @RequestBody DeletePeriodsRequest deletePeriodRequest
+	) {
+		periodService.deletePeriods(deletePeriodRequest, token.getUserId());
 	}
 }
