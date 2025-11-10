@@ -20,7 +20,7 @@ public class PeriodsWithDailyMigraineExtractor implements ResultSetExtractor<Lis
 	public List<Period> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<UUID, Period> periods = new LinkedHashMap<>();
 		Map<UUID, List<Migraine>> migraines = new LinkedHashMap<>();
-		Map<UUID, List<DailyTracking>> trackings = new LinkedHashMap<>();
+		Map<UUID, DailyTracking> trackings = new LinkedHashMap<>();
 		while (rs.next()) {
 			UUID pid = rs.getObject("periodId", UUID.class);
 			var userId = rs.getObject("userId", UUID.class);
@@ -35,13 +35,7 @@ public class PeriodsWithDailyMigraineExtractor implements ResultSetExtractor<Lis
 			dailyTracking.setFlowLevel(flowLevel);
 			dailyTracking.setPeriodId(pid);
 
-			trackings.computeIfPresent(pid, (id, list) -> {
-				var dts = new ArrayList<>(list);
-				dts.add(dailyTracking);
-				return dts;
-			});
-
-			trackings.computeIfAbsent(pid, id -> List.of(dailyTracking));
+			trackings.computeIfAbsent(pid, id -> dailyTracking);
 
 			var migraineId = rs.getObject("migraineId", UUID.class);
 			if (migraineId != null) {

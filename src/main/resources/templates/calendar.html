@@ -31,21 +31,6 @@
                 <div class="py-1 text-center">Su</div>
             </div>
 
-<!--             Day cells (already includes leading/trailing blanks) -->
-<!--            <div class="mt-2 grid grid-cols-7 gap-1 text-sm">-->
-<!--                <div th:each="d : ${m.days}"-->
-<!--                     th:attr="data-date=|${year}-${#numbers.formatInteger(monthNum,2)}-${#numbers.formatInteger(d.dayOfMonth,2)}|"-->
-<!--                     th:onclick="|openModal(this.dataset.date)|"-->
-<!--                     th:class="${d.blank} ? 'h-9 rounded-lg border border-blue-900/40 bg-slate-900/40'-->
-<!--                                  : ('h-9 rounded-lg border px-0.5 flex items-center justify-center transition ' +-->
-<!--                                      (${d.tracked} ? 'bg-purple-950/60 border-purple-700/60 text-blue-100 ring-1 ring-purple-700/40 ' :-->
-<!--                                       (${d.weekend} ? 'bg-blue-900/40 border-blue-900/60 text-blue-200 ' :-->
-<!--                                                    'bg-slate-900/60 border-blue-900/60 text-blue-100 ')) +-->
-<!--                                      (${d.today} ? 'ring-2 ring-indigo-600/70 bg-indigo-800/70 text-white ' : '') +-->
-<!--                                      'hover:border-indigo-700 hover:bg-indigo-950/40')"-->
-<!--                     th:text="${d.blank} ? '' : ${d.dayOfMonth}">-->
-<!--                </div>-->
-<!--            </div>-->
             <div class="mt-2 grid grid-cols-7 gap-1 text-sm">
                 <div th:each="d : ${m.days}">
 
@@ -72,6 +57,7 @@
                          th:data-pain="${d.painLevel}"
                          th:data-flow="${d.flowLevel}"
                          th:data-tracked="${d.tracked}"
+                         th:data-pid="${d.periodId}"
 
                          th:onclick="'openModal(this)'"
                          th:text="${d.dayOfMonth}">
@@ -81,8 +67,7 @@
             </div>
 
     </div>
+    </div>
 </section>
 </body>
 </html>
-
-<!--th:if="${!d.blank}"-->

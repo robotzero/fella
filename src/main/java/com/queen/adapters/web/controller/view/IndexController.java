@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Controller
@@ -55,7 +56,10 @@ public class IndexController {
 			model.addAttribute("error", "Something went wrong");
 			return "calendar";
 		}
-		List<DailyTracking> periodDates = dto.stream().flatMap(d -> d.dailyTracking().stream()).toList();
+		List<DailyTracking> periodDates = dto.stream().map(d -> {
+			var dailyTracking = d.dailyTracking();
+			return dailyTracking.withPeriodId(d.periodId);
+		}).toList();
 
 		List<MonthVM> months = buildMonths(y, periodDates, ZoneId.systemDefault());
 
@@ -80,6 +84,18 @@ public class IndexController {
 		// Return a small snippet that replaces the modal with success feedback
 		model.addAttribute("message", "Saved successfully for " + trackingDate);
 		return "fragments/modal-success";
+	}
+
+	@PostMapping("/tracking/delete")
+	public String deleteTracking(
+			@RequestParam String periodId,
+			@RegisteredOAuth2AuthorizedClient("fella-webui") OAuth2AuthorizedClient client
+	) {
+		var token = client.getAccessToken().getTokenValue();
+		restClient.post().uri("api/periods/delete").accept(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer " + token)
+				.body(Map.of("periodIds", List.of(UUID.fromString(periodId)))).retrieve().body(Void.class);
+		return "index";
 	}
 
 //
@@ -144,7 +160,7 @@ public class IndexController {
 			int offset = iso - 1; // 0..6
 
 			// Leading blanks
-			for (int i = 0; i < offset; i++) cells.add(new DayCell(null, true, false, false, false, null, null));
+			for (int i = 0; i < offset; i++) cells.add(new DayCell(null, true, false, false, false, null, null, null));
 
 			// Actual days
 			for (int d = 1; d <= ym.lengthOfMonth(); d++) {
@@ -159,7 +175,7 @@ public class IndexController {
 			// Trailing blanks to complete rows
 			int total = cells.size();
 			int target = ((total + 6) / 7) * 7;
-			for (int i = total; i < target; i++) cells.add(new DayCell(null, true, false, false, false, null, null));
+			for (int i = total; i < target; i++) cells.add(new DayCell(null, true, false, false, false, null, null, null));
 
 			res.add(new MonthVM(ym.getMonth().name().charAt(0) + ym.getMonth().name().substring(1).toLowerCase(), cells));
 		}
@@ -168,18 +184,23 @@ public class IndexController {
 
 	// --- simple DTOs (replace with your real ones) -------------------------
 	public record PeriodDto(String periodId, String startDate, String endDate,
-							List<Migraine> migraine, List<DailyTracking> dailyTracking) {}
+							List<Migraine> migraine, DailyTracking dailyTracking) {}
 	public record Migraine(String migraineDate, int severityLevel, String description) {}
-	public record DailyTracking(int painLevel, int flowLevel, String trackingDate) {}
+	public record DailyTracking(int painLevel, int flowLevel, String trackingDate, String periodId) {
+		public DailyTracking withPeriodId(String periodId) {
+			return new DailyTracking(this.painLevel, this.flowLevel, this.trackingDate, periodId);
+		}
+	}
 
 	// --- View Model ---------------------------------------------------------
 	public record MonthVM(String name, List<DayCell> days) {}
-	public record DayCell(Integer dayOfMonth, boolean blank, boolean weekend, boolean today, boolean tracked, Integer painLevel, Integer flowLevel) {
+	public record DayCell(Integer dayOfMonth, boolean blank, boolean weekend, boolean today, boolean tracked, Integer painLevel, Integer flowLevel, String periodId) {
 		public static DayCell of(int d, boolean weekend, boolean today, DailyTracking trackingForThisDate) {
 			boolean tracked = trackingForThisDate != null;
 			Integer painLevel = tracked ? trackingForThisDate.painLevel() : null;
 			Integer flowLevel = tracked ? trackingForThisDate.flowLevel() : null;
-			return new DayCell(d, false, weekend, today, tracked, painLevel, flowLevel);
+			String periodId = tracked ? trackingForThisDate.periodId() : null;
+			return new DayCell(d, false, weekend, today, tracked, painLevel, flowLevel, periodId);
 		}
 	}
 }

@@ -53,9 +53,9 @@ public class PeriodService {
 		});
 		dt.setFlowLevel(dailyTracking.flowLevel());
 		dt.setPainLevel(dailyTracking.painLevel());
-		var dt1 = dailyTrackingPersistencePort.createDailyTracking(dt);
+		var createdDailyTracking = dailyTrackingPersistencePort.createDailyTracking(dt);
 
-		return periodMapper.mapToDTO(p, List.of(m.orElse(com.queen.infrastructure.persistence.Migraine.empty())), List.of(dt1));
+		return periodMapper.mapToDTO(p, List.of(m.orElse(com.queen.infrastructure.persistence.Migraine.empty())), createdDailyTracking);
 	}
 
 	@Transactional

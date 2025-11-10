@@ -22,7 +22,7 @@ public class Period implements Persistable<UUID> {
 	private List<Migraine> migraine;
 
 	@Transient
-	private List<DailyTracking> dailyTracking;
+	private DailyTracking dailyTracking;
 
 	@Transient
 	private Boolean isNew;
@@ -70,7 +70,7 @@ public class Period implements Persistable<UUID> {
 		this.migraine = migraine;
 	}
 
-	public void setDailyTracking(final List<DailyTracking> dailyTracking) {
+	public void setDailyTracking(final DailyTracking dailyTracking) {
 		this.dailyTracking = dailyTracking;
 	}
 
@@ -79,7 +79,7 @@ public class Period implements Persistable<UUID> {
 		return this;
 	}
 
-	public List<DailyTracking> getDailyTracking() {
+	public DailyTracking getDailyTracking() {
 		return dailyTracking;
 	}
 }

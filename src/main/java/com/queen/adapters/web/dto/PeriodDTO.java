@@ -17,6 +17,6 @@ public record PeriodDTO(
 		@JsonSerialize(using = LocalDateSerializer.class)
 		LocalDate date,
 		List<MigraineDTO> migraine,
-		List<DailyTrackingDTO> dailyTracking
+		DailyTrackingDTO dailyTracking
 ) {
 }

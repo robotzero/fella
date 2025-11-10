@@ -59,7 +59,7 @@ public class PeriodController {
 		return periodService.getPeriods(token.getUserId());
 	}
 
-	@DeleteMapping(value = "/api/periods", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/api/periods/delete", produces = MediaType.APPLICATION_JSON_VALUE)
 	void deletePeriod(
 			final FellaJwtAuthenticationToken token,
 			final @Valid @RequestBody DeletePeriodsRequest deletePeriodRequest

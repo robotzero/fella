@@ -8,6 +8,6 @@ import com.queen.infrastructure.persistence.Period;
 import java.util.List;
 
 public interface PeriodMapperPort {
-	PeriodDTO mapToDTO(final com.queen.infrastructure.persistence.Period period, final List<Migraine> migraine, final List<DailyTracking> dailyTracking);
+	PeriodDTO mapToDTO(final com.queen.infrastructure.persistence.Period period, final List<Migraine> migraine, final DailyTracking dailyTracking);
 	Period mapToPersistence(final com.queen.domain.Period period, final boolean isNew);
 }

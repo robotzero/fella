@@ -2,6 +2,7 @@ package com.queen.infrastructure.persistence;
 
 import com.queen.infrastructure.auth.repository.PeriodsWithDailyMigraineExtractor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -30,7 +31,8 @@ public interface PeriodRepository extends CrudRepository<@NotNull Period, @NotNu
 		WHERE p.user_id = :userId
 	""", resultSetExtractorClass = PeriodsWithDailyMigraineExtractor.class)
 	List<Period> findAllByUserId(final UUID userId);
-	@Query("""
+
+	@Query(value = """
 		SELECT p.*, m.* AS migraine, dt.* AS dailyTracking
 		FROM periods p
 		INNER JOIN daily_tracking dt ON p.period_id = dt.period_id
@@ -38,7 +40,9 @@ public interface PeriodRepository extends CrudRepository<@NotNull Period, @NotNu
 		WHERE p.period_id = :periodId
 	""")
 	Period findByIdAndByUserId(final UUID periodId);
-	@Query("""
+
+	@Modifying
+	@Query(value = """
 		DELETE FROM periods
 		WHERE period_id IN (:periodIds) AND user_id = :userId
 	""")

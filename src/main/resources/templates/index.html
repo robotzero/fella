@@ -236,6 +236,32 @@
 <!--</body>-->
 
 <!--</html>-->
+
+<!--        <div class="flex justify-between items-center pt-2">-->
+<!--            <button id="deleteBtn"-->
+<!--                    type="button"-->
+<!--                    class="hidden rounded-md border border-red-700 bg-red-700 px-4 py-2 text-white hover:bg-red-600 text-sm"-->
+<!--                    hx-post="/tracking/delete"-->
+<!--                    hx-target="#calendar"-->
+<!--                    hx-swap="innerHTML"-->
+<!--                    hx-on::afterRequest="closeModal()">-->
+<!--                Delete-->
+<!--            </button>-->
+
+<!--            <div class="flex gap-3">-->
+<!--                <button type="button" onclick="closeModal()"-->
+<!--                        class="rounded-md border border-blue-900/50 bg-slate-950/60 px-4 py-2 text-blue-200 hover:bg-slate-900">-->
+<!--                    Cancel-->
+<!--                </button>-->
+<!--                <button type="submit"-->
+<!--                        class="rounded-md border border-indigo-700 bg-indigo-700 px-4 py-2 text-white hover:bg-indigo-600">-->
+<!--                    Save-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
+
+
+
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -286,7 +312,8 @@
              hx-get="/calendar"
              hx-trigger="load"
              hx-target="#calendar"
-             hx-swap="innerHTML">
+             hx-swap="innerHTML"
+             hx-on::after-swap="closeModal()">
         <div class="text-blue-300/70">Loading…</div>
     </section>
 
@@ -343,31 +370,17 @@
                             class="rounded-md border border-indigo-700 bg-indigo-700 px-4 py-2 text-white hover:bg-indigo-600">
                         Save
                     </button>
+
+                    <button id="deleteBtn"
+                            type="button"
+                            class="hidden rounded-md border border-red-700 bg-red-700 px-4 py-2 text-white hover:bg-red-600 text-sm"
+                            hx-post="/tracking/delete"
+                            hx-target="#calendar"
+                            hx-swap="innerHTML">
+                        Delete
+                    </button>
                 </div>
             </form>
-        </div>
-
-        <div class="flex justify-between items-center pt-2">
-            <button id="deleteBtn"
-                    type="button"
-                    class="hidden rounded-md border border-red-700 bg-red-700 px-4 py-2 text-white hover:bg-red-600 text-sm"
-                    hx-post="/delete"
-                    hx-target="#calendar"
-                    hx-swap="innerHTML"
-                    hx-on::afterRequest="closeModal()">
-                Delete
-            </button>
-
-            <div class="flex gap-3">
-                <button type="button" onclick="closeModal()"
-                        class="rounded-md border border-blue-900/50 bg-slate-950/60 px-4 py-2 text-blue-200 hover:bg-slate-900">
-                    Cancel
-                </button>
-                <button type="submit"
-                        class="rounded-md border border-indigo-700 bg-indigo-700 px-4 py-2 text-white hover:bg-indigo-600">
-                    Save
-                </button>
-            </div>
         </div>
     </template>
 
@@ -404,6 +417,9 @@
             const isTracked = cellOrDate && cellOrDate.dataset
                 ? cellOrDate.dataset.tracked === 'true'
                 : false;
+            const periodId = cellOrDate && cellOrDate.dataset
+                ? cellOrDate.dataset.pid || ''
+                : '';
 
             const dateInput = document.getElementById('trackingDate');
             const painInput = document.getElementById('painLevel');
@@ -426,6 +442,7 @@
                     const vals = {};
                     if (dateStr) vals.date = dateStr;
                     if (yearHidden) vals.year = yearHidden.value;
+                    if (periodId) vals.periodId = periodId;
 
                     // htmx hx-vals expects JSON string
                     deleteBtn.setAttribute('hx-vals', JSON.stringify(vals));
@@ -449,12 +466,12 @@
 
     <script>
         // Tailwind class presets (match your calendar)
-        const baseCell =
+        var baseCell =
             "h-9 rounded-lg border px-0.5 flex items-center justify-center text-sm transition select-none";
-        const inactive =
+        var inactive =
             "bg-slate-900/60 border-blue-900/60 text-blue-100 hover:border-indigo-700 hover:bg-indigo-950/40";
         // Active styles — purple, like tracked days
-        const active =
+        var active =
             "bg-purple-950/60 border-purple-700/60 text-blue-100 ring-1 ring-purple-700/40";
 
         // Build a 1..10 picker inside container, syncing to hidden input
