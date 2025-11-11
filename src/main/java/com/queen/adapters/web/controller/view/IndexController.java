@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClient;
 
@@ -58,7 +59,7 @@ public class IndexController {
 		}
 		List<DailyTracking> periodDates = dto.stream().map(d -> {
 			var dailyTracking = d.dailyTracking();
-			return dailyTracking.withPeriodId(d.periodId);
+			return dailyTracking.withPeriodId(d.periodId).withMigraine(d.migraine.severityLevel());
 		}).toList();
 
 		List<MonthVM> months = buildMonths(y, periodDates, ZoneId.systemDefault());
@@ -74,10 +75,16 @@ public class IndexController {
 			@RequestParam int painLevel,
 			@RequestParam int flowLevel,
 			@RequestParam(required = false) int migraineLevel,
+			@RequestParam(required = false) String periodId,
 			@RegisteredOAuth2AuthorizedClient("fella-webui") OAuth2AuthorizedClient client,
 			Model model) {
 
 		var token = client.getAccessToken().getTokenValue();
+		if (periodId != null) {
+			System.out.println("EDITING EXISTING PERIOD IS NOT IMPLEMENTED YET");
+			model.addAttribute("message", "Saved successfully for " + trackingDate + ", but editing existing period is not implemented yet.");
+			return "fragments/modal-success";
+		}
 		restClient.post().uri("api/period").accept(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + token)
 				.body(FullPeriodRequest.fromUI(trackingDate, painLevel, flowLevel, migraineLevel)).retrieve().body(Void.class);
@@ -98,6 +105,16 @@ public class IndexController {
 		return "index";
 	}
 
+	@PutMapping("/tracking/edit/{periodId}")
+	public String editTracking(
+			@RequestParam String periodId,
+			@RegisteredOAuth2AuthorizedClient("fella-webui") OAuth2AuthorizedClient client,
+			Model model
+	) {
+		var token = client.getAccessToken().getTokenValue();
+		model.addAttribute("message", "Editing existing period is not implemented yet.");
+		return "fragments/modal-success";
+	}
 //
 //	@RequestMapping("/view/period/all")
 //	public String viewAllPeriods(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
@@ -160,7 +177,7 @@ public class IndexController {
 			int offset = iso - 1; // 0..6
 
 			// Leading blanks
-			for (int i = 0; i < offset; i++) cells.add(new DayCell(null, true, false, false, false, null, null, null));
+			for (int i = 0; i < offset; i++) cells.add(new DayCell(null, true, false, false, false, null, null, null, null));
 
 			// Actual days
 			for (int d = 1; d <= ym.lengthOfMonth(); d++) {
@@ -175,7 +192,7 @@ public class IndexController {
 			// Trailing blanks to complete rows
 			int total = cells.size();
 			int target = ((total + 6) / 7) * 7;
-			for (int i = total; i < target; i++) cells.add(new DayCell(null, true, false, false, false, null, null, null));
+			for (int i = total; i < target; i++) cells.add(new DayCell(null, true, false, false, false, null, null, null, null));
 
 			res.add(new MonthVM(ym.getMonth().name().charAt(0) + ym.getMonth().name().substring(1).toLowerCase(), cells));
 		}
@@ -183,24 +200,27 @@ public class IndexController {
 	}
 
 	// --- simple DTOs (replace with your real ones) -------------------------
-	public record PeriodDto(String periodId, String startDate, String endDate,
-							List<Migraine> migraine, DailyTracking dailyTracking) {}
-	public record Migraine(String migraineDate, int severityLevel, String description) {}
-	public record DailyTracking(int painLevel, int flowLevel, String trackingDate, String periodId) {
+	public record PeriodDto(String periodId, Migraine migraine, DailyTracking dailyTracking) {}
+	public record Migraine(String migraineDate, Integer severityLevel, String description) {}
+	public record DailyTracking(Integer painLevel, Integer flowLevel, String trackingDate, String periodId, Integer migraineLevel) {
 		public DailyTracking withPeriodId(String periodId) {
-			return new DailyTracking(this.painLevel, this.flowLevel, this.trackingDate, periodId);
+			return new DailyTracking(this.painLevel, this.flowLevel, this.trackingDate, periodId, this.migraineLevel);
+		}
+		public DailyTracking withMigraine(Integer migraineLevel) {
+			return new DailyTracking(this.painLevel, this.flowLevel, this.trackingDate, this.periodId, migraineLevel);
 		}
 	}
 
 	// --- View Model ---------------------------------------------------------
 	public record MonthVM(String name, List<DayCell> days) {}
-	public record DayCell(Integer dayOfMonth, boolean blank, boolean weekend, boolean today, boolean tracked, Integer painLevel, Integer flowLevel, String periodId) {
+	public record DayCell(Integer dayOfMonth, boolean blank, boolean weekend, boolean today, boolean tracked, Integer painLevel, Integer flowLevel, String periodId, Integer migraineLevel) {
 		public static DayCell of(int d, boolean weekend, boolean today, DailyTracking trackingForThisDate) {
 			boolean tracked = trackingForThisDate != null;
 			Integer painLevel = tracked ? trackingForThisDate.painLevel() : null;
 			Integer flowLevel = tracked ? trackingForThisDate.flowLevel() : null;
 			String periodId = tracked ? trackingForThisDate.periodId() : null;
-			return new DayCell(d, false, weekend, today, tracked, painLevel, flowLevel, periodId);
+			Integer migraineLevel = tracked ? trackingForThisDate.migraineLevel() : null;
+			return new DayCell(d, false, weekend, today, tracked, painLevel, flowLevel, periodId, migraineLevel);
 		}
 	}
 }

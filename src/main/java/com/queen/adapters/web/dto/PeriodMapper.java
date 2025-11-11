@@ -5,7 +5,6 @@ import com.queen.domain.PeriodMapperPort;
 import com.queen.infrastructure.persistence.DailyTracking;
 import com.queen.infrastructure.persistence.Migraine;
 
-import java.util.List;
 import java.util.UUID;
 
 public class PeriodMapper implements PeriodMapperPort {
@@ -36,7 +35,7 @@ public class PeriodMapper implements PeriodMapperPort {
 	}
 
 	@Override
-	public PeriodDTO mapToDTO(final com.queen.infrastructure.persistence.Period period, final List<Migraine> migraine, final DailyTracking dailyTracking) {
+	public PeriodDTO mapToDTO(final com.queen.infrastructure.persistence.Period period, final Migraine migraine, final DailyTracking dailyTracking) {
 		if (period != null) {
 			return new PeriodDTO(
 					period.getId(),

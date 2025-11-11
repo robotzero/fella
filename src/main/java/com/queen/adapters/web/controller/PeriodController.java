@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,5 +66,14 @@ public class PeriodController {
 			final @Valid @RequestBody DeletePeriodsRequest deletePeriodRequest
 	) {
 		periodService.deletePeriods(deletePeriodRequest, token.getUserId());
+	}
+
+	@PutMapping(value = "/api/periods/{periodId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	void editPeriod(
+			final FellaJwtAuthenticationToken token,
+			final @Valid @RequestBody DeletePeriodsRequest deletePeriodRequest
+	) {
+		System.out.println("Editing period is not implemented yet!!!!!!!!!!!!!!!");
+//		periodService.deletePeriods(deletePeriodRequest, token.getUserId());
 	}
 }

@@ -19,7 +19,7 @@ public class PeriodsWithDailyMigraineExtractor implements ResultSetExtractor<Lis
 	@Override
 	public List<Period> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<UUID, Period> periods = new LinkedHashMap<>();
-		Map<UUID, List<Migraine>> migraines = new LinkedHashMap<>();
+		Map<UUID, Migraine> migraines = new LinkedHashMap<>();
 		Map<UUID, DailyTracking> trackings = new LinkedHashMap<>();
 		while (rs.next()) {
 			UUID pid = rs.getObject("periodId", UUID.class);
@@ -45,12 +45,7 @@ public class PeriodsWithDailyMigraineExtractor implements ResultSetExtractor<Lis
 				migraine.setId(migraineId);
 				migraine.setSeverityLevel(migraineSeverity);
 
-				migraines.computeIfPresent(pid, (id, list) -> {
-						var m = new ArrayList<>(list);
-						m.add(migraine);
-						return m;
-				});
-				migraines.computeIfAbsent(pid, id -> List.of(migraine));
+				migraines.computeIfAbsent(pid, id -> migraine);
 			}
 			periods.computeIfAbsent(pid, id -> {
 				try {

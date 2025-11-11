@@ -55,7 +55,7 @@ public class PeriodService {
 		dt.setPainLevel(dailyTracking.painLevel());
 		var createdDailyTracking = dailyTrackingPersistencePort.createDailyTracking(dt);
 
-		return periodMapper.mapToDTO(p, List.of(m.orElse(com.queen.infrastructure.persistence.Migraine.empty())), createdDailyTracking);
+		return periodMapper.mapToDTO(p, m.orElse(com.queen.infrastructure.persistence.Migraine.empty()), createdDailyTracking);
 	}
 
 	@Transactional

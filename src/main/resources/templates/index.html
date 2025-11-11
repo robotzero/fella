@@ -327,12 +327,12 @@
             <h2 class="mb-4 text-lg font-semibold text-blue-100">Daily Tracking</h2>
 
             <form id="trackingForm"
-                  hx-post="/tracking/save"
                   hx-target="#modal-body"
                   hx-swap="outerHTML"
                   class="space-y-4">
 
                 <input type="hidden" name="trackingDate" id="trackingDate"/>
+                <input type="hidden" name="periodId" id="periodId"/>
 
                 <!-- Pain -->
                 <div>
@@ -404,6 +404,8 @@
             ensureFormInModal();
 
             const modal = document.getElementById('modal');
+            const form  = document.getElementById('trackingForm');
+
             const dateStr = typeof cellOrDate === 'string'
                 ? cellOrDate
                 : (cellOrDate.dataset.date || '');
@@ -420,17 +422,30 @@
             const periodId = cellOrDate && cellOrDate.dataset
                 ? cellOrDate.dataset.pid || ''
                 : '';
-
+            const migraineVal = cellOrDate && cellOrDate.dataset
+                ? parseInt(cellOrDate.dataset.migraine || '0', 10)
+                : 0;
             const dateInput = document.getElementById('trackingDate');
             const painInput = document.getElementById('painLevel');
             const flowInput = document.getElementById('flowLevel');
+            const migraineInput = document.getElementById('migraineLevel');
+            const periodInput = document.getElementById('periodId');
 
             if (dateInput) dateInput.value = dateStr;
-            if (painInput) painInput.value = painVal > 0 ? String(painVal) : '';
-            if (flowInput) flowInput.value = flowVal > 0 ? String(flowVal) : '';
+            if (painInput) painInput.value = painVal > 0 ? String(painVal) : null;
+            if (flowInput) flowInput.value = flowVal > 0 ? String(flowVal) : null;
+            if (migraineInput) migraineInput.value = migraineVal > 0 ? String(migraineVal) : null;
+            if (periodInput) periodInput.value = periodId;
 
             // Rebuild the 1..10 button pickers with these values
             initPickers(); // from previous step
+
+            // Dynamically set form action for HTMX
+            if (periodId && periodId.trim() !== "") {
+                form.setAttribute('hx-put', `/tracking/edit/${periodId}`);
+            } else {
+                form.setAttribute('hx-post', '/tracking/save');
+            }
 
             // Configure Delete button based on isTracked
             const deleteBtn = document.getElementById('deleteBtn');

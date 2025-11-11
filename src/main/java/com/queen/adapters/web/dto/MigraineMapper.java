@@ -3,7 +3,6 @@ package com.queen.adapters.web.dto;
 import com.queen.domain.Migraine;
 import com.queen.domain.MigraineMapperPort;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,13 +12,11 @@ public class MigraineMapper implements MigraineMapperPort {
 	}
 
 	@Override
-	public List<MigraineDTO> mapToDTO(final List<com.queen.infrastructure.persistence.Migraine> migraine) {
+	public MigraineDTO mapToDTO(final com.queen.infrastructure.persistence.Migraine migraine) {
 		if (migraine == null) {
 			return null;
 		}
-		return migraine.stream().map(m -> {
-			return new MigraineDTO(m.getMigraineDate(), m.getSeverityLevel(), m.getDescription());
-		}).toList();
+		return new MigraineDTO(migraine.getMigraineDate(), migraine.getSeverityLevel(), migraine.getDescription());
 	}
 
 	@Override

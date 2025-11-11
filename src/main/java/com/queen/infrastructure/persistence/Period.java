@@ -7,7 +7,6 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Table(name = "periods")
@@ -19,7 +18,7 @@ public class Period implements Persistable<UUID> {
 	private LocalDate date;
 
 	@Transient
-	private List<Migraine> migraine;
+	private Migraine migraine;
 
 	@Transient
 	private DailyTracking dailyTracking;
@@ -62,11 +61,11 @@ public class Period implements Persistable<UUID> {
 		return this;
 	}
 
-	public List<Migraine> getMigraine() {
+	public Migraine getMigraine() {
 		return migraine;
 	}
 
-	public void setMigraine(final List<Migraine> migraine) {
+	public void setMigraine(final Migraine migraine) {
 		this.migraine = migraine;
 	}
 
