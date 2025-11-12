@@ -16,11 +16,31 @@ public class PeriodMapper implements PeriodMapperPort {
 		this.dailyTrackingMapper = dailyTrackingMapper;
 	}
 
+	@Override
 	public Period mapToDomain(final UUID userId, final PeriodRequest periodRequest) {
 		switch (periodRequest) {
 			case FullPeriodRequest fullPeriodRequest -> {
 				return new Period(
 						UUID.randomUUID(),
+						userId,
+						fullPeriodRequest.startDateOrNow()
+				);
+			} case EndPeriodRequest endPeriodRequest -> {
+				return new Period(
+						endPeriodRequest.periodIdToUUID(),
+						userId,
+						endPeriodRequest.endDateOrNow()
+				);
+			}
+		}
+	}
+
+	@Override
+	public Period mapToDomainUpdate(final UUID periodID, final UUID userId, final PeriodRequest periodRequest) {
+		switch (periodRequest) {
+			case FullPeriodRequest fullPeriodRequest -> {
+				return new Period(
+						periodID,
 						userId,
 						fullPeriodRequest.startDateOrNow()
 				);

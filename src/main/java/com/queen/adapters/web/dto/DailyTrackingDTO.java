@@ -7,8 +7,10 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record DailyTrackingDTO(
+		UUID dailyTrackingId,
 		Integer painLevel,
 		Integer flowLevel,
 		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")

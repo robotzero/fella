@@ -327,12 +327,16 @@
             <h2 class="mb-4 text-lg font-semibold text-blue-100">Daily Tracking</h2>
 
             <form id="trackingForm"
+                  hx-post="/tracking/save"
                   hx-target="#modal-body"
                   hx-swap="outerHTML"
+                  hx-on="htmx:configRequest: configureEdit(event)"
                   class="space-y-4">
 
                 <input type="hidden" name="trackingDate" id="trackingDate"/>
                 <input type="hidden" name="periodId" id="periodId"/>
+                <input type="hidden" name="migraineId" id="migraineId"/>
+                <input type="hidden" name="trackingId" id="trackingId"/>
 
                 <!-- Pain -->
                 <div>
@@ -404,7 +408,6 @@
             ensureFormInModal();
 
             const modal = document.getElementById('modal');
-            const form  = document.getElementById('trackingForm');
 
             const dateStr = typeof cellOrDate === 'string'
                 ? cellOrDate
@@ -425,27 +428,31 @@
             const migraineVal = cellOrDate && cellOrDate.dataset
                 ? parseInt(cellOrDate.dataset.migraine || '0', 10)
                 : 0;
+            const migraineId = cellOrDate && cellOrDate.dataset
+                ? cellOrDate.dataset.migraineId || ''
+                : '';
+            const trackingId = cellOrDate && cellOrDate.dataset ?
+                cellOrDate.dataset.trackingId || ''
+                : '';
+
             const dateInput = document.getElementById('trackingDate');
             const painInput = document.getElementById('painLevel');
             const flowInput = document.getElementById('flowLevel');
             const migraineInput = document.getElementById('migraineLevel');
             const periodInput = document.getElementById('periodId');
+            const migraineIdInput = document.getElementById('migraineId');
+            const trackingIdInput = document.getElementById('trackingId');
 
             if (dateInput) dateInput.value = dateStr;
             if (painInput) painInput.value = painVal > 0 ? String(painVal) : null;
             if (flowInput) flowInput.value = flowVal > 0 ? String(flowVal) : null;
             if (migraineInput) migraineInput.value = migraineVal > 0 ? String(migraineVal) : null;
             if (periodInput) periodInput.value = periodId;
+            if (migraineIdInput) migraineIdInput.value = migraineId;
+            if (trackingId) trackingIdInput.value = trackingId;
 
             // Rebuild the 1..10 button pickers with these values
             initPickers(); // from previous step
-
-            // Dynamically set form action for HTMX
-            if (periodId && periodId.trim() !== "") {
-                form.setAttribute('hx-put', `/tracking/edit/${periodId}`);
-            } else {
-                form.setAttribute('hx-post', '/tracking/save');
-            }
 
             // Configure Delete button based on isTracked
             const deleteBtn = document.getElementById('deleteBtn');
@@ -538,6 +545,15 @@
             buildLevelPicker("painPicker", "painLevel");
             buildLevelPicker("flowPicker", "flowLevel", 5);
             buildLevelPicker("migrainePicker", "migraineLevel");
+        }
+
+        function configureEdit(e) {
+            if (e.target.id !== 'trackingForm') return;
+            const periodId = (document.getElementById('periodId').value || '').trim();
+            if (periodId) {
+                e.detail.path = `/tracking/edit/${periodId}`; // change URL
+                e.detail.verb = 'PUT';                        // change method
+            }
         }
 
         // If you’re using the template approach from earlier:

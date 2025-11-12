@@ -15,7 +15,7 @@ public class DailyTrackingMapper implements DailyTrackingMapperPort {
 		if (dailyTracking == null) {
 			return null;
 		}
-		return new DailyTrackingDTO(dailyTracking.getPainLevel(), dailyTracking.getFlowLevel(), dailyTracking.getTrackingDate());
+		return new DailyTrackingDTO(dailyTracking.getId(), dailyTracking.getPainLevel(), dailyTracking.getFlowLevel(), dailyTracking.getTrackingDate());
 	}
 
 	@Override

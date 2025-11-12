@@ -63,6 +63,21 @@ public class PeriodService {
 		periodPersistencePort.deletePeriods(deletePeriodsRequest.periodIds(), userId);
 	}
 
+	@Transactional
+	public PeriodDTO updatePeriod(final Period period, final Migraine migraine, final DailyTracking dailyTracking) {
+		var dt = dailyTrackingMapper.mapToPersistence(dailyTracking);
+		dt.setPeriodId(period.periodId());
+		var m = migraineMapper.mapToPersistence(migraine);
+//		m.ifPresent(mm -> {
+//			migrainePersistencePort.updateMigraine(mm);
+//			dt.setMigraineId(mm.getId());
+//		});
+		dt.setFlowLevel(dailyTracking.flowLevel());
+		dt.setPainLevel(dailyTracking.painLevel());
+//		var updatedDailyTracking = dailyTrackingPersistencePort.updateDailyTracking(dt);
+		return null;
+	}
+
 	public List<PeriodDTO> getPeriods(final UUID userId) {
 		return periodPersistencePort.getPeriods(userId).stream().map(p -> {
 			return periodMapper.mapToDTO(p, p.getMigraine(), p.getDailyTracking());

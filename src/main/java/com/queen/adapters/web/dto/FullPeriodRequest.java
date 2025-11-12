@@ -14,6 +14,7 @@ public record FullPeriodRequest(
 	public LocalDate startDateOrNow() {
 		return date.orElse(LocalDate.now());
 	}
+
 	public static FullPeriodRequest fromUI(LocalDate trackingDate, Integer painLevel, Integer flowLevel, Integer migraineLevel) {
 		var migraineRequest = Optional.of(migraineLevel).filter(m -> m > 0).map(m -> new MigraineRequest(
 				Optional.of(trackingDate),

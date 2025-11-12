@@ -16,7 +16,7 @@ public class MigraineMapper implements MigraineMapperPort {
 		if (migraine == null) {
 			return null;
 		}
-		return new MigraineDTO(migraine.getMigraineDate(), migraine.getSeverityLevel(), migraine.getDescription());
+		return new MigraineDTO(migraine.getMigraineDate(), migraine.getId(), migraine.getSeverityLevel(), migraine.getDescription());
 	}
 
 	@Override
