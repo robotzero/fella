@@ -429,10 +429,10 @@
                 ? parseInt(cellOrDate.dataset.migraine || '0', 10)
                 : 0;
             const migraineId = cellOrDate && cellOrDate.dataset
-                ? cellOrDate.dataset.migraineId || ''
+                ? cellOrDate.dataset.migraineid || ''
                 : '';
             const trackingId = cellOrDate && cellOrDate.dataset ?
-                cellOrDate.dataset.trackingId || ''
+                cellOrDate.dataset.trackingid || ''
                 : '';
 
             const dateInput = document.getElementById('trackingDate');
@@ -449,7 +449,7 @@
             if (migraineInput) migraineInput.value = migraineVal > 0 ? String(migraineVal) : null;
             if (periodInput) periodInput.value = periodId;
             if (migraineIdInput) migraineIdInput.value = migraineId;
-            if (trackingId) trackingIdInput.value = trackingId;
+            if (trackingIdInput) trackingIdInput.value = trackingId;
 
             // Rebuild the 1..10 button pickers with these values
             initPickers(); // from previous step

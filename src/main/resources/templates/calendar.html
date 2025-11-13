@@ -33,7 +33,6 @@
 
             <div class="mt-2 grid grid-cols-7 gap-1 text-sm">
                 <div th:each="d : ${m.days}">
-
                     <!-- Blank cell -->
                     <div th:if="${d.blank}"
                          class="h-9 rounded-lg border border-blue-900/40 bg-slate-900/40">
@@ -59,9 +58,8 @@
                          th:data-tracked="${d.tracked}"
                          th:data-pid="${d.periodId}"
                          th:data-migraine="${d.migraineLevel}"
-                         th:data-migraineId="${d.migraineId}"
-                         th:data-trackingId="${d.trackingId}"
-
+                         th:data-migraineid="${d.migraineId}"
+                         th:data-trackingid="${d.trackingId}"
                          th:onclick="'openModal(this)'"
                          th:text="${d.dayOfMonth}">
                     </div>

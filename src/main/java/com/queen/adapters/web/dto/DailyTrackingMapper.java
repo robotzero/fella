@@ -3,12 +3,11 @@ package com.queen.adapters.web.dto;
 import com.queen.domain.DailyTracking;
 import com.queen.domain.DailyTrackingMapperPort;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public class DailyTrackingMapper implements DailyTrackingMapperPort {
-	public DailyTracking mapToDomain(final UUID userId, final UUID trackingId, final DailyTrackingRequest dt) {
-		return new DailyTracking(Optional.of(trackingId), userId, dt.trackingDateOrNow(), dt.painLevelOrDefault(), dt.flowLevelOrDefault());
+	public DailyTracking mapToDomain(final UUID userId, final DailyTrackingRequest dt) {
+		return new DailyTracking(dt.trackingId(), userId, dt.trackingDateOrNow(), dt.painLevelOrDefault(), dt.flowLevelOrDefault());
 	}
 
 	@Override

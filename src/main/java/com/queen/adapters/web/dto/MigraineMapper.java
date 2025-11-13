@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class MigraineMapper implements MigraineMapperPort {
 	public Migraine mapToDomain(final UUID userId, MigraineRequest request) {
-		return new Migraine(userId, request.migraineDateOrNow(), request.severityLevelOrDefault(), request.description().orElse(null));
+		return new Migraine(request.migraineId(), userId, request.migraineDateOrNow(), request.severityLevelOrDefault(), request.description().orElse(null));
 	}
 
 	@Override

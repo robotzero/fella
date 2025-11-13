@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.Nulls;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 public record FullPeriodRequest(
 		@JsonSetter(nulls = Nulls.AS_EMPTY) Optional<LocalDate> date,
@@ -17,6 +18,7 @@ public record FullPeriodRequest(
 
 	public static FullPeriodRequest fromUI(LocalDate trackingDate, Integer painLevel, Integer flowLevel, Integer migraineLevel) {
 		var migraineRequest = Optional.of(migraineLevel).filter(m -> m > 0).map(m -> new MigraineRequest(
+				Optional.empty(),
 				Optional.of(trackingDate),
 				Optional.of(migraineLevel),
 				Optional.empty()
@@ -28,6 +30,28 @@ public record FullPeriodRequest(
 				Optional.of(flowLevel),
 				Optional.empty(),
 				Optional.empty()
+		));
+		return new FullPeriodRequest(
+				Optional.of(trackingDate),
+				migraineRequest,
+				dailyTrackingRequest
+		);
+	}
+
+	public static FullPeriodRequest fromUIEdit(LocalDate trackingDate, Integer painLevel, Integer flowLevel, Integer migraineLevel, UUID trackingId, UUID migraineId) {
+		var migraineRequest = Optional.of(migraineLevel).filter(m -> m > 0).map(m -> new MigraineRequest(
+				Optional.of(migraineId),
+				Optional.of(trackingDate),
+				Optional.of(migraineLevel),
+				Optional.empty()
+		));
+		Optional<DailyTrackingRequest> dailyTrackingRequest = Optional.of(new DailyTrackingRequest(
+				Optional.empty(),
+				Optional.of(trackingDate),
+				Optional.of(painLevel),
+				Optional.of(flowLevel),
+				Optional.empty(),
+				Optional.of(trackingId)
 		));
 		return new FullPeriodRequest(
 				Optional.of(trackingDate),

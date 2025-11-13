@@ -12,17 +12,16 @@ import com.queen.domain.DailyTracking;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -53,7 +52,7 @@ public class PeriodController {
 		final var period = periodMapper.mapToDomain(token.getUserId(), periodRequest);
 		final var migraine = periodRequest.migraine().map(m -> migraineMapper.mapToDomain(token.getUserId(), m));
 		final var dailyTracking = periodRequest.dailyTracking().map(d -> dailyTrackingMapper.mapToDomain(token.getUserId(), d));
-		return periodService.createPeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(token.getUserId(), LocalDate.now(), 0, 0)));
+		return periodService.createPeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(Optional.empty(), token.getUserId(), LocalDate.now(), 0, 0)));
 	}
 
 	@GetMapping(value = "/api/period/all", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,6 +79,6 @@ public class PeriodController {
 		final var period = periodMapper.mapToDomainUpdate(periodId, token.getUserId(), periodRequest);
 		final var migraine = periodRequest.migraine().map(m -> migraineMapper.mapToDomain(token.getUserId(), m));
 		final var dailyTracking = periodRequest.dailyTracking().map(d -> dailyTrackingMapper.mapToDomain(token.getUserId(), d));
-		return periodService.updatePeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(token.getUserId(), LocalDate.now(), 0, 0)));
+		return periodService.updatePeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(Optional.empty(), token.getUserId(), LocalDate.now(), 0, 0)));
 	}
 }

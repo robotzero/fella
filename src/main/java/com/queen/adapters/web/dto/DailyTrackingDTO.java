@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public record DailyTrackingDTO(
-		UUID dailyTrackingId,
+		UUID trackingId,
 		Integer painLevel,
 		Integer flowLevel,
 		@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")

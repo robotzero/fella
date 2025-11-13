@@ -12,7 +12,7 @@ public record DailyTrackingRequest(@JsonSetter(nulls = Nulls.AS_EMPTY) Optional<
 								   @JsonSetter(nulls = Nulls.AS_EMPTY) Optional<Integer> painLevel,
 								   @JsonSetter(nulls = Nulls.AS_EMPTY) Optional<Integer> flowLevel,
 								   @JsonSetter(nulls = Nulls.AS_EMPTY) Optional<UUID> moodId,
-								   @JsonSetter(nulls = Nulls.AS_EMPTY) Optional<UUID> migraineId
+								   @JsonSetter(nulls = Nulls.AS_EMPTY) Optional<UUID> trackingId
 ) {
 	public LocalDate trackingDateOrNow() {
 		return trackingDate.orElse(LocalDate.now());

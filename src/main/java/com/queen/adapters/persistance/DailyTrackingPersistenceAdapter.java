@@ -15,4 +15,9 @@ public class DailyTrackingPersistenceAdapter implements DailyTrackingPersistence
 	public DailyTracking createDailyTracking(final DailyTracking dailyTracking) {
 		return dailyTrackingRepository.save(dailyTracking);
 	}
+
+	@Override
+	public void updateDailyTracking(DailyTracking dailyTracking) {
+		dailyTrackingRepository.updateDailyTracking(dailyTracking);
+	}
 }

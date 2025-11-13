@@ -76,7 +76,6 @@ public class IndexController {
 			@RequestParam int painLevel,
 			@RequestParam int flowLevel,
 			@RequestParam(required = false) int migraineLevel,
-			@RequestParam(required = false) String periodId,
 			@RegisteredOAuth2AuthorizedClient("fella-webui") OAuth2AuthorizedClient client,
 			Model model) {
 
@@ -107,48 +106,20 @@ public class IndexController {
 			@RequestParam int painLevel,
 			@RequestParam int flowLevel,
 			@RequestParam(required = false) int migraineLevel,
+			@RequestParam(required = false) String trackingId,
+			@RequestParam(required = false) String migraineId,
 			@PathVariable String periodId,
 			@RegisteredOAuth2AuthorizedClient("fella-webui") OAuth2AuthorizedClient client
 	) {
 		var token = client.getAccessToken().getTokenValue();
-		var request = FullPeriodRequest.fromUI(trackingDate, painLevel, flowLevel, migraineLevel);
+		var trackingIdFinal = trackingId.isEmpty() ? null : UUID.fromString(trackingId);
+		var migraineIdFinal = migraineId.isEmpty() ? null : UUID.fromString(migraineId);
+		var request = FullPeriodRequest.fromUIEdit(trackingDate, painLevel, flowLevel, migraineLevel, trackingIdFinal, migraineIdFinal);
 		restClient.put().uri("api/periods/" + periodId).accept(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + token)
 				.body(request).retrieve().body(Void.class);
 		return "index";
 	}
-//
-//	@RequestMapping("/view/period/all")
-//	public String viewAllPeriods(Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
-//		String token = authorizedClient.getAccessToken().getTokenValue();
-//		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//		System.out.println("token: " + token);
-//		return "index";
-//	}
-//
-//	@GetMapping("/view/period/end")
-//	public Mono<String> viewEndPeriod(
-//			Model model,
-//			@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
-//			@RequestParam("id") UUID periodId,
-//			@RequestParam(value = "endDate", required = false) LocalDate endDate
-//	) {
-//		String token = authorizedClient.getAccessToken().getTokenValue();
-//		final var request = new EndPeriodRequest(periodId.toString(), Optional.of(LocalDate.now()));
-//		return webClient.put()
-//				.uri("/api/period/end")
-//				.body(Mono.just(request), EndPeriodRequest.class)
-//				.header("Authorization", "Bearer " + token)
-//				.retrieve()
-//				.onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), response -> Mono.error(new RuntimeException(response.toString())))
-//				.bodyToFlux(PeriodDTO.class)
-//				.collectList()
-//				.filter(periods -> !periods.isEmpty())
-//				.map(period -> {
-//					model.addAttribute("period", period.getFirst());
-//					return "fragments/period-item";
-//				});
-//	}
 
 	@GetMapping("/")
 	public String viewPeriod(Model model, Principal principal, Authentication authentication, @RegisteredOAuth2AuthorizedClient("fella-webui") OAuth2AuthorizedClient authorizedClient) {

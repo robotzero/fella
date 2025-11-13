@@ -17,4 +17,9 @@ public class MigrainePersistenceAdapter implements MigrainePersistencePort {
 	public Migraine createMigraine(final Migraine migraine) {
 		return migraineRepository.save(migraine);
 	}
+
+	@Override
+	public void updateMigraine(Migraine migraine) {
+		migraineRepository.updateMigraine(migraine);
+	}
 }
