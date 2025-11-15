@@ -41,16 +41,23 @@
                     <!-- Real day cell -->
                     <div th:if="${!d.blank}"
                          th:class="${'cursor-pointer h-9 rounded-lg border px-0.5 flex items-center justify-center transition ' +
-                   (d.tracked ?
-                      'bg-purple-950/60 border-purple-700/60 text-blue-100 ring-1 ring-purple-700/40 ' :
-                      (d.weekend ?
-                          'bg-blue-900/40 border-blue-900/60 text-blue-200 ' :
-                          'bg-slate-900/60 border-blue-900/60 text-blue-100 ')
-                   ) +
-                   (d.today ?
-                      'ring-2 ring-indigo-600/70 bg-indigo-800/70 text-white ' : ''
-                   ) +
-                   'hover:border-indigo-700 hover:bg-indigo-950/40'}"
+                   (
+         (d.periodId != null and d.migraineId != null) ?
+           'bg-red-950/60 border-red-700/60 text-red-100 ring-1 ring-red-300/70 ' :
+         (d.periodId != null) ?
+           'bg-pink-700/70 border-pink-400/70 text-white ring-1 ring-pink-300/70  ' :
+         (d.migraineId != null) ?
+           'bg-green-950/60 border-green-700/60 text-green-100 ring-1 ring-green-300/70 ' :
+         (d.tracked) ?
+           'bg-purple-950/60 border-purple-700/60 text-blue-100 ring-1 ring-purple-700/40 ' :
+         (d.weekend) ?
+           'bg-blue-900/40 border-blue-900/60 text-blue-200 ' :
+           'bg-slate-900/60 border-blue-900/60 text-blue-100 '
+       ) +
+       (d.today ?
+          'ring-2 ring-indigo-600/70 bg-indigo-800/70 text-white ' : ''
+       ) +
+       'hover:border-indigo-700 hover:bg-indigo-950/40'}"
 
                          th:data-date="${year + '-' + #numbers.formatInteger(monthNum, 2) + '-' + #numbers.formatInteger(d.dayOfMonth, 2)}"
                          th:data-pain="${d.painLevel}"

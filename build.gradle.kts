@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 group = "com.queen"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_25
@@ -5,7 +7,6 @@ java.sourceCompatibility = JavaVersion.VERSION_25
 plugins {
     java
     id("org.springframework.boot") version "4.0.0-RC2"
-    id("io.spring.dependency-management") version "1.1.7"
 }
 
 springBoot {
@@ -32,6 +33,8 @@ configurations {
 }
 
 dependencies {
+    // Import the BOM that matches your Boot plugin version
+    implementation(platform(SpringBootPlugin.BOM_COORDINATES))
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")

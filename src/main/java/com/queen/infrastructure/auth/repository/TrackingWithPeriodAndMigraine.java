@@ -1,8 +1,8 @@
 package com.queen.infrastructure.auth.repository;
 
-import com.queen.infrastructure.persistence.DailyTracking;
 import com.queen.infrastructure.persistence.Migraine;
 import com.queen.infrastructure.persistence.Period;
+import com.queen.infrastructure.persistence.Tracking;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -14,27 +14,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class PeriodsWithDailyMigraineExtractor implements ResultSetExtractor<List<Period>> {
+public class TrackingWithPeriodAndMigraine implements ResultSetExtractor<List<Tracking>> {
 	@Override
-	public List<Period> extractData(ResultSet rs) throws SQLException, DataAccessException {
+	public List<Tracking> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<UUID, Period> periods = new LinkedHashMap<>();
 		Map<UUID, Migraine> migraines = new LinkedHashMap<>();
-		Map<UUID, DailyTracking> trackings = new LinkedHashMap<>();
+		Map<UUID, Tracking> trackings = new LinkedHashMap<>();
 		while (rs.next()) {
-			UUID pid = rs.getObject("periodId", UUID.class);
+			UUID pid = rs.getObject("trackingId", UUID.class);
 			var userId = rs.getObject("userId", UUID.class);
 
-			var dailyTrackingId = rs.getObject("trackingId", UUID.class);
+			var periodId = rs.getObject("periodId", UUID.class);
 			var dailyTrackingDate = rs.getObject("trackingDate", LocalDate.class);
 			var flowLevel = rs.getInt("flowLevel");
 			var painLevel = rs.getInt("painLevel");
-			var dailyTracking = new DailyTracking(userId, dailyTrackingDate, false);
-			dailyTracking.setId(dailyTrackingId);
-			dailyTracking.setPainLevel(painLevel);
-			dailyTracking.setFlowLevel(flowLevel);
-			dailyTracking.setPeriodId(pid);
+			var tracking = new Tracking(userId, dailyTrackingDate, false);
+			tracking.setId(pid);
+			tracking.setPainLevel(painLevel);
+			tracking.setFlowLevel(flowLevel);
 
-			trackings.computeIfAbsent(pid, id -> dailyTracking);
+			trackings.computeIfAbsent(pid, id -> tracking);
 
 			var migraineId = rs.getObject("migraineId", UUID.class);
 			if (migraineId != null) {
@@ -49,22 +48,21 @@ public class PeriodsWithDailyMigraineExtractor implements ResultSetExtractor<Lis
 			periods.computeIfAbsent(pid, id -> {
 				try {
 					var date = rs.getObject("date", LocalDate.class);
-					Period np = new Period(id, userId, date);
-					np.setId(id);
-					np.setCycleLength(rs.getInt("cycleLength"));
-					return np;
+					Period p = new Period(periodId, userId, date);
+					p.setId(periodId);
+					return p;
 				} catch (Exception e) {
 					//@TODO proper exception
 					throw new RuntimeException(e);
 				}
 			});
-			periods.forEach((p, d) -> {
-				var dts = trackings.get(p);
-				d.setDailyTracking(dts);
-				var m = migraines.get(p);
+			trackings.forEach((i, d) -> {
+				var p = periods.get(i);
+				var m = migraines.get(i);
 				d.setMigraine(m);
+				d.setPeriod(p);
 			});
 		}
-		return periods.values().stream().toList();
+		return trackings.values().stream().toList();
 	}
 }

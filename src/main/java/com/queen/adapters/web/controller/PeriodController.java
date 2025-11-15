@@ -49,9 +49,13 @@ public class PeriodController {
 			final FellaJwtAuthenticationToken token,
 			final @Valid @RequestBody FullPeriodRequest periodRequest
 	) {
-		final var period = periodMapper.mapToDomain(token.getUserId(), periodRequest);
 		final var migraine = periodRequest.migraine().map(m -> migraineMapper.mapToDomain(token.getUserId(), m));
 		final var dailyTracking = periodRequest.dailyTracking().map(d -> dailyTrackingMapper.mapToDomain(token.getUserId(), d));
+		final var period = dailyTracking.filter(dtr -> {
+			return dtr.painLevel() != 0 && dtr.flowLevel() != 0;
+		}).map(dtr -> {
+			return periodMapper.mapToDomain(token.getUserId(), periodRequest);
+		}).orElse(null);
 		return periodService.createPeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(Optional.empty(), token.getUserId(), LocalDate.now(), 0, 0)));
 	}
 

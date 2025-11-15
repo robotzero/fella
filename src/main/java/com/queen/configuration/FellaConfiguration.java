@@ -12,6 +12,7 @@ import com.queen.adapters.web.dto.UserToDTO;
 import com.queen.application.ports.out.CreateUserPort;
 import com.queen.application.ports.out.LoadUserPort;
 import com.queen.application.service.AttachUserService;
+import com.queen.application.service.DailyTrackingService;
 import com.queen.application.service.PeriodService;
 import com.queen.application.service.UserService;
 import com.queen.domain.DailyTrackingPersistencePort;
@@ -27,7 +28,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableWebSecurity
@@ -105,6 +105,14 @@ public class FellaConfiguration {
 	@Bean
 	DailyTrackingPersistencePort dailyTrackingPersistencePort(final DailyTrackingRepository dailyTrackingRepository) {
 		return new DailyTrackingPersistenceAdapter(dailyTrackingRepository);
+	}
+
+	@Bean
+	DailyTrackingService dailyTrackingService(
+			final DailyTrackingPersistencePort dailyTrackingPersistencePort,
+			final DailyTrackingMapper dailyTrackingMapper
+	) {
+		return new DailyTrackingService(dailyTrackingPersistencePort, dailyTrackingMapper);
 	}
 
 	@Bean

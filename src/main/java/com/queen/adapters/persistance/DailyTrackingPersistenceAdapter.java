@@ -3,6 +3,10 @@ package com.queen.adapters.persistance;
 import com.queen.domain.DailyTrackingPersistencePort;
 import com.queen.infrastructure.persistence.DailyTracking;
 import com.queen.infrastructure.persistence.DailyTrackingRepository;
+import com.queen.infrastructure.persistence.Tracking;
+
+import java.util.List;
+import java.util.UUID;
 
 public class DailyTrackingPersistenceAdapter implements DailyTrackingPersistencePort {
 	private final DailyTrackingRepository dailyTrackingRepository;
@@ -19,5 +23,10 @@ public class DailyTrackingPersistenceAdapter implements DailyTrackingPersistence
 	@Override
 	public void updateDailyTracking(DailyTracking dailyTracking) {
 		dailyTrackingRepository.updateDailyTracking(dailyTracking);
+	}
+
+	@Override
+	public List<Tracking> getTracking(UUID userId) {
+		return dailyTrackingRepository.findAllByUserId(userId);
 	}
 }

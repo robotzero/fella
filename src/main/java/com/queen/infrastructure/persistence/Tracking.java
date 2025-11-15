@@ -11,31 +11,30 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Table("daily_tracking")
-public class DailyTracking implements Persistable<UUID> {
+public class Tracking implements Persistable<UUID> {
 	@Id
 	@Column("tracking_id")
 	private UUID id;
 	private UUID userId;
 	private LocalDate trackingDate;
-	private UUID periodId;
-	private UUID moodId;
-	private UUID migraineId;
 	private Integer painLevel;
 	private Integer flowLevel;
+	private Migraine migraine;
+	private Period period;
 
 	@Transient
 	private Boolean isNew;
 
-	public DailyTracking(UUID userId, LocalDate trackingDate, Boolean isNew) {
+	public Tracking(UUID userId, LocalDate trackingDate, Boolean isNew) {
 		this.userId = userId;
 		this.trackingDate = trackingDate;
 		this.isNew = isNew;
 	}
 
-	protected DailyTracking() {}
+	protected Tracking() {}
 
-	public static DailyTracking empty() {
-		return new DailyTracking(null, null, true);
+	public static Tracking empty() {
+		return new Tracking(null, null, true);
 	}
 
 	@Override
@@ -56,7 +55,7 @@ public class DailyTracking implements Persistable<UUID> {
 		return painLevel;
 	}
 
-	public DailyTracking setPainLevel(Integer painLevel) {
+	public Tracking setPainLevel(Integer painLevel) {
 		this.painLevel = painLevel;
 		return this;
 	}
@@ -65,26 +64,8 @@ public class DailyTracking implements Persistable<UUID> {
 		return flowLevel;
 	}
 
-	public DailyTracking setFlowLevel(Integer flowLevel) {
+	public Tracking setFlowLevel(Integer flowLevel) {
 		this.flowLevel = flowLevel;
-		return this;
-	}
-
-	public UUID getMoodId() {
-		return moodId;
-	}
-
-	public DailyTracking setMoodId(UUID moodId) {
-		this.moodId = moodId;
-		return this;
-	}
-
-	public UUID getPeriodId() {
-		return periodId;
-	}
-
-	public DailyTracking setPeriodId(UUID periodId) {
-		this.periodId = periodId;
 		return this;
 	}
 
@@ -92,11 +73,20 @@ public class DailyTracking implements Persistable<UUID> {
 		return trackingDate;
 	}
 
-	public UUID getMigraineId() {
-		return migraineId;
+	public Migraine getMigraine() {
+		return migraine;
 	}
 
-	public void setMigraineId(UUID migraineId) {
-		this.migraineId = migraineId;
+	public void setMigraine(Migraine migraine) {
+		this.migraine = migraine;
+	}
+
+	public Period getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(Period period) {
+		this.period = period;
 	}
 }
+

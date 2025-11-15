@@ -1,6 +1,6 @@
 package com.queen.infrastructure.persistence;
 
-import com.queen.infrastructure.auth.repository.PeriodsWithDailyMigraineExtractor;
+import com.queen.infrastructure.auth.repository.TrackingWithPeriodAndMigraine;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
@@ -29,7 +29,7 @@ public interface PeriodRepository extends CrudRepository<@NotNull Period, @NotNu
 		JOIN daily_tracking dt ON p.period_id = dt.period_id
 		LEFT JOIN migraines m ON dt.migraine_id = m.migraine_id
 		WHERE p.user_id = :userId
-	""", resultSetExtractorClass = PeriodsWithDailyMigraineExtractor.class)
+	""")
 	List<Period> findAllByUserId(final UUID userId);
 
 	@Query(value = """

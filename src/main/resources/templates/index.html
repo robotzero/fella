@@ -413,11 +413,11 @@
                 ? cellOrDate
                 : (cellOrDate.dataset.date || '');
 
-            const painVal = cellOrDate && cellOrDate.dataset
-                ? parseInt(cellOrDate.dataset.pain || '0', 10)
-                : 0;
-            const flowVal = cellOrDate && cellOrDate.dataset
-                ? parseInt(cellOrDate.dataset.flow || '0', 10)
+            const painVal = cellOrDate?.dataset?.pain !== undefined
+                ? parseInt(cellOrDate.dataset.pain || 10)
+                : null;
+            const flowVal = cellOrDate?.dataset?.flow !== undefined
+                ? parseInt(cellOrDate.dataset.flow || 5)
                 : 0;
             const isTracked = cellOrDate && cellOrDate.dataset
                 ? cellOrDate.dataset.tracked === 'true'
@@ -425,9 +425,12 @@
             const periodId = cellOrDate && cellOrDate.dataset
                 ? cellOrDate.dataset.pid || ''
                 : '';
-            const migraineVal = cellOrDate && cellOrDate.dataset
-                ? parseInt(cellOrDate.dataset.migraine || '0', 10)
-                : 0;
+
+            const migraineVal =
+                cellOrDate?.dataset?.migraine !== undefined
+                    ? parseInt(cellOrDate.dataset.migraine, 10)
+                    : null;
+
             const migraineId = cellOrDate && cellOrDate.dataset
                 ? cellOrDate.dataset.migraineid || ''
                 : '';
@@ -444,9 +447,9 @@
             const trackingIdInput = document.getElementById('trackingId');
 
             if (dateInput) dateInput.value = dateStr;
-            if (painInput) painInput.value = painVal > 0 ? String(painVal) : null;
-            if (flowInput) flowInput.value = flowVal > 0 ? String(flowVal) : null;
-            if (migraineInput) migraineInput.value = migraineVal > 0 ? String(migraineVal) : null;
+            if (painInput) painInput.value = painVal > 0 ? painVal : 0;
+            if (flowInput) flowInput.value = flowVal > 0 ? flowVal : 0;
+            if (migraineInput) migraineInput.value = migraineVal > 0 ? migraineVal : 0;
             if (periodInput) periodInput.value = periodId;
             if (migraineIdInput) migraineIdInput.value = migraineId;
             if (trackingIdInput) trackingIdInput.value = trackingId;

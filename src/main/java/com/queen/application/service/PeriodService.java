@@ -44,6 +44,15 @@ public class PeriodService {
 	@Transactional
 	public PeriodDTO createPeriod(final Period period, final Migraine migraine, final DailyTracking dailyTracking) {
 		var dt = dailyTrackingMapper.mapToPersistence(dailyTracking);
+		if (period == null) {
+			var m = migraineMapper.mapToPersistence(migraine);
+			m.ifPresent(mm -> {
+				migrainePersistencePort.createMigraine(mm);
+				dt.setMigraineId(mm.getId());
+			});
+			var createdDailyTracking = dailyTrackingPersistencePort.createDailyTracking(dt);
+			return periodMapper.mapToDTO(null, com.queen.infrastructure.persistence.Migraine.empty(), createdDailyTracking);
+		}
 		var p = periodPersistencePort.createPeriod(periodMapper.mapToPersistence(period, true));
 		dt.setPeriodId(p.getId());
 		var m = migraineMapper.mapToPersistence(migraine);

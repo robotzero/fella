@@ -1,6 +1,7 @@
 package com.queen.adapters.web.controller.view;
 
 import com.queen.adapters.web.dto.FullPeriodRequest;
+import com.queen.adapters.web.dto.MigraineDTO;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -42,11 +43,11 @@ public class IndexController {
 	public String calendar(@RequestParam(value = "year", required = false) Integer year,
 			Model model, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
 		int y = (year != null) ? year : Year.now().getValue();
-		ParameterizedTypeReference<@org.jetbrains.annotations.NotNull List<PeriodDto>> periodsBody = new ParameterizedTypeReference<>() {};
+		ParameterizedTypeReference<@org.jetbrains.annotations.NotNull List<Tracking>> periodsBody = new ParameterizedTypeReference<>() {};
 
 		String token = authorizedClient.getAccessToken().getTokenValue();
-		List<PeriodDto> dto = restClient.get()
-				.uri("api/period/all")
+		List<Tracking> dto = restClient.get()
+				.uri("api/tracking/all")
 				.accept(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer "  + token)
 				.retrieve()
@@ -58,9 +59,15 @@ public class IndexController {
 			model.addAttribute("error", "Something went wrong");
 			return "calendar";
 		}
-		List<DailyTracking> periodDates = dto.stream().map(d -> {
-			var dailyTracking = d.dailyTracking();
-			return dailyTracking.withPeriodId(d.periodId).withMigraine(d.migraine.severityLevel(), d.migraine.migraineId());
+		List<Tracking> periodDates = dto.stream().map(d -> {
+			var migraine = d.migraine();
+			if (migraine == null) {
+				return d.withPeriodId(d.period().periodId);
+			}
+			if (d.period() == null) {
+				return d.withMigraine(migraine.severityLevel(), migraine.migraineId());
+			}
+			return d.withPeriodId(d.period().periodId).withMigraine(d.migraine.severityLevel(), d.migraine.migraineId());
 		}).toList();
 
 		List<MonthVM> months = buildMonths(y, periodDates, ZoneId.systemDefault());
@@ -73,11 +80,20 @@ public class IndexController {
 	@PostMapping("/tracking/save")
 	public String saveTracking(
 			@RequestParam LocalDate trackingDate,
-			@RequestParam int painLevel,
-			@RequestParam int flowLevel,
+			@RequestParam(required = false) int painLevel,
+			@RequestParam(required = false) int flowLevel,
 			@RequestParam(required = false) int migraineLevel,
 			@RegisteredOAuth2AuthorizedClient("fella-webui") OAuth2AuthorizedClient client,
 			Model model) {
+
+		if (trackingDate == null) {
+			model.addAttribute("message", "Tracking date is required");
+			return "fragments/modal-success";
+		}
+		if (painLevel == 0 && flowLevel == 0 && migraineLevel == 0) {
+			model.addAttribute("message", "At least one of pain level, flow level, or migraine level must be provided");
+			return "fragments/modal-success";
+		}
 
 		var token = client.getAccessToken().getTokenValue();
 		restClient.post().uri("api/period").accept(MediaType.APPLICATION_JSON)
@@ -131,10 +147,10 @@ public class IndexController {
 		return "index";
 	}
 
-	private List<MonthVM> buildMonths(int year, List<DailyTracking> trackingList, ZoneId zone) {
+	private List<MonthVM> buildMonths(int year, List<Tracking> trackingList, ZoneId zone) {
 		LocalDate today = LocalDate.now(zone);
 		List<MonthVM> res = new ArrayList<>(12);
-		Map<LocalDate, DailyTracking> trackingByDate = trackingList.stream()
+		Map<LocalDate, Tracking> trackingByDate = trackingList.stream()
 				.collect(Collectors.toMap(
 						t -> LocalDate.parse(t.trackingDate(), DMY), // same formatter as before
 						t -> t,
@@ -155,7 +171,7 @@ public class IndexController {
 			// Actual days
 			for (int d = 1; d <= ym.lengthOfMonth(); d++) {
 				LocalDate date = ym.atDay(d);
-				DailyTracking t = trackingByDate.get(date);
+				Tracking t = trackingByDate.get(date);
 				boolean weekend = date.getDayOfWeek() == DayOfWeek.SATURDAY
 						|| date.getDayOfWeek() == DayOfWeek.SUNDAY;
 				boolean isToday = date.equals(today);
@@ -173,21 +189,21 @@ public class IndexController {
 	}
 
 	// --- simple DTOs (replace with your real ones) -------------------------
-	public record PeriodDto(String periodId, Migraine migraine, DailyTracking dailyTracking) {}
+	public record PeriodDto(String periodId) {}
 	public record Migraine(UUID migraineId, String migraineDate, Integer severityLevel, String description) {}
-	public record DailyTracking(String trackingId, UUID migraineId, Integer painLevel, Integer flowLevel, String trackingDate, String periodId, Integer migraineLevel) {
-		public DailyTracking withPeriodId(String periodId) {
-			return new DailyTracking(this.trackingId, this.migraineId, this.painLevel, this.flowLevel, this.trackingDate, periodId, this.migraineLevel);
+	public record Tracking(String trackingId, UUID migraineId, Integer painLevel, Integer flowLevel, String trackingDate, String periodId, Integer migraineLevel, PeriodDto period, MigraineDTO migraine) {
+		public Tracking withPeriodId(String periodId) {
+			return new Tracking(this.trackingId, this.migraineId, this.painLevel, this.flowLevel, this.trackingDate, periodId, this.migraineLevel, this.period, this.migraine);
 		}
-		public DailyTracking withMigraine(Integer migraineLevel, UUID migraineId) {
-			return new DailyTracking(this.trackingId, migraineId, this.painLevel, this.flowLevel, this.trackingDate, this.periodId, migraineLevel);
+		public Tracking withMigraine(Integer migraineLevel, UUID migraineId) {
+			return new Tracking(this.trackingId, migraineId, this.painLevel, this.flowLevel, this.trackingDate, this.periodId, migraineLevel, this.period, this.migraine);
 		}
 	}
 
 	// --- View Model ---------------------------------------------------------
 	public record MonthVM(String name, List<DayCell> days) {}
 	public record DayCell(Integer dayOfMonth, boolean blank, boolean weekend, boolean today, boolean tracked, Integer painLevel, Integer flowLevel, String periodId, Integer migraineLevel, String trackingId, UUID migraineId) {
-		public static DayCell of(int d, boolean weekend, boolean today, DailyTracking trackingForThisDate) {
+		public static DayCell of(int d, boolean weekend, boolean today, Tracking trackingForThisDate) {
 			boolean tracked = trackingForThisDate != null;
 			Integer painLevel = tracked ? trackingForThisDate.painLevel() : null;
 			Integer flowLevel = tracked ? trackingForThisDate.flowLevel() : null;
