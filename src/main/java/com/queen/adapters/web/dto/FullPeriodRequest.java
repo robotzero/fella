@@ -38,15 +38,15 @@ public record FullPeriodRequest(
 		);
 	}
 
-	public static FullPeriodRequest fromUIEdit(LocalDate trackingDate, Integer painLevel, Integer flowLevel, Integer migraineLevel, UUID trackingId, UUID migraineId) {
+	public static FullPeriodRequest fromUIEdit(UUID trackingId, LocalDate trackingDate, Integer painLevel, Integer flowLevel, Integer migraineLevel, UUID periodId, UUID migraineId) {
 		var migraineRequest = Optional.of(migraineLevel).filter(m -> m > 0).map(m -> new MigraineRequest(
-				Optional.of(migraineId),
+				Optional.ofNullable(migraineId),
 				Optional.of(trackingDate),
 				Optional.of(migraineLevel),
 				Optional.empty()
 		));
 		Optional<DailyTrackingRequest> dailyTrackingRequest = Optional.of(new DailyTrackingRequest(
-				Optional.empty(),
+				Optional.ofNullable(periodId),
 				Optional.of(trackingDate),
 				Optional.of(painLevel),
 				Optional.of(flowLevel),

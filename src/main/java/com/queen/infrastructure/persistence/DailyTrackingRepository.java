@@ -13,11 +13,14 @@ public interface DailyTrackingRepository extends CrudRepository<DailyTracking, U
 	@Query(value = """
 		UPDATE daily_tracking
 		SET
-			pain_level = :#{#dailyTracking.painLevel},
-			flow_level = :#{#dailyTracking.flowLevel},
-			migraine_id = :#{#dailyTracking.migraineId}
+			pain_level  = :#{#dailyTracking.painLevel},
+			flow_level  = :#{#dailyTracking.flowLevel},
+			migraine_id = :#{#dailyTracking.migraineId},
+			period_id   = :#{#dailyTracking.periodId}
 		WHERE
 			tracking_id = :#{#dailyTracking.id}
+		  AND user_id = :#{#dailyTracking.userId}
+		  AND (:#{#dailyTracking.migraineId} IS NOT NULL OR :#{#dailyTracking.migraineId} IS NOT NULL)
 	""")
 	void updateDailyTracking(DailyTracking dailyTracking);
 

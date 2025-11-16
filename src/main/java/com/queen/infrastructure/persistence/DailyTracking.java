@@ -99,4 +99,12 @@ public class DailyTracking implements Persistable<UUID> {
 	public void setMigraineId(UUID migraineId) {
 		this.migraineId = migraineId;
 	}
+
+	public UUID getUserId() {
+		return userId;
+	}
+
+	public void setUserId(UUID userId) {
+		this.userId = userId;
+	}
 }

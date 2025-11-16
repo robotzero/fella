@@ -74,15 +74,18 @@ public class PeriodController {
 		periodService.deletePeriods(deletePeriodRequest, token.getUserId());
 	}
 
-	@PutMapping(value = "/api/periods/{periodId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/api/periods/{trackingId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	PeriodDTO editPeriod(
 			final FellaJwtAuthenticationToken token,
 			final @RequestBody FullPeriodRequest periodRequest,
-			final @PathVariable UUID periodId
+			final @PathVariable UUID trackingId
 	) {
-		final var period = periodMapper.mapToDomainUpdate(periodId, token.getUserId(), periodRequest);
+		if (trackingId == null) {
+			throw new IllegalArgumentException("Tracking ID must be provided for editing a period.");
+		}
+		final var period = periodMapper.mapToDomainUpdate(token.getUserId(), periodRequest);
 		final var migraine = periodRequest.migraine().map(m -> migraineMapper.mapToDomain(token.getUserId(), m));
 		final var dailyTracking = periodRequest.dailyTracking().map(d -> dailyTrackingMapper.mapToDomain(token.getUserId(), d));
-		return periodService.updatePeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(Optional.empty(), token.getUserId(), LocalDate.now(), 0, 0)));
+		return periodService.updatePeriod(period, migraine.orElse(null), dailyTracking.orElse(new DailyTracking(Optional.empty(), token.getUserId(), LocalDate.now(), 0, 0)), token.getUserId());
 	}
 }

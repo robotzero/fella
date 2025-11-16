@@ -21,10 +21,11 @@ public class MigraineMapper implements MigraineMapperPort {
 
 	@Override
 	public Optional<com.queen.infrastructure.persistence.Migraine> mapToPersistence(final Migraine migraine) {
-		if (migraine != null) {
+		if (migraine != null && migraine.severityLevel() != null && migraine.severityLevel() > 0) {
 			final var m = new com.queen.infrastructure.persistence.Migraine(migraine.userId(), migraine.migraineDate(), true);
 			m.setSeverityLevel(migraine.severityLevel());
 			m.setDescription(migraine.description());
+			m.setId(migraine.migraineId().orElse(UUID.randomUUID()));
 			return Optional.of(m);
 		}
 		return Optional.empty();

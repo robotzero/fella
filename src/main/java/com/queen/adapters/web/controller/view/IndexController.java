@@ -116,22 +116,22 @@ public class IndexController {
 		return "index";
 	}
 
-	@PutMapping("/tracking/edit/{periodId}")
+	@PutMapping("/tracking/edit/{trackingId}")
 	public String editTracking(
 			@RequestParam LocalDate trackingDate,
 			@RequestParam int painLevel,
 			@RequestParam int flowLevel,
 			@RequestParam(required = false) int migraineLevel,
-			@RequestParam(required = false) String trackingId,
+			@RequestParam(required = false) String periodId,
 			@RequestParam(required = false) String migraineId,
-			@PathVariable String periodId,
+			@PathVariable String trackingId,
 			@RegisteredOAuth2AuthorizedClient("fella-webui") OAuth2AuthorizedClient client
 	) {
 		var token = client.getAccessToken().getTokenValue();
-		var trackingIdFinal = trackingId.isEmpty() ? null : UUID.fromString(trackingId);
+		var periodIdFinal = periodId.isEmpty() ? null : UUID.fromString(periodId);
 		var migraineIdFinal = migraineId.isEmpty() ? null : UUID.fromString(migraineId);
-		var request = FullPeriodRequest.fromUIEdit(trackingDate, painLevel, flowLevel, migraineLevel, trackingIdFinal, migraineIdFinal);
-		restClient.put().uri("api/periods/" + periodId).accept(MediaType.APPLICATION_JSON)
+		var request = FullPeriodRequest.fromUIEdit(UUID.fromString(trackingId), trackingDate, painLevel, flowLevel, migraineLevel, periodIdFinal, migraineIdFinal);
+		restClient.put().uri("api/periods/" + trackingId).accept(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + token)
 				.body(request).retrieve().body(Void.class);
 		return "index";

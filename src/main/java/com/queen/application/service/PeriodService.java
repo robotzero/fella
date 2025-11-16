@@ -73,15 +73,25 @@ public class PeriodService {
 	}
 
 	@Transactional
-	public PeriodDTO updatePeriod(final Period period, final Migraine migraine, final DailyTracking dailyTracking) {
+	public PeriodDTO updatePeriod(final Period period, final Migraine migraine, final DailyTracking dailyTracking, UUID userId) {
 		var dt = dailyTrackingMapper.mapToPersistence(dailyTracking);
+		dt.setId(userId);
 		dailyTracking.trackingId().ifPresent(dt::setId);
-		dt.setPeriodId(period.periodId());
+		if (period.periodId() == null && dailyTracking.painLevel() != null && dailyTracking.flowLevel() != null) {
+			var createdPeriod = periodPersistencePort.createPeriod(periodMapper.mapToPersistence(period, true));
+			dt.setPeriodId(createdPeriod.getId());
+		} else {
+			dt.setPeriodId(period.periodId());
+		}
 		var m = migraineMapper.mapToPersistence(migraine);
 		m.ifPresent(mm -> {
 			migraine.migraineId().ifPresent(mm::setId);
+			if (migraine.migraineId().isEmpty()) {
+				migrainePersistencePort.createMigraine(mm);
+			} else {
+				migrainePersistencePort.updateMigraine(mm);
+			}
 			dt.setMigraineId(mm.getId());
-			migrainePersistencePort.updateMigraine(mm);
 		});
 		dt.setFlowLevel(dailyTracking.flowLevel());
 		dt.setPainLevel(dailyTracking.painLevel());

@@ -552,9 +552,9 @@
 
         function configureEdit(e) {
             if (e.target.id !== 'trackingForm') return;
-            const periodId = (document.getElementById('periodId').value || '').trim();
-            if (periodId) {
-                e.detail.path = `/tracking/edit/${periodId}`; // change URL
+            const trackingId = (document.getElementById('trackingId').value || '').trim();
+            if (trackingId) {
+                e.detail.path = `/tracking/edit/${trackingId}`; // change URL
                 e.detail.verb = 'PUT';                        // change method
             }
         }

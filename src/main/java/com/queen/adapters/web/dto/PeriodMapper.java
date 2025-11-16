@@ -36,11 +36,14 @@ public class PeriodMapper implements PeriodMapperPort {
 	}
 
 	@Override
-	public Period mapToDomainUpdate(final UUID periodID, final UUID userId, final PeriodRequest periodRequest) {
+	public Period mapToDomainUpdate(final UUID userId, final PeriodRequest periodRequest) {
 		switch (periodRequest) {
 			case FullPeriodRequest fullPeriodRequest -> {
+				var periodId = fullPeriodRequest.dailyTracking()
+						.flatMap(DailyTrackingRequest::periodId)
+						.orElse(null);
 				return new Period(
-						periodID,
+						periodId,
 						userId,
 						fullPeriodRequest.startDateOrNow()
 				);
