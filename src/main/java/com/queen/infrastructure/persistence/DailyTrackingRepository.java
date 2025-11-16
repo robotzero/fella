@@ -6,6 +6,7 @@ import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public interface DailyTrackingRepository extends CrudRepository<DailyTracking, UUID> {
@@ -44,4 +45,11 @@ public interface DailyTrackingRepository extends CrudRepository<DailyTracking, U
 		WHERE dt.user_id = :userId
 	""", resultSetExtractorClass = TrackingWithPeriodAndMigraine.class)
 	List<Tracking> findAllByUserId(final UUID userId);
+
+	@Modifying
+	@Query(value = """
+		DELETE FROM daily_tracking
+		WHERE tracking_id IN (:trackingIds) AND user_id = :userId
+	""")
+	void deleteTracking(final Set<UUID> trackingIds, final UUID userId);
 }

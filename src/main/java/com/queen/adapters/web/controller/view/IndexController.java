@@ -106,13 +106,13 @@ public class IndexController {
 
 	@PostMapping("/tracking/delete")
 	public String deleteTracking(
-			@RequestParam String periodId,
+			@RequestParam String trackingId,
 			@RegisteredOAuth2AuthorizedClient("fella-webui") OAuth2AuthorizedClient client
 	) {
 		var token = client.getAccessToken().getTokenValue();
-		restClient.post().uri("api/periods/delete").accept(MediaType.APPLICATION_JSON)
+		restClient.post().uri("api/tracking/delete").accept(MediaType.APPLICATION_JSON)
 				.header("Authorization", "Bearer " + token)
-				.body(Map.of("periodIds", List.of(UUID.fromString(periodId)))).retrieve().body(Void.class);
+				.body(Map.of("trackingIds", List.of(UUID.fromString(trackingId)))).retrieve().body(Void.class);
 		return "index";
 	}
 

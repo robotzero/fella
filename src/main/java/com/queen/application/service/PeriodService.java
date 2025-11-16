@@ -1,6 +1,5 @@
 package com.queen.application.service;
 
-import com.queen.adapters.web.dto.DeletePeriodsRequest;
 import com.queen.adapters.web.dto.PeriodDTO;
 import com.queen.domain.DailyTracking;
 import com.queen.domain.DailyTrackingPersistencePort;
@@ -65,11 +64,6 @@ public class PeriodService {
 		var createdDailyTracking = dailyTrackingPersistencePort.createDailyTracking(dt);
 
 		return periodMapper.mapToDTO(p, m.orElse(com.queen.infrastructure.persistence.Migraine.empty()), createdDailyTracking);
-	}
-
-	@Transactional
-	public void deletePeriods(final DeletePeriodsRequest deletePeriodsRequest, final UUID userId) {
-		periodPersistencePort.deletePeriods(deletePeriodsRequest.periodIds(), userId);
 	}
 
 	@Transactional

@@ -1,13 +1,10 @@
 package com.queen.infrastructure.persistence;
 
-import com.queen.infrastructure.auth.repository.TrackingWithPeriodAndMigraine;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 // @TODO transactional
@@ -40,11 +37,4 @@ public interface PeriodRepository extends CrudRepository<@NotNull Period, @NotNu
 		WHERE p.period_id = :periodId
 	""")
 	Period findByIdAndByUserId(final UUID periodId);
-
-	@Modifying
-	@Query(value = """
-		DELETE FROM periods
-		WHERE period_id IN (:periodIds) AND user_id = :userId
-	""")
-	void deletePeriods(final Set<UUID> periodIds, final UUID userId);
 }

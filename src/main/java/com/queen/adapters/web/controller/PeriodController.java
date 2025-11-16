@@ -1,7 +1,6 @@
 package com.queen.adapters.web.controller;
 
 import com.queen.adapters.web.dto.DailyTrackingMapper;
-import com.queen.adapters.web.dto.DeletePeriodsRequest;
 import com.queen.adapters.web.dto.MigraineMapper;
 import com.queen.adapters.web.dto.PeriodDTO;
 import com.queen.adapters.web.dto.FullPeriodRequest;
@@ -64,14 +63,6 @@ public class PeriodController {
 			FellaJwtAuthenticationToken token
 	) {
 		return periodService.getPeriods(token.getUserId());
-	}
-
-	@PostMapping(value = "/api/periods/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-	void deletePeriod(
-			final FellaJwtAuthenticationToken token,
-			final @Valid @RequestBody DeletePeriodsRequest deletePeriodRequest
-	) {
-		periodService.deletePeriods(deletePeriodRequest, token.getUserId());
 	}
 
 	@PutMapping(value = "/api/periods/{trackingId}", produces = MediaType.APPLICATION_JSON_VALUE)

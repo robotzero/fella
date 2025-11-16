@@ -6,6 +6,7 @@ import com.queen.infrastructure.persistence.DailyTrackingRepository;
 import com.queen.infrastructure.persistence.Tracking;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class DailyTrackingPersistenceAdapter implements DailyTrackingPersistencePort {
@@ -28,5 +29,10 @@ public class DailyTrackingPersistenceAdapter implements DailyTrackingPersistence
 	@Override
 	public List<Tracking> getTracking(UUID userId) {
 		return dailyTrackingRepository.findAllByUserId(userId);
+	}
+
+	@Override
+	public void deleteTracking(Set<UUID> trackingIds, UUID userId) {
+		dailyTrackingRepository.deleteTracking(trackingIds, userId);
 	}
 }

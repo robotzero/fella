@@ -467,7 +467,7 @@
                     const vals = {};
                     if (dateStr) vals.date = dateStr;
                     if (yearHidden) vals.year = yearHidden.value;
-                    if (periodId) vals.periodId = periodId;
+                    if (trackingId) vals.trackingId = trackingId;
 
                     // htmx hx-vals expects JSON string
                     deleteBtn.setAttribute('hx-vals', JSON.stringify(vals));
